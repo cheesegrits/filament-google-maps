@@ -1,0 +1,26 @@
+{
+    "name": "cheesegrits/filament-google-maps",
+    "description": "A Google maps package for Filament PHP with field, column and widget",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Cheesegrits\\FilamentGoogleMaps\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Cheesegrits\\FilamentGoogleMaps\\FilamentGoogleMapsServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Hugh Messenger",
+            "email": "hugh.messenger@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
