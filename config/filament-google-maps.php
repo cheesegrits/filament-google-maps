@@ -1,4 +1,4 @@
 <?php
 return [
-    'key' => env('FILAMENT_GOOGLE_MAPS_KEY')
+    'key' => env('GOOGLE_MAPS_API_KEY')
 ];
