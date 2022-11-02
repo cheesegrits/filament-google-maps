@@ -60,6 +60,8 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
 
             this.createClustering();
 
+            this.createLayers();
+
             this.map.fitBounds(this.bounds);
         },
         createLayers: function () {
