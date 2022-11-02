@@ -65,13 +65,15 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             this.markers = this.data.map((location, i) => {
                 let markerIcon;
 
-                if (location.icon ?? null) {
-                    markerIcon = {
-                        url: location.icon,
-                    };
+                if (location.icon && typeof location.icon === 'object') {
+                    if (location.icon.hasOwnProperty('url')) {
+                        markerIcon = {
+                            url: location.icon.url,
+                        };
 
-                    if (location.hasOwnProperty('iconType') && location.iconType === 'svg' && location.hasOwnProperty('iconScale')) {
-                        markerIcon.scaledSize = new google.maps.Size(location.iconScale[0], location.iconScale[1]);
+                        if (location.icon.hasOwnProperty('type') && location.icon.type === 'svg' && location.icon.hasOwnProperty('scale')) {
+                            markerIcon.scaledSize = new google.maps.Size(location.icon.scale[0], location.icon.scale[1]);
+                        }
                     }
                 }
 

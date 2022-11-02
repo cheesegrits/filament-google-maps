@@ -12,7 +12,7 @@ class ModelCode extends Command
 
     protected $signature = 'filament-google-maps:model-code {model?} {--lat=} {--lng=} {--location=} ';
 
-    protected $description = 'Geocode models';
+    protected $description = 'Produce computed property code for model';
 
     public function handle()
     {

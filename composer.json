@@ -1,8 +1,14 @@
 {
     "name": "cheesegrits/filament-google-maps",
-    "description": "A Google maps package for Filament PHP with field, column and widget",
+    "description": "A Google Maps package for Filament PHP with field, column and widget",
     "type": "project",
     "license": "MIT",
+    "homepage": "https://github.com/cheesegrits/filament-google-maps",
+    "require": {
+        "spatie/laravel-package-tools": "^1.9",
+        "filament/filament": "^2.0",
+        "guzzlehttp/guzzle": "^7.2"
+    },
     "autoload": {
         "psr-4": {
             "Cheesegrits\\FilamentGoogleMaps\\": "src/"
@@ -22,5 +28,5 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "prefer-stable": true
 }
