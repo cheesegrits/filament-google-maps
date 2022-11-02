@@ -49,17 +49,29 @@ class ReverseGeocode extends Command
             }
         }
 
-	    $lat = $this->option('lat')
-		    ?? $this->askRequired(
-			    'Name of latitude element on table (e.g. `latitude`)',
-			    'lat'
-		    ) && $prompted = true;
+	    $lat = $this->option('lat');
+		
+		if (empty($lat))
+		{
+			$prompted = true;
+			
+			$lat = $this->askRequired(
+				'Name of latitude element on table (e.g. `latitude`)',
+				'lat'
+			);
+		}
 
-	    $lng = $this->option('lng')
-		    ?? $this->askRequired(
-			    'Name of longitude element on table (e.g. `latitude`)',
-			    'fields'
-		    ) && $prompted = true;
+	    $lng = $this->option('lng');
+
+	    if (empty($lng))
+	    {
+		    $prompted = true;
+
+		    $lng = $this->askRequired(
+			    'Name of longitude element on table (e.g. `longitude`)',
+			    'lng'
+		    );
+	    }
 
 	    $fields = $this->option('fields');
 
@@ -76,7 +88,7 @@ class ReverseGeocode extends Command
 			$this->newLine();
 			$this->line('Google returns a complex set of address components.  You need to tell us how you want');
 			$this->line('those components mapped on to your database fields.  We use a standard symbolic format');
-			$this->line('as summarixed in the table above to extract the address components.');
+			$this->line('as summarized in the table above to extract the address components.');
 			$this->newLine();
 			$this->line('Each mapping should be of the form <field name>=<format symbol(s)>, for example');
 			$this->line('to map (say) a street address to your `street_name` field, you would need ...');
@@ -147,7 +159,7 @@ class ReverseGeocode extends Command
 			$summary = sprintf(
 				'php artisan filament-google-maps:reverse-geocode %s %s --lat=%s --lng=%s --rate-limit=%s',
 				$ogModelName,
-				implode(' ', array_map(fn ($field) => '--fields=' . $field, $fields)),
+				implode(' ', array_map(fn ($field) => '--fields="' . $field . '"', $fields)),
 				$lat,
 				$lng,
 				$rateLimit

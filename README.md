@@ -398,6 +398,123 @@ field is a foreign key, you can specify that in dotted notation, like 'states.st
 The command will select all records from your table where either the lat or lng fields
 are empty (0, null or empty string).
 
+### Reverse Geocoding
+
+Reverse geocoding from the command line is a little trickier, as we have to decompose and
+map the rather complicated address format Google returns.  For this, we use a standard printf style
+formatting from [Gecocoder PHP](https://github.com/geocoder-php/Geocoder#formatters).
+
+Rather than explain it all, here as an example terminal session ...
+
+<details>
+  <summary> (<i>click to expand</i>)</summary>
+  <!-- have to be followed by an empty line! -->
+
+## *formatted* **heading** with [a](link)
+
+```sh
+fgm> php artisan filament-google-maps:reverse-geocode Location
+
+ Name of latitude element on table (e.g. `latitude`):
+ > lat
+
+ Name of longitude element on table (e.g. `longitude`):
+ > lng
+
++------------------------------+-------------------------+
+| Component                    | Format                  |
++------------------------------+-------------------------+
+| Street Number                | %n                      |
+| Street Name                  | %S                      |
+| City (Locality)              | %L                      |
+| City District (Sub-Locality) | %D                      |
+| Zipcode (Postal Code)        | %z                      |
+| Admin Level Name             | %A1, %A2, %A3, %A4, %A5 |
+| Admin Level Code             | %a1, %a2, %a3, %a4, %a5 |
+| Country                      | %C                      |
+| Country Code                 | %c                      |
+| Timezone                     | %T                      |
++------------------------------+-------------------------+
+Use the table above to enter your address component mapping.
+
+Google returns a complex set of address components.  You need to tell us how you want
+those components mapped on to your database fields.  We use a standard symbolic format
+as summarixed in the table above to extract the address components.
+
+Each mapping should be of the form <field name>=<format symbol(s)>, for example
+to map (say) a street address to your `street_name` field, you would need ...
+street_name=%n %S
+... and you might also add ...
+city=%L
+state=%A2
+zip=%z
+... or just ...
+formatted_address=%s %S, %L, %A2, %z
+
+You may enter as many mappings as you need, enter a blank line to continue.
+
+Test your field mapping.
+
+Yes.  This is complicated.  If you would like us to look up an example record from your table
+and show you what all those formats translate to, enter an ID here.  If not, just press enter.
+
+ ID (primary key on table):
+ > 1
+
++--------+-------------------+
+| Symbol | Result            |
++--------+-------------------+
+| %n     | 19225             |
+| %S     | North 44th Avenue |
+| %L     | Glendale          |
+| %D     |                   |
+| %z     | 85308             |
+| %A1    | Arizona           |
+| %A2    | Maricopa County   |
+| %A3    |                   |
+| %A4    |                   |
+| %A5    |                   |
+| %a1    | AZ                |
+| %a2    | Maricopa County   |
+| %a3    |                   |
+| %a4    |                   |
+| %a5    |                   |
+| %C     | United States     |
+| %c     | US                |
+| %T     |                   |
++--------+-------------------+
+
+ Field mapping (e.g. city=%L), blank line to continue:
+ > street=%n %S
+
+ Field mapping (e.g. city=%L), blank line to continue:
+ > city=%L
+
+ Field mapping (e.g. city=%L), blank line to continue:
+ > state=%A1
+
+ Field mapping (e.g. city=%L), blank line to continue:
+ > zip=%z
+
+ Field mapping (e.g. city=%L), blank line to continue:
+ > formatted_address=%n %S, %L, %z %a1
+
+ Field mapping (e.g. city=%L), blank line to continue:
+ > 
+
+ Rate limit as API calls per minute (max 300):
+ > 100
+
+Results
+API Lookups: 2
+Records Updated: 2
+
+Command summary - you may wish to copy and save this somewhere!
+php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S" --fields="city=%L" --fields="state=%A1" --fields="zip=%z" --fields="formatted_address=%n %S, %L, %z %a1" --lat=lat --lng=lng --rate-limit=100
+
+```
+</details>
+
 <!-- ROADMAP -->
 ## Roadmap
 
