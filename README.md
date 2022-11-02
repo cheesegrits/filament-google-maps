@@ -13,29 +13,30 @@ either as part of an admin panel, or in standalone front end forms, tables and d
 
 **IMPORTANT NOTE** - some features of this package could potentially drive up your
 API bill.  If you have large tables that you display static maps on, and you clear your
-cache frequently.  Or if you allow public access to your forms, and get hit by bots.
+cache frequently.  Or if you allow public access to forms that use geocoding, and get hit by bots.
 
-We suggest you keep an eye on your API usage in the Google Console.  We are not liable if you get a surprise bill!
+We **strongly** suggest you set [usage quotas in your Google Console](https://console.cloud.google.com/projectselector2/google/maps-apis/quotas).
+We are not liable if you get a surprise bill!
 
 ### Components
 
-The FilamentGoogleMaps field displays (unsurprisingly) a Google map, with a comprehensive set of configuration
+The **FilamentGoogleMaps** field displays (unsurprisingly) a Google map, with a comprehensive set of configuration
 options.  It supports coordinate updating both ways between map and form, as well as forward and reverse
 geocoding.
 
 ![Filament Google Maps Form](images/form-map.png)
 
-The FilamentGoogleMapsWidget displays a filterable set of locations from a model, with 
+The **FilamentGoogleMapsWidget** displays a filterable set of locations from a model, with 
 optional clustering, templatable labels, customizable icons, etc.
 
 ![Filament Google Maps Widget](images/widget-maps.png)
 
-The FilamentGoogleMapsTableWidget displays a map widget, along with a Filament Table,
+The **FilamentGoogleMapsTableWidget** displays a map widget, along with a Filament Table,
 and reacts to all filtering and searching on the table.
 
 ![Filament Google Maps Table Widget](images/widget-table-map.png)
 
-The FilamentGoogleMapsColumn displays a customizable static map image, with the images cached locally
+The **FilamentGoogleMapsColumn** displays a customizable static map image, with the images cached locally
 to reduce API overhead.
 
 ![Filament Google Maps Column](images/table-map.png)
