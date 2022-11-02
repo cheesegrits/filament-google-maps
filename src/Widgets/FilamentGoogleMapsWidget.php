@@ -112,7 +112,7 @@ class FilamentGoogleMapsWidget extends Widgets\Widget
         return json_encode(
             array_merge($this->mapConfig, [
                 'clustering' => self::getClustering(),
-				'layers' => self::getLayers(),
+                'layers' => $this->getLayers(),
                 'controls'  => $this->controls,
                 'gmaps' => $gmaps,
             ])
