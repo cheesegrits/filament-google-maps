@@ -13,7 +13,7 @@ class Geocode extends Command
 {
     use CanValidateInput;
 
-    protected $signature = 'filament-google-maps:geocode {model?} {lat?} {lng?} {--fields=} {--rate-limit=} {--sleep-time=} {--verbose?}}';
+    protected $signature = 'filament-google-maps:geocode {model?} {--lat=} {--lng=} {--fields=} {--rate-limit=} {--verbose?}}';
 
     protected $description = 'Geocode a table';
 
@@ -33,11 +33,13 @@ class Geocode extends Command
         try
         {
             $model = new $modelName();
+			$modelName .= '::class';
         } catch (\Throwable $e)
         {
             try
             {
                 $model = new ('\\App\\Models\\' . $modelName)();
+	            $modelName = '\\App\\Models\\' . $modelName . '::class';
             } catch (\Throwable $e)
             {
                 echo "Can't find class {$modelName} or \\App\\Models\\{$modelName}\n";
@@ -52,13 +54,13 @@ class Geocode extends Command
                 'fields'
             );
 
-        $lat = $this->argument('lat')
+        $lat = $this->option('lat')
             ?? $this->askRequired(
                 'Name of latitude element on table (e.g. `latitude`)',
                 'lat'
             );
 
-        $lng = $this->argument('lat')
+        $lng = $this->option('lat')
             ?? $this->askRequired(
                 'Name of latitude element on table (e.g. `latitude`)',
                 'fields'
@@ -74,17 +76,7 @@ class Geocode extends Command
             );
         }
 
-        $sleepTime = (int)  $this->option('sleep-time');
-
-        while ($sleepTime > 60 || $sleepTime < 1)
-        {
-            $sleepTime = (int) $this->askRequired(
-                    'Time in seconds to sleep if rate-limit is reached (min 1, max 60)',
-                    'sleep-time'
-                );
-        }
-
-        GeocodeHelper::batchGeocode($model, $lat, $lng, $fields, $rateLimit, $sleepTime, $verbose);
+        GeocodeHelper::batchGeocode($model, $lat, $lng, $fields, $rateLimit, $verbose);
 
         return static::SUCCESS;
     }

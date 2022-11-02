@@ -363,6 +363,39 @@ Anything you can do in normal Filament tables, you can do in this table.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Command Line Batching
+
+When dealing with location data, it is common to have tables which have lat and lng date
+but no address data, or vice versa.  This package provides a convenient way to process tables
+to either geocode or reverse geocode them to fill in the blanks.
+
+### Geocoding
+
+To add lat and lng coordinates to a table with address data, run this command:
+
+```shell
+php artisan filament-google-maps:geocode
+```
+
+... which will prompt you for the following
+
+- model - your model name, like Location or Dealerships/Location
+- fields - an ordered, comma separated list of the fields that make up an address, like 'street,city,state,zip'
+- lat - your lat field
+- lng - your lng field
+- rate-limit - max number of lookups per minute (max is 300, which is Google's hard limit, suggested max is 150)
+
+Or you can skip the hand holding and issue it as ...
+
+```shell
+php artisan filament-google-maps:geocode Location --fields=street,city,state,zip --lat=lat --lng=lng --rate-limit=100
+
+```
+If any of your address data is joined, like say you have a 'states' table, you can specify that
+in dotted notation, like 'states.state_full_name', where the first part (states) is the
+name of the relationship on your model.
+
+
 <!-- ROADMAP -->
 ## Roadmap
 
