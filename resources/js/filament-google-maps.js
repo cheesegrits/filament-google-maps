@@ -4,6 +4,7 @@ window.filamentGoogleMaps = ($wire, config) => {
         geocoder: null,
         marker: null,
         markerLocation: null,
+        layers: null,
         mapEl: null,
         pacEl: null,
 
@@ -136,6 +137,14 @@ window.filamentGoogleMaps = ($wire, config) => {
                 }
             }
 
+            if (config.kmlLayers) {
+                this.layers = config.kmlLayers.map((layerUrl) => {
+                    return new google.maps.KmlLayer({
+                        url: layerUrl,
+                        map: this.map,
+                    });
+                })
+            }
 
         },
         updateMapFromAlpine: function () {

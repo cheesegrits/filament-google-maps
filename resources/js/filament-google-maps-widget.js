@@ -8,6 +8,7 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
         mapEl: null,
         data: null,
         markers: [],
+        layers: [],
         clusterer: null,
 
         loadGMaps: function () {
@@ -60,6 +61,14 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             this.createClustering();
 
             this.map.fitBounds(this.bounds);
+        },
+        createLayers: function () {
+            this.layers = config.layers.map((layerUrl) => {
+                return new google.maps.KmlLayer({
+                    url: layerUrl,
+                    map: this.map,
+                });
+            })
         },
         createMarkers: function () {
             this.markers = this.data.map((location, i) => {

@@ -25,6 +25,8 @@ class FilamentGoogleMap extends Field
     protected Closure|bool $clickable = false;
 
     protected Closure|array $mapControls = [];
+	
+    protected Closure|array $kmlLayers = [];
 
     protected Closure|string $height = '350px';
 
@@ -229,6 +231,21 @@ class FilamentGoogleMap extends Field
         return json_encode(array_merge($this->controls, $controls), JSON_THROW_ON_ERROR);
     }
 
+	public function kmlLayers(Closure|array $layers): static
+	{
+		$this->kmlLayers = $layers;
+
+		return $this;
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function getKmlLayers(): array
+	{
+		return $this->evaluate($this->kmlLayers);
+	}
+
     private function getTopComponent(Component $component): Component
     {
         $parentComponent = $component->getContainer()->getParentComponent();
@@ -297,6 +314,7 @@ class FilamentGoogleMap extends Field
                 'defaultLocation'     => $this->getDefaultLocation(),
                 'statePath'           => $this->getStatePath(),
                 'controls'            => $this->getMapControls(),
+				'kmlLayers'           => $this->getKmlLayers(),
                 'gmaps'               => $gmaps,
             ])
         );

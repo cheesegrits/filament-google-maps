@@ -26,6 +26,8 @@ class FilamentGoogleMapsWidget extends Widgets\Widget
 
     protected static ?bool $clustering = true;
 
+	protected static array $layers = [];
+
     protected static string $view = 'filament-google-maps::widgets.filament-google-maps-widget';
 
     public array $controls = [
@@ -95,6 +97,11 @@ class FilamentGoogleMapsWidget extends Widgets\Widget
         return static::$clustering;
     }
 
+	protected function getLayers(): array
+	{
+		return static::$layers;
+	}
+
     public function getMapConfig(): string
     {
         $gmaps = 'https://maps.googleapis.com/maps/api/js'
@@ -105,6 +112,7 @@ class FilamentGoogleMapsWidget extends Widgets\Widget
         return json_encode(
             array_merge($this->mapConfig, [
                 'clustering' => self::getClustering(),
+				'layers' => self::getLayers(),
                 'controls'  => $this->controls,
                 'gmaps' => $gmaps,
             ])
