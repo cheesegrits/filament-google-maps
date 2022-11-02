@@ -16,7 +16,7 @@ class FilamentGoogleMap extends Field
 
     protected int $precision = 8;
 
-    protected array|Closure|null $defaultLocation;
+    protected array|Closure|null $defaultLocation = [0, 0];
 
     protected Closure|int $defaultZoom = 8;
 
