@@ -395,6 +395,8 @@ If any of your address data is joined, like say you have a 'states' table, you c
 in dotted notation, like 'states.state_full_name', where the first part (states) is the
 name of the relationship on your model.
 
+The command will select all records from your table where either the lat or lng fields
+are empty (0, null or empty string);
 
 <!-- ROADMAP -->
 ## Roadmap
