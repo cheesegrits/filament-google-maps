@@ -96,7 +96,7 @@ All use of the Google Maps API requires an API key.  If you don't have one, refe
 Once you have a key, either add it to your .env file as:
 
 ```php
-FILAMENT_GOOGLE_MAPS_KEY=your_map_key_here
+GOOGLE_MAPS_API_KEY=your_map_key_here
 ```
 ... or publish and edit the filament-google-maps.php config file.  We recommend using
 an environment variable.
