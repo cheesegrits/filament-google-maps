@@ -304,6 +304,7 @@ the FilamentGoogleMapsTableWidget, and add standard Filament table methods:
 <!-- ROADMAP -->
 ## Roadmap
 
+- [ ] Add option for which cache store to use for static maps
 - [ ] Add Artisan commands for geocoding / reverse geocoding tables, useful when source tables have addreeses but no coords, or vice versa
 - [ ] Add optional request signing of API calls
 - [ ] Add more geocoding options for form fields, for individual address components (street, city, zip, etc)
@@ -345,7 +346,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@@cheesegrits](https://twitter.com/@cheesegrits) - hugh.messenger@gmail.com
+Hugh Messenger - [@cheesegrits](https://twitter.com/@cheesegrits) - hugh.messenger@gmail.com
 
 Project Link: [https://github.com/cheesegrits/filament-google-maps](https://github.com/cheesegrits/filament-google-maps)
 
@@ -356,9 +357,9 @@ Project Link: [https://github.com/cheesegrits/filament-google-maps](https://gith
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* []()
-* []()
-* []()
+* [Filament PHP](https://filamentphp.com)
+* [Laravel](https://laravel.com)
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
