@@ -65,7 +65,7 @@ and standalone pages, with no need to publish anything or modify your project.
 ### Preparing Models
 
 To simplify working with coordinate data, we require a computed property on any model
-being used for map data, which converts between separate lat and lng fields on the table,
+being used for map data, which converts between separate lat and lng fields on your table,
 and a Google Point style array of 'lat' and 'lng' keys.
 
 To prepare your model, use the Artisan command:
@@ -74,19 +74,18 @@ To prepare your model, use the Artisan command:
 php artisan filament-google-maps:model-code
 ```
 
-... which will prompt you for your model class, the computed property name (such as 'location',
-which will be the name you use for map fields and columns), and the lat and lng field names (model attributes)
-on your table.  It will then spit out the code for you to copy and paste to your model class.
+... which will prompt you for:
 
-### Publish the configuration
+- model: your model class, such as Places, or Dealerships/Dealership
+- lat: your latitude attribute (existing table field) 
+- lng: your longitude attribute (existing table field)
+- location: the computed property name, which **should not exist** on your table
 
-You may publish the package configuration, in order to set your key in the next step,
-although this can be done with an environment variable, so is not required.
+The 'location' computed attribute is what you will use when you make() your map
+fields and columns.  If you have no religious preference and it doesn't already
+exist on your table, just use 'location'.
 
-```sh
-php artisan vendor:publish --tag="filament-google-maps-config"
-```
-... which can then be found in ./config/filament-google-maps.php
+It will then spit out the code for you to copy and paste to your model class.
 
 ### Setting your Google Maps API Key
 
@@ -100,6 +99,16 @@ GOOGLE_MAPS_API_KEY=your_map_key_here
 ```
 ... or publish and edit the filament-google-maps.php config file.  We recommend using
 an environment variable.
+
+### Publish the configuration
+
+You may optionally publish the package configuration, if you would rather set your API key
+directly rather than using a .env variable.
+
+```sh
+php artisan vendor:publish --tag="filament-google-maps-config"
+```
+... which can then be found in ./config/filament-google-maps.php
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -124,7 +133,9 @@ The name used for make() must be the one you set up as your model's computed loc
 property.  Note that you can have multiple maps on a form, by adding a second computed
 property referencing a second pair of lat/lng fields.
 
-The full set of options is as follows:
+#### Full Options
+
+The full set of options is as follows.  All option methods support closures, as well as direct values.
 
 ```php
 FilamentGoogleMap::make('location')
@@ -145,15 +156,51 @@ FilamentGoogleMap::make('location')
     ->draggable() // allow dragging to move marker
     ->clickable(false) // allow clicking to move marker
 ```
+The mapControls without comments are standard Google Maps controls, refer to
+the [API documentation](https://developers.google.com/maps/documentation/javascript/controls).
 
-All option methods support closures, as well as direct values.
+#### Reactive Form Fields
+
+If you want the map marker to react to changes in the lat or lng fields on your form:
+
+```php
+    Forms\Components\TextInput::make('latitude')
+        ->reactive()
+        ->afterStateUpdated(function ($state, callable $get, callable $set) {
+            $set('location', [
+                'lat' => floatVal($state),
+                'lng' => floatVal($get('longitude')),
+            ]);
+        })
+        ->lazy(), // important to use lazy, to avoid updates as you type
+    Forms\Components\TextInput::make('longitude')
+        ->reactive()
+        ->afterStateUpdated(function ($state, callable $get, callable $set) {
+            $set('location', [
+                'lat' => floatval($get('latitude')),
+                'lng' => floatVal($state),
+            ]);
+        })
+        ->lazy(), // important to use lazy, to avoid updates as you type
+```
+
+If you wish to update your lat and lng fields on the form when the map marker is moved:
+
+```php
+    FilamentGoogleMap::make('location')
+        ->reactive()
+        ->afterStateUpdated(function ($state, callable $get, callable $set) {
+            $set('latitude', $state['lat']);
+            $set('longitude', $state['lng']);
+        }),
+```
 
 ### Table Column
 
 The table column displays a static Google map image.  The images are created on the
 server side through calls to the Maps API, and cached locally on the server (using
 Laravel's default cache driver) for a default of 30 days, to prevent excessive API usage.
-See the warning at the top of this page about API usage.
+**See the warning at the top of this page about API usage**.
 
 ```php
 use Cheesegrits\FilamentGoogleMaps\Columns\FilamentGoogleMapColumn;
@@ -173,7 +220,7 @@ FilamentGoogleMapColumn::make('location')
     ->zoom(15) // API setting for zoom (1 through 20)
     ->ttl(60 * 60 * 24 * 30), // number of seconds to cache image before refetching from API
 ```
-NOTE that options marked as 'API Setting' are used as part of the cache key, so changing
+**NOTE** that options marked as 'API Setting' are used as part of the cache key, so changing
 any of these will force a cache refresh for all images in the table (as they are displayed).
 
 ### Map Widget
@@ -181,9 +228,9 @@ any of these will force a cache refresh for all images in the table (as they are
 The map widget can be used either in the Filament Admin panel (see Filament docs), or
 standalone as a normal Livewire component.
 
-Here is An example of using the widget on a front end dashboard.  Create a component somewhere
+Here is an example of using the widget on a front end dashboard.  Create a component somewhere
 in your Livewire folder, like ./Http/Livewire/Widgets/Dealerships.php, which extends the
-FilamentGoogleMapsWidget class:
+FilamentGoogleMapsWidget class.
 
 ```php
 <?php
@@ -209,6 +256,11 @@ class DealershipMap extends FilamentGoogleMapsWidget
         {
             if ($dealership->latitude && $dealership->longitude)
             {
+                /**
+                 * Each element in the returned data must be an array
+                 * containing a 'location' array of 'lat' and 'lng',
+                 * and a 'label' string.
+                 */
                 $data[] = [
                     'location'  => [
                         'lat' => $dealership->latitude,
@@ -235,7 +287,9 @@ class DealershipMap extends FilamentGoogleMapsWidget
     </div>
 ```
 
-You can render your labels as a Blade templates, and provide an optional icon ...
+Optionally you can render your labels with Blade templates (see the Google
+API docs for restrictions on what HTML markup and styling you can use), and
+provide an icon ...
 
 ```php
                 $data[] = [
@@ -256,6 +310,11 @@ You can render your labels as a Blade templates, and provide an optional icon ..
                         'type' => 'svg',
                         'scale' => [35,35],
                     ],
+                    // ... or png, which doesn't support scaling ...             
+//                    'icon' => [
+//                        'url' => url('images/dealership.png'),
+//                        'type' => 'png',
+//                    ]
                 ]; 
 ```
 
@@ -298,6 +357,8 @@ the FilamentGoogleMapsTableWidget, and add standard Filament table methods:
     }
 
 ```
+
+Anything you can do in normal Filament tables, you can do in this table.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
