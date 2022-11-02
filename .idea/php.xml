@@ -120,6 +120,7 @@
       <path value="$PROJECT_DIR$/vendor/php-http/promise" />
       <path value="$PROJECT_DIR$/vendor/php-http/message-factory" />
       <path value="$PROJECT_DIR$/vendor/spatie/guzzle-rate-limiter-middleware" />
+      <path value="$PROJECT_DIR$/vendor/illuminate/config" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">

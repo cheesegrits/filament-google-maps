@@ -391,12 +391,12 @@ Or you can skip the hand holding and issue it as ...
 php artisan filament-google-maps:geocode Location --fields=street,city,state,zip --lat=lat --lng=lng --rate-limit=100
 
 ```
-If any of your address data is joined, like say you have a 'states' table, you can specify that
-in dotted notation, like 'states.state_full_name', where the first part (states) is the
-name of the relationship on your model.
+If any of your address data is a join relationship, like say you have a 'states' table and the 'state'
+field is a foreign key, you can specify that in dotted notation, like 'states.state_full_name', where the first part
+(states) is the **name of the relationship** on your model.
 
 The command will select all records from your table where either the lat or lng fields
-are empty (0, null or empty string);
+are empty (0, null or empty string).
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -404,6 +404,7 @@ are empty (0, null or empty string);
 - [ ] Add option for which cache store to use for static maps
 - [ ] Add Artisan commands for geocoding / reverse geocoding tables, useful when source tables have addreeses but no coords, or vice versa
 - [ ] Add optional request signing of API calls
+- [ ] Add KML layers to field and widget
 - [ ] Add more geocoding options for form fields, for individual address components (street, city, zip, etc)
 - [ ] Write test suite
 

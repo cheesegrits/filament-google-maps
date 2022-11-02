@@ -11,7 +11,8 @@
         "guzzlehttp/guzzle": "^7.5",
         "geocoder-php/google-maps-provider": "^4.7",
         "php-http/guzzle7-adapter": "^1.0",
-        "spatie/guzzle-rate-limiter-middleware": "^2.0"
+        "spatie/guzzle-rate-limiter-middleware": "^2.0",
+        "illuminate/config": "^9.38"
     },
     "autoload": {
         "psr-4": {

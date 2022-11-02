@@ -60,9 +60,9 @@ class Geocode extends Command
                 'lat'
             );
 
-        $lng = $this->option('lat')
+        $lng = $this->option('lng')
             ?? $this->askRequired(
-                'Name of latitude element on table (e.g. `latitude`)',
+                'Name of longitude element on table (e.g. `latitude`)',
                 'fields'
             );
 
