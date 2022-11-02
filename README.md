@@ -410,8 +410,6 @@ Rather than explain it all, here as an example terminal session ...
   <summary> (<i>click to expand</i>)</summary>
   <!-- have to be followed by an empty line! -->
 
-## *formatted* **heading** with [a](link)
-
 ```sh
 fgm> php artisan filament-google-maps:reverse-geocode Location
 
