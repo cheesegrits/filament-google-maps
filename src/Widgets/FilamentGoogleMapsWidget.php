@@ -26,6 +26,8 @@ class FilamentGoogleMapsWidget extends Widgets\Widget
 
 	protected static ?bool $clustering = true;
 
+	protected static ?bool $fitToBounds = true;
+
 	protected static ?int $zoom = null;
 
 	protected static array $layers = [];
@@ -49,6 +51,7 @@ class FilamentGoogleMapsWidget extends Widgets\Widget
 			'lng' => 44.2171392,
 		],
 		'zoom'       => 8,
+		'fit'        => true,
 		'gmaps'      => '',
 		'clustering' => true,
 	];
@@ -103,6 +106,11 @@ class FilamentGoogleMapsWidget extends Widgets\Widget
 		return static::$clustering;
 	}
 
+	protected function getFitToBounds(): ?bool
+	{
+		return static::$fitToBounds;
+	}
+
 	protected function getLayers(): array
 	{
 		return static::$layers;
@@ -121,6 +129,7 @@ class FilamentGoogleMapsWidget extends Widgets\Widget
 				'layers'     => $this->getLayers(),
 				'zoom'       => $this->getZoom(),
 				'controls'   => $this->controls,
+				'fit'        => $this->getFitToBounds(),
 				'gmaps'      => $gmaps,
 			])
 		);
