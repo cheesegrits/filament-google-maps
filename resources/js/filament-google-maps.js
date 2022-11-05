@@ -41,6 +41,10 @@ window.filamentGoogleMaps = ($wire, config) => {
         createMap: function () {
             window.filamentGoogleMapsAPILoaded = true;
 
+            if (config.autocompleteReverse || Object.keys(config.geocodeFields).length > 0) {
+                this.geocoder = new google.maps.Geocoder();
+            }
+
             let position = this.getCoordinates();
 
             this.map = new google.maps.Map(this.mapEl, {
@@ -62,6 +66,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                     this.markerLocation = event.latLng.toJSON();
                     this.setCoordinates(this.markerLocation);
                     this.updateAutocomplete(this.markerLocation);
+                    this.updateGeocode(this.markerLocation);
                     //this.updateMap(this.markerLocation);
                     this.map.panTo(this.markerLocation);
                 });
@@ -72,6 +77,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                     this.markerLocation = event.latLng.toJSON();
                     this.setCoordinates(this.markerLocation);
                     this.updateAutocomplete(this.markerLocation);
+                    this.updateGeocode(this.markerLocation);
                     // this.updateMap(this.markerLocation);
                     this.map.panTo(this.markerLocation);
                 });
@@ -95,10 +101,6 @@ window.filamentGoogleMaps = ($wire, config) => {
 
 
             if (config.autocomplete) {
-                if (config.autocompleteReverse) {
-                    this.geocoder = new google.maps.Geocoder();
-                }
-
                 const geoComplete = document.getElementById(config.autocomplete);
 
                 if (geoComplete) {
@@ -160,6 +162,29 @@ window.filamentGoogleMaps = ($wire, config) => {
             this.marker.setPosition(position);
             this.map.panTo(position);
         },
+        updateGeocode: function (position) {
+            if (Object.keys(config.geocodeFields).length > 0) {
+                this.geocoder
+                    .geocode({location: position})
+                    .then((response) => {
+                        if (response.results[0]) {
+                            //$wire.set(config.autocomplete, response.results[0].formatted_address);
+                            const replacements = this.getReplacements(response.results[0].address_components);
+
+                            for (const field in config.geocodeFields) {
+                                let replaced = config.geocodeFields[field];
+
+                                for (const replacement in replacements) {
+                                    replaced = replaced.split(replacement).join(replacements[replacement]);
+                                }
+
+                                $wire.set(field, replaced)
+                            }
+
+                        }
+                    })
+            }
+        },
         updateAutocomplete: function (position) {
             if (config.autocomplete && config.autocompleteReverse) {
                 this.geocoder
@@ -181,5 +206,43 @@ window.filamentGoogleMaps = ($wire, config) => {
             }
             return location;
         },
+
+        getReplacements: function (address_components) {
+            var symbols = {
+                '%n': ["street_number"],
+                '%z': ["postal_code"],
+                '%S': ["street_address", "route"],
+                '%A1': ["administrative_area_level_1"],
+                '%A2': ["administrative_area_level_2"],
+                '%A3': ["administrative_area_level_3"],
+                '%A4': ["administrative_area_level_4"],
+                '%A5': ["administrative_area_level_5"],
+                '%a1': ["administrative_area_level_1"],
+                '%a2': ["administrative_area_level_2"],
+                '%a3': ["administrative_area_level_3"],
+                '%a4': ["administrative_area_level_4"],
+                '%a5': ["administrative_area_level_5"],
+                '%L': ["locality"],
+                '%D': ["sublocality"],
+                '%C': ["country"],
+                '%c': ["country"],
+            };
+
+            var replacements = {};
+
+            address_components.forEach(component => {
+                for (const symbol in symbols) {
+                    if (symbols[symbol].indexOf(component.types[0]) !== -1) {
+                        if (symbol  === symbol.toLowerCase()) {
+                            replacements[symbol] = component.short_name;
+                        } else {
+                            replacements[symbol] = component.long_name;
+                        }
+                    }
+                }
+            });
+
+            return replacements;
+        }
     }
 }
