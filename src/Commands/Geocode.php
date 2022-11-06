@@ -50,7 +50,7 @@ class Geocode extends Command
 
         $fields = $this->option('fields')
             ?? $this->askRequired(
-                'Comma separated list oif fields to concatenate for the address (e.g. `address,city,state`)',
+                'Comma separated list of fields to concatenate for the address (e.g. `address,city,state`)',
                 'fields'
             );
 
@@ -62,7 +62,7 @@ class Geocode extends Command
 
         $lng = $this->option('lng')
             ?? $this->askRequired(
-                'Name of longitude element on table (e.g. `latitude`)',
+                'Name of longitude element on table (e.g. `longitude`)',
                 'fields'
             );
 
