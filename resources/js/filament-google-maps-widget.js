@@ -62,7 +62,19 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
 
             this.createLayers();
 
-            config.fit && this.map.fitBounds(this.bounds);
+            this.show();
+        },
+        show: function () {
+            if (config.fit) {
+                this.map.fitBounds(this.bounds);
+            }
+            else
+            {
+                if (this.markers.length > 0)
+                {
+                    this.map.setCenter(this.markers[0].getPosition());
+                }
+            }
         },
         createLayers: function () {
             this.layers = config.layers.map((layerUrl) => {
@@ -136,7 +148,7 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             this.removeMarkers();
             this.createMarkers();
             this.updateClustering();
-            config.fit && this.map.fitBounds(this.bounds);
+            this.show();
         },
 
         fetchData: async function () {
