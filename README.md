@@ -153,6 +153,13 @@ FilamentGoogleMap::make('location')
     ->defaultZoom(5) // default zoom level when opening form
     ->autocomplete('full_address') // field on form to use as Places geocompletion field
     ->autocompleteReverse(true) // reverse geocode marker location to autocomplete field
+    ->reverseGeocode([
+        'street' => '%n %S',
+        'city' => '%L',
+        'state' => '%A1',
+        'zip' => '%z',
+    ]) // reverse geocode marker location to form fields, see notes below
+    ->debug() // prints reverse geocode format strings to the debug console 
     ->defaultLocation([39.526610, -107.727261]) // default for new forms
     ->draggable() // allow dragging to move marker
     ->clickable(false) // allow clicking to move marker
@@ -160,9 +167,40 @@ FilamentGoogleMap::make('location')
 The mapControls without comments are standard Google Maps controls, refer to
 the [API documentation](https://developers.google.com/maps/documentation/javascript/controls).
 
+### Geocompletion
+
+The autocomplete('field_name') option turns the field name you give it into a Google Places geocomplete
+field, which suggests locations as you type.  Selecting a suggestion will move the marker on the 
+map.
+
+If you specify autocompleteReverse(), moving the map marker will update the field specified
+in autocomplete() with the reverse geocoded address (using the formatted_address component from Google).
+
+### Reverse Geocoding
+
+The reverseGeocode() option lets you specify a list of field names from your form, with corresponding
+format strings for decoding the address component response from Google. We use the printf() style formatting
+defined by [Geocoder PHP](https://github.com/geocoder-php/Geocoder#formatters) as follows:
+
+* Street Number: %n
+* Street Name: %S
+* City (Locality): %L
+* City District (Sub-Locality): %D
+* Zipcode (Postal Code): %z
+* Admin Level Name: %A1, %A2, %A3, %A4, %A5
+* Admin Level Code: %a1, %a2, %a3, %a4, %a5
+* Country: %C
+* Country Code: %c
+
+To help you figure out the format strings you need, you can set debug() on the map
+field, which will console.log() the response from each reverse geocode event (e.g. whenever
+you move the marker).
+
+![Reverse Geocode format string debug](images/debug.png)
+
 #### Reactive Form Fields
 
-If you want the map marker to react to changes in the lat or lng fields on your form:
+If you want the map marker to react to changes to lat or lng fields on your form:
 
 ```php
     Forms\Components\TextInput::make('latitude')
@@ -516,11 +554,11 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Add option for which cache store to use for static maps
-- [ ] Add Artisan commands for geocoding / reverse geocoding tables, useful when source tables have addreeses but no coords, or vice versa
+- [x] Add option for which cache store to use for static maps
+- [x] Add Artisan commands for geocoding / reverse geocoding tables, useful when source tables have addreeses but no coords, or vice versa
 - [ ] Add optional request signing of API calls
-- [ ] Add KML layers to field and widget
-- [ ] Add more geocoding options for form fields, for individual address components (street, city, zip, etc)
+- [x] Add KML layers to field and widget
+- [x] Add more geocoding options for form fields, for individual address components (street, city, zip, etc)
 - [ ] Write test suite
 
 <!-- ISSUES -->

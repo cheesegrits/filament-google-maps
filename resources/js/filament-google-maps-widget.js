@@ -10,13 +10,33 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
         markers: [],
         layers: [],
         clusterer: null,
+        config: {
+            center: {
+                lat: 0,
+                lng: 0
+            },
+            clustering: false,
+            controls: {
+                mapTypeControl: true,
+                scaleControl: true,
+                streetViewControl: true,
+                rotateControl: true,
+                fullscreenControl: true,
+                searchBoxControl: false,
+                zoomControl: false,
+            },
+            fit: true,
+            gmaps: '',
+            layers: [],
+            zoom: 12,
+        },
 
         loadGMaps: function () {
             if (!document.getElementById('filament-google-maps-widget-google-maps-js')) {
                 const script = document.createElement('script');
                 script.id = 'filament-google-maps-widget-google-maps-js';
                 window.filamentGoogleMapsAsyncLoad = this.createMap.bind(this);
-                script.src = config.gmaps + '&callback=filamentGoogleMapsAsyncLoad';
+                script.src = this.config.gmaps + '&callback=filamentGoogleMapsAsyncLoad';
                 document.head.appendChild(script);
             } else {
                 const waitForGlobal = function (key, callback) {
@@ -38,6 +58,7 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
         init: function (data, mapEl) {
             this.mapEl = document.getElementById(mapEl) || mapEl;
             this.data = data;
+            this.config = {...this.config, config};
             this.loadGMaps();
         },
 
@@ -49,9 +70,9 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             });
 
             this.map = new google.maps.Map(this.mapEl, {
-                center: config.center,
-                zoom: config.zoom,
-                ...config.controls
+                center: this.config.center,
+                zoom: this.config.zoom,
+                ...this.config.controls
             });
 
             this.bounds = new google.maps.LatLngBounds();
@@ -65,19 +86,16 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             this.show();
         },
         show: function () {
-            if (config.fit) {
+            if (this.config.fit) {
                 this.map.fitBounds(this.bounds);
-            }
-            else
-            {
-                if (this.markers.length > 0)
-                {
+            } else {
+                if (this.markers.length > 0) {
                     this.map.setCenter(this.markers[0].getPosition());
                 }
             }
         },
         createLayers: function () {
-            this.layers = config.layers.map((layerUrl) => {
+            this.layers = this.config.layers.map((layerUrl) => {
                 return new google.maps.KmlLayer({
                     url: layerUrl,
                     map: this.map,
@@ -85,7 +103,7 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             })
         },
         createMarkers: function () {
-            this.markers = this.data.map((location, i) => {
+            this.markers = this.data.map((location) => {
                 let markerIcon;
 
                 if (location.icon && typeof location.icon === 'object') {
@@ -129,7 +147,7 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             this.markers = [];
         },
         createClustering: function () {
-            if (config.clustering) {
+            if (this.config.clustering) {
                 // use default algorithm and renderer
                 this.clusterer = new MarkerClusterer({
                     map: this.map,
@@ -138,7 +156,7 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             }
         },
         updateClustering: function () {
-            if (config.clustering) {
+            if (this.config.clustering) {
                 this.clusterer.clearMarkers();
                 this.clusterer.addMarkers(this.markers);
             }
@@ -149,11 +167,6 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             this.createMarkers();
             this.updateClustering();
             this.show();
-        },
-
-        fetchData: async function () {
-            const response = await fetch('/cheesegrits/filament-google-maps/')
-            return response.json();
         }
     }
 }

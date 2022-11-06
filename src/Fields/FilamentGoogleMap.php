@@ -30,33 +30,40 @@ class FilamentGoogleMap extends Field
 
 	protected Closure|string $height = '350px';
 
-	protected Closure|string|bool $autocomplete = false;
+	protected Closure|string|null $autocomplete = null;
 
-	protected Closure|string|bool $autocompleteReverse = false;
+	protected Closure|bool $autocompleteReverse = false;
 
-	protected Closure|array $geocodeFields = [];
+	protected Closure|array $reverseGeocode = [];
 
-	protected Closure|string|bool $geocodeFieldsReverse = false;
-
-
-	private array $componentTree = [];
+	protected Closure|bool $debug = false;
 
 	/**
 	 * Main field config variables
 	 * @var array
 	 */
 	private array $mapConfig = [
-		'statePath'           => '',
-		'draggable'           => true,
-		'defaultLocation'     => [
+		'autocomplete'         => false,
+		'autocompleteReverse'  => false,
+		'draggable'            => true,
+		'clickable'            => false,
+		'defaultLocation'      => [
 			'lat' => 15.3419776,
 			'lng' => 44.2171392,
 		],
-		'defaultZoom'         => 8,
-		'gmaps'               => '',
-		'autocomplete'        => false,
-		'autocompleteReverse' => false,
+		'controls'             => [],
+		'statePath'            => '',
+		'layers'               => [],
+		'defaultZoom'          => 8,
+		'reverseGeocodeFields' => [],
+		'debug'                => false,
+		'gmaps'                => '',
 	];
+
+
+//	protected Closure|string|bool $geocodeFieldsReverse = false;
+
+	private array $componentTree = [];
 
 	public array $controls = [
 		'mapTypeControl'    => true,
@@ -106,11 +113,11 @@ class FilamentGoogleMap extends Field
 	/**
 	 * If autocomplete() is enabled, this will enable reverse geocoding for that field.
 	 *
-	 * @param Closure|string $autoCompleteReverse
+	 * @param Closure|bool $autoCompleteReverse
 	 *
 	 * @return $this
 	 */
-	public function autocompleteReverse(Closure|string $autoCompleteReverse): static
+	public function autocompleteReverse(Closure|bool $autoCompleteReverse = true): static
 	{
 		$this->autocompleteReverse = $autoCompleteReverse;
 
@@ -122,16 +129,16 @@ class FilamentGoogleMap extends Field
 		return $this->evaluate($this->autocompleteReverse);
 	}
 
-	public function geocodeFields(Closure|array $geocodeFields): static
+	public function reverseGeocode(Closure|array $reverseGeocode): static
 	{
-		$this->geocodeFields = $geocodeFields;
+		$this->reverseGeocode = $reverseGeocode;
 
 		return $this;
 	}
 
-	public function getGeocodeFields(): array
+	public function getReverseGeocode(): array
 	{
-		$fields = $this->evaluate($this->geocodeFields);
+		$fields     = $this->evaluate($this->reverseGeocode);
 		$flatFields = $this->getFlatFields();
 		$statePaths = [];
 
@@ -226,6 +233,26 @@ class FilamentGoogleMap extends Field
 	}
 
 	/**
+	 * Prints out reverse geocode components on the debug console, useful for figuring out the format
+	 * strings to use.
+	 *
+	 * @param Closure|bool $debug
+	 *
+	 * @return $this
+	 */
+	public function debug(Closure|bool $debug = true): static
+	{
+		$this->debug = $debug;
+
+		return $this;
+	}
+
+	public function getDebug(): bool
+	{
+		return $this->evaluate($this->debug);
+	}
+
+	/**
 	 * Sets whether clicking on the map sets the marker location, can be used by itself or in conjunction with
 	 * draggable, default is false
 	 *
@@ -233,7 +260,7 @@ class FilamentGoogleMap extends Field
 	 *
 	 * @return $this
 	 */
-	public function clickable(Closure|bool $clickable = false): static
+	public function clickable(Closure|bool $clickable = true): static
 	{
 		$this->clickable = $clickable;
 
@@ -343,16 +370,18 @@ class FilamentGoogleMap extends Field
 
 		$config = json_encode(
 			array_merge($this->mapConfig, [
-				'autocomplete'        => $this->getAutocompleteId(),
-				'autocompleteReverse' => $this->getAutocompleteReverse(),
-				'draggable'           => $this->getDraggable(),
-				'clickable'           => $this->getClickable(),
-				'defaultLocation'     => $this->getDefaultLocation(),
-				'statePath'           => $this->getStatePath(),
-				'controls'            => $this->getMapControls(),
-				'layers'              => $this->getLayers(),
-				'geocodeFields'       => $this->getGeocodeFields(),
-				'gmaps'               => $gmaps,
+				'autocomplete'         => $this->getAutocompleteId(),
+				'autocompleteReverse'  => $this->getAutocompleteReverse(),
+				'draggable'            => $this->getDraggable(),
+				'clickable'            => $this->getClickable(),
+				'defaultLocation'      => $this->getDefaultLocation(),
+				'statePath'            => $this->getStatePath(),
+				'controls'             => $this->getMapControls(),
+				'layers'               => $this->getLayers(),
+				'reverseGeocodeFields' => $this->getReverseGeocode(),
+				'defaultZoom'          => $this->getDefaultZoom(),
+				'debug'                => $this->getDebug(),
+				'gmaps'                => $gmaps,
 			])
 		);
 

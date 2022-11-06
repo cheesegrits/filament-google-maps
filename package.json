@@ -13,6 +13,7 @@
     "production": "mix --production"
   },
   "devDependencies": {
+    "@types/googlemaps": "^3.43.3",
     "laravel-mix": "^6.0.6",
     "postcss": "^8.1.14"
   },
