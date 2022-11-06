@@ -41,7 +41,7 @@ to reduce API overhead.
 
 ![Filament Google Maps Column](images/table-map.png)
 
-The FilamentGoogleMapsRadiusFilter provides radius filtering against geocomplete address,
+The **FilamentGoogleMapsRadiusFilter** provides radius filtering against geocomplete address,
 in kilometers or miles.
 
 ![Filament Google Maps Radius Filter](images/radius.png)
