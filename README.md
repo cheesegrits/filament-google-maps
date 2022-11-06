@@ -21,8 +21,8 @@ We are not liable if you get a surprise bill!
 ### Components
 
 The **FilamentGoogleMaps** field displays (unsurprisingly) a Google map, with a comprehensive set of configuration
-options.  It supports coordinate updating both ways between map and form, as well as forward and reverse
-geocoding.
+options.  It supports coordinate updating both ways between map and form, forward and revese geocompletion, reverse
+geocoding and KML layers.
 
 ![Filament Google Maps Form](images/form-map.png)
 
@@ -40,6 +40,11 @@ The **FilamentGoogleMapsColumn** displays a customizable static map image, with 
 to reduce API overhead.
 
 ![Filament Google Maps Column](images/table-map.png)
+
+The Artisan commands allow you to do batch processing on your location tables, either geocoding
+a combination of address fields into lat lng, or reverse geocoding lat and lng to address fields.
+
+![Filament Google Maps Artisan command](images/artisan.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

@@ -72,7 +72,8 @@ class Geocode extends Command
         {
             $rateLimit = (int) $this->askRequired(
                 'Rate limit as API calls per minute (max 300)',
-                'rate-limit'
+                'rate-limit',
+	                '150',
             );
         }
 
