@@ -3,6 +3,7 @@
 namespace Cheesegrits\FilamentGoogleMaps;
 
 use Cheesegrits\FilamentGoogleMaps\Controllers\FilamentGoogleMapAssets;
+use Cheesegrits\FilamentGoogleMaps\Widgets\FilamentGoogleMapsTableWidget;
 use Cheesegrits\FilamentGoogleMaps\Widgets\FilamentGoogleMapsWidget;
 use Filament\PluginServiceProvider;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,7 @@ class FilamentGoogleMapsServiceProvider extends PluginServiceProvider
 {
     protected array $widgets = [
         FilamentGoogleMapsWidget::class,
+        FilamentGoogleMapsTableWidget::class,
     ];
 
     public function configurePackage(Package $package): void

@@ -41,6 +41,12 @@ to reduce API overhead.
 
 ![Filament Google Maps Column](images/table-map.png)
 
+The FilamentGoogleMapsRadiusFilter provides radius filtering against geocomplete address,
+in kilometers or miles.
+
+![Filament Google Maps Radius Filter](images/radius.png)
+
+
 The **Artisan commands** allow you to do batch processing on your location tables, either geocoding
 a combination of address fields into lat lng, or reverse geocoding lat and lng to address fields.
 
@@ -266,6 +272,21 @@ FilamentGoogleMapColumn::make('location')
 ```
 **NOTE** that options marked as 'API Setting' are used as part of the cache key, so changing
 any of these will force a cache refresh for all images in the table (as they are displayed).
+
+### Radius Filtering
+
+The radius filter allows you to specify an address (using a geocomplete dropdown),
+a numeric distance and an optional unit selection, and the table will be filtered to records
+within the specified distance of that address.
+
+```php
+    FilamentGoogleMapsRadiusFilter::make('radius')
+        ->latitude('lat') // latitude field on your table
+        ->longitude('lng') // longitude field on your table
+        ->selectUnit() // add a Kilometer / Miles select
+        ->kilometers() // use (or default the select to) kilometers
+        ->section('Radius Search') // wrap the filter in a section with heading
+```
 
 ### Map Widget
 
