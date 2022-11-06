@@ -41,7 +41,7 @@ to reduce API overhead.
 
 ![Filament Google Maps Column](images/table-map.png)
 
-The Artisan commands allow you to do batch processing on your location tables, either geocoding
+The **Artisan commands** allow you to do batch processing on your location tables, either geocoding
 a combination of address fields into lat lng, or reverse geocoding lat and lng to address fields.
 
 ![Filament Google Maps Artisan command](images/artisan.png)
