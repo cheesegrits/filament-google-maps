@@ -58,7 +58,7 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
         init: function (data, mapEl) {
             this.mapEl = document.getElementById(mapEl) || mapEl;
             this.data = data;
-            this.config = {...this.config, config};
+            this.config = {...this.config, ...config};
             this.loadGMaps();
         },
 
