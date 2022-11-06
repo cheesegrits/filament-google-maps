@@ -24,7 +24,7 @@ The **FilamentGoogleMaps** field displays (unsurprisingly) a Google map, with a 
 options.  It supports coordinate updating both ways between map and form, forward and revese geocompletion, reverse
 geocoding and KML layers.
 
-![Filament Google Maps Form](images/form-map.png)
+![Filament Google Maps Form](images/form-map.png | width=450)
 
 The **FilamentGoogleMapsWidget** displays a filterable set of locations from a model, with 
 optional clustering, templatable labels, customizable icons, etc.
@@ -44,7 +44,7 @@ to reduce API overhead.
 The **Artisan commands** allow you to do batch processing on your location tables, either geocoding
 a combination of address fields into lat lng, or reverse geocoding lat and lng to address fields.
 
-![Filament Google Maps Artisan command](images/artisan.png)
+![Filament Google Maps Artisan command](images/artisan.png | width=300)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
