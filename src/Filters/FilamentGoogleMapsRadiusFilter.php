@@ -24,7 +24,7 @@ class FilamentGoogleMapsRadiusFilter extends BaseFilter
 
 	protected bool|Closure|null $selectUnit = false;
 
-	protected string|Closure|null $section = null;
+	protected bool|string|Closure|null $section = null;
 
 
 	protected function setUp(): void
@@ -76,10 +76,11 @@ class FilamentGoogleMapsRadiusFilter extends BaseFilter
 	{
 		$form = [
 			FilamentGoogleGeocomplete::make('geocomplete')
-				->label('Address')
+				->label(__('filament-google-maps::fgm.radius_filter.address'))
 				->filterName($this->getName())
 				->lazy(),
 			TextInput::make('radius')
+				->label(__('filament-google-maps::fgm.radius_filter.distance'))
 				->numeric()
 				->lazy(),
 			Hidden::make('latitude'),
@@ -90,9 +91,10 @@ class FilamentGoogleMapsRadiusFilter extends BaseFilter
 		{
 			$form = array_merge($form, [
 				Select::make('unit')
+					->label(__('filament-google-maps::fgm.radius_filter.unit'))
 					->options([
-						'm' => 'Miles',
-						'k' => 'Kilometers',
+						'm' => __('filament-google-maps::fgm.radius_filter.miles'),
+						'k' => __('filament-google-maps::fgm.radius_filter.kilometers'),
 					])
 					->default(
 						$this->getKilometers() ? 'k' : 'm'
@@ -100,7 +102,7 @@ class FilamentGoogleMapsRadiusFilter extends BaseFilter
 			]);
 		}
 
-		if ($this->getSection())
+		if ($this->hasSection())
 		{
 			$form = [
 				Section::make($this->getSection())->schema($form),
@@ -158,7 +160,7 @@ class FilamentGoogleMapsRadiusFilter extends BaseFilter
 		return $this->evaluate($this->longitude);
 	}
 
-	public function section(string|Closure|null $section): static
+	public function section(bool|string|Closure|null $section = true): static
 	{
 		$this->section = $section;
 
@@ -167,6 +169,18 @@ class FilamentGoogleMapsRadiusFilter extends BaseFilter
 
 	public function getSection(): string|null
 	{
-		return $this->evaluate($this->section);
+		$section = $this->evaluate($this->section);
+
+		if ($section === true)
+		{
+			$section = __('fgm.radius_filter.title');
+		}
+
+		return $section;
+	}
+
+	private function hasSection(): bool
+	{
+		return !empty($this->getSection());
 	}
 }

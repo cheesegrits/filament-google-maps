@@ -2,11 +2,9 @@
 
 namespace Cheesegrits\FilamentGoogleMaps;
 
-use Cheesegrits\FilamentGoogleMaps\Controllers\FilamentGoogleMapAssets;
 use Cheesegrits\FilamentGoogleMaps\Widgets\FilamentGoogleMapsTableWidget;
 use Cheesegrits\FilamentGoogleMaps\Widgets\FilamentGoogleMapsWidget;
 use Filament\PluginServiceProvider;
-use Illuminate\Support\Facades\Route;
 use Spatie\LaravelPackageTools\Package;
 
 class FilamentGoogleMapsServiceProvider extends PluginServiceProvider
@@ -23,7 +21,7 @@ class FilamentGoogleMapsServiceProvider extends PluginServiceProvider
             ->hasCommands($this->getCommands())
             ->hasConfigFile()
             ->hasRoutes(['web'])
-//            ->hasTranslations()
+            ->hasTranslations()
             ->hasViews();
     }
 
