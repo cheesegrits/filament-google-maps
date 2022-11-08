@@ -2,6 +2,7 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Fields;
 
+use Cheesegrits\FilamentGoogleMaps\Helpers\FieldHelper;
 use Closure;
 use Exception;
 use Filament\Forms\Components\Component;
@@ -9,7 +10,7 @@ use Filament\Forms\Components\Contracts\CanConcealComponents;
 use Filament\Forms\Components\Field;
 use JsonException;
 
-class FilamentGoogleMap extends Field
+class Map extends Field
 {
 
 	protected string $view = 'filament-google-maps::fields.filament-google-maps';
@@ -129,6 +130,26 @@ class FilamentGoogleMap extends Field
 		return $this->evaluate($this->autocompleteReverse);
 	}
 
+	/**
+	 * Optionally provide an array of field names and format strings as key and value, if you would like the map to reverse geocode
+	 * address components to individual fields on your form.  See documentation for full explanation of format strings.
+	 * 
+	 * ->reverseGeocode(['street' => '%n %s', 'city' => '%L', 'state' => %A1', 'zip' => '%z'])
+	 *
+	 * Street Number: %n
+	 * Street Name: %S
+	 * City (Locality): %L
+	 * City District (Sub-Locality): %D
+	 * Zipcode (Postal Code): %z
+	 * Admin Level Name: %A1, %A2, %A3, %A4, %A5
+	 * Admin Level Code: %a1, %a2, %a3, %a4, %a5
+	 * Country: %C
+	 * Country Code: %c
+	 * 
+	 * @param Closure|array $reverseGeocode
+	 *
+	 * @return $this
+	 */
 	public function reverseGeocode(Closure|array $reverseGeocode): static
 	{
 		$this->reverseGeocode = $reverseGeocode;
@@ -139,15 +160,15 @@ class FilamentGoogleMap extends Field
 	public function getReverseGeocode(): array
 	{
 		$fields     = $this->evaluate($this->reverseGeocode);
-		$flatFields = $this->getFlatFields();
 		$statePaths = [];
 
 		foreach ($fields as $field => $format)
 		{
+			$fieldId = FieldHelper::getFieldId($field, $this);
 
-			if (array_key_exists($field, $flatFields))
+			if ($fieldId)
 			{
-				$statePaths[$flatFields[$field]->getId()] = $format;
+				$statePaths[] = $format;
 			}
 		}
 
@@ -309,51 +330,45 @@ class FilamentGoogleMap extends Field
 		return $this->evaluate($this->layers);
 	}
 
-	private function getTopComponent(Component $component): Component
+//	private function getTopComponent(Component $component): Component
+//	{
+//		$parentComponent = $component->getContainer()->getParentComponent();
+//
+//		return $parentComponent ? $this->getTopComponent($parentComponent) : $component;
+//	}
+//
+//	public function getFlatFields(): array
+//	{
+//		$topComponent = $this->getTopComponent($this->getContainer()?->getParentComponent());
+//
+//		$flatFields = [];
+//
+//		foreach ($topComponent->getContainer()->getComponents() as $component)
+//		{
+//			foreach ($component->getChildComponentContainers() as $container)
+//			{
+//				if ($container->isHidden())
+//				{
+//					continue;
+//				}
+//
+//				$flatFields = array_merge($flatFields, $container->getFlatFields());
+//			}
+//		}
+//
+//		return $flatFields;
+//	}
+
+	private function getAutocompleteId(): string|null
 	{
-		$parentComponent = $component->getContainer()->getParentComponent();
-
-		return $parentComponent ? $this->getTopComponent($parentComponent) : $component;
-	}
-
-	public function getFlatFields(): array
-	{
-		$topComponent = $this->getTopComponent($this->getContainer()?->getParentComponent());
-
-		$flatFields = [];
-
-		foreach ($topComponent->getContainer()->getComponents() as $component)
-		{
-			foreach ($component->getChildComponentContainers() as $container)
-			{
-				if ($container->isHidden())
-				{
-					continue;
-				}
-
-				$flatFields = array_merge($flatFields, $container->getFlatFields());
-			}
-		}
-
-		return $flatFields;
-	}
-
-	private function getAutocompleteId(): string|false
-	{
-		$autoCompleteId    = false;
 		$autoCompleteField = $this->getAutocomplete();
 
-		if ($autoCompleteField)
+		if (!blank($autoCompleteField))
 		{
-			$flatFields = $this->getFlatFields();
-
-			if (array_key_exists($autoCompleteField, $flatFields))
-			{
-				$autoCompleteId = $flatFields[$autoCompleteField]->getId();
-			}
+			return FieldHelper::getFieldId($autoCompleteField, $this);
 		}
-
-		return $autoCompleteId;
+		
+		return null;
 	}
 
 	/**

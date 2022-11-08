@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\View\ComponentAttributeBag;
 use Throwable;
 
-class FilamentGoogleMapColumn extends Column
+class MapColumn extends Column
 {
     protected string $view = 'filament-google-maps::columns.filament-google-maps-column';
 

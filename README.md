@@ -9,6 +9,12 @@ either as part of an admin panel, or in standalone front end forms, tables and d
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+### Pre-Release
+
+**NOTE** that this project is currently in a pre-release state, and breaking changes may be introduced
+without warning, until the first release tag is applied (expected to be some time week commencing
+Nov 7th, 2022).
+
 ### API Usage
 
 **IMPORTANT NOTE** - some features of this package could potentially drive up your
@@ -20,31 +26,38 @@ We are not liable if you get a surprise bill!
 
 ### Components
 
-The **FilamentGoogleMaps** field displays (unsurprisingly) a Google map, with a comprehensive set of configuration
+The **Map** field displays (unsurprisingly) a Google map, with a comprehensive set of configuration
 options.  It supports coordinate updating both ways between map and form, forward and revese geocompletion, reverse
 geocoding and KML layers.
 
-![Filament Google Maps Form](images/form-map.png)
+![Map Field](images/form-map.png)
 
-The **FilamentGoogleMapsWidget** displays a filterable set of locations from a model, with 
+The **Geocomplete** field turns a text field on your form into a Google geocomplete field,
+with optional reverse geocoding of address components.
+
+![Geocomplete Field](images/form-geocode.png)
+
+The **MapWidget** displays a filterable set of locations from a model, with 
 optional clustering, templatable labels, customizable icons, etc.
 
-![Filament Google Maps Widget](images/widget-maps.png)
+![Map Widget](images/widget-maps.png)
 
-The **FilamentGoogleMapsTableWidget** displays a map widget, along with a Filament Table,
+The **MapTableWidget** displays a map widget, along with a Filament Table,
 and reacts to all filtering and searching on the table.
 
-![Filament Google Maps Table Widget](images/widget-table-map.png)
+![Map Table Widget](images/widget-table-map.png)
 
-The **FilamentGoogleMapsColumn** displays a customizable static map image, with the images cached locally
+
+The **MapColumn** displays a customizable static map image, with the images cached locally
 to reduce API overhead.
 
-![Filament Google Maps Column](images/table-map.png)
+![Map Column](images/table-map.png)
 
-The **FilamentGoogleMapsRadiusFilter** provides radius filtering against geocomplete address,
+
+The **RadiusFilter** provides radius filtering against a geocomplete address,
 in kilometers or miles.
 
-![Filament Google Maps Radius Filter](images/radius.png)
+![Radius Filter](images/radius.png)
 
 
 The **Artisan commands** allow you to do batch processing on your location tables, either geocoding
@@ -133,11 +146,11 @@ The form field can be used with no options, by simply adding this to your Filame
 Form schema:
 
 ```php
-use Cheesegrits\FilamentGoogleMaps\Fields\FilamentGoogleMap
+use Cheesegrits\FilamentGoogleMaps\Fields\Map
 ...
 ->schema[
     ...
-    FilamentGoogleMap::make('location')
+    Map::make('location')
     ...
 ]
 ```
@@ -245,6 +258,49 @@ If you wish to update your lat and lng fields on the form when the map marker is
         }),
 ```
 
+### Geocomplete Field
+
+The Geocomplete field turns a field on your form into a Google Geocomplete field.  You
+would usually use this **instead of** a Map field (if you want a geocomplete field together
+with a map, you would typically use the autocomplete() feature on the Map field).
+
+The Geocomplete field can operate in one of two modes.  Either independently, where you
+simply use it with a normal text field on your form, e.g. 'full_address', and this component
+will simply fill the field in with the formatted address returned when the user selects one
+from the dropdown.
+
+```php
+    Geocomplete::make('full_address'),
+```
+
+The second mode is isLocation() mode, where you use it with the 'location' computed attribute field
+from your model.  In this usage, the component will synchronize with your lat and lng fields.  When
+the form loads, the current lat and lng will be reverse geocoded to a full address, and when
+the form is saved, the currently selected address will be geocoded to the lat and lng fields.
+
+```php
+    Geocomplete::make('location') // field name must be the computed attribute name on your model
+        ->isLocation(),
+```
+
+In both modes, you may optionally specify fields to reverse geocode address component data
+to, using the same method as the Map component, documented above.
+
+```php
+    Geocomplete::make('location')
+        ->isLocation()
+        ->reverseGeocode([
+            'city'   => '%L',
+            'zip'    => '%z',
+            'state'  => '%A1',
+            'street' => '%n %S',
+        ])
+        ->maxLength(1024),
+```
+
+The Geocomplete field also offers many of the samer features as Filament's TextInput,
+like prefixes, suffixes, placeholders, etc.
+
 ### Table Column
 
 The table column displays a static Google map image.  The images are created on the
@@ -253,11 +309,11 @@ Laravel's default cache driver) for a default of 30 days, to prevent excessive A
 **See the warning at the top of this page about API usage**.
 
 ```php
-use Cheesegrits\FilamentGoogleMaps\Columns\FilamentGoogleMapColumn;
+use Cheesegrits\FilamentGoogleMaps\Columns\MapColumn;
 
 ...
 
-FilamentGoogleMapColumn::make('location')
+MapColumn::make('location')
     ->extraAttributes([
       'class' => 'my-funky-class'
     ]) // set any additional attributes, merged into the wrapper div around the image tag
@@ -303,9 +359,9 @@ FilamentGoogleMapsWidget class.
 namespace App\Http\Livewire\Widgets;
 
 use App\Models\Dealerships;
-use Cheesegrits\FilamentGoogleMaps\Widgets\FilamentGoogleMapsWidget;
+use Cheesegrits\FilamentGoogleMaps\Widgets\MapWidget;
 
-class DealershipMap extends FilamentGoogleMapsWidget
+class DealershipMap extends MapWidget
 {
     protected static ?string $heading = 'Dealership Locations';
 

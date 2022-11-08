@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
-class FilamentGoogleMapsTableWidget extends FilamentGoogleMapsWidget implements Tables\Contracts\HasTable
+class MapTableWidget extends MapWidget implements Tables\Contracts\HasTable
 {
     use Tables\Concerns\InteractsWithTable {
         getTableRecords as traitGetTableRecords;

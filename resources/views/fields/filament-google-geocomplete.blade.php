@@ -1,6 +1,4 @@
 @php
-    $datalistOptions = $getDatalistOptions();
-
     $affixLabelClasses = [
         'whitespace-nowrap group-focus-within:text-primary-500',
         'text-gray-400' => ! $errors->has($getStatePath()),
@@ -74,37 +72,19 @@
                  wire:ignore
             >
         <div class="flex-1">
-            <input
-                    @unless ($hasMask())
-                        x-data="{}"
+            <input x-data="{}"
             {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
-            type="{{ $getType() }}"
-            @else
-                x-data="textInputFormComponent({
-                        {{ $hasMask() ? "getMaskOptionsUsing: (IMask) => ({$getJsonMaskConfiguration()})," : null }}
-                state: $wire.{{ $applyStateBindingModifiers('entangle(\'' . $getStatePath() . '\')', lazilyEntangledModifiers: ['defer']) }},
-                    })"
-                type="text"
-                wire:ignore
-                {!! $isLazy() ? "x-on:blur=\"\$wire.\$refresh\"" : null !!}
-                {!! $isDebounced() ? "x-on:input.debounce.{$getDebounce()}=\"\$wire.\$refresh\"" : null !!}
-                {{ $getExtraAlpineAttributeBag() }}
-            @endunless
+            type="text"
+
             dusk="filament.forms.{{ $getStatePath() }}"
-            {!! ($autocapitalize = $getAutocapitalize()) ? "autocapitalize=\"{$autocapitalize}\"" : null !!}
-            {!! ($autocomplete = $getAutocomplete()) ? "autocomplete=\"{$autocomplete}\"" : null !!}
             {!! $isAutofocused() ? 'autofocus' : null !!}
             {!! $isDisabled() ? 'disabled' : null !!}
             id="{{ $getId() }}"
             {!! ($inputMode = $getInputMode()) ? "inputmode=\"{$inputMode}\"" : null !!}
-            {!! $datalistOptions ? "list=\"{$getId()}-list\"" : null !!}
             {!! ($placeholder = $getPlaceholder()) ? "placeholder=\"{$placeholder}\"" : null !!}
-            {!! ($interval = $getStep()) ? "step=\"{$interval}\"" : null !!}
             @if (! $isConcealed())
                 {!! filled($length = $getMaxLength()) ? "maxlength=\"{$length}\"" : null !!}
-                {!! filled($value = $getMaxValue()) ? "max=\"{$value}\"" : null !!}
                 {!! filled($length = $getMinLength()) ? "minlength=\"{$length}\"" : null !!}
-                {!! filled($value = $getMinValue()) ? "min=\"{$value}\"" : null !!}
                 {!! $isRequired() ? 'required' : null !!}
             @endif
             {{ $getExtraInputAttributeBag()->class([
@@ -134,13 +114,5 @@
             {{ $suffixAction }}
         @endif
     </div>
-
-    @if ($datalistOptions)
-        <datalist id="{{ $getId() }}-list">
-            @foreach ($datalistOptions as $option)
-                <option value="{{ $option }}" />
-            @endforeach
-        </datalist>
-    @endif
 </x-dynamic-component>
 

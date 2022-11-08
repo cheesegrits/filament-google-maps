@@ -224,6 +224,42 @@ class GeocodeHelper
 		return [$lookups, $processed];
 	}
 
+	public static function reverseGeocode(array $latLng)
+	{
+		$httpClient = new Client();
+		$provider   = new GoogleMaps($httpClient, null, config('filament-google-maps.key'));
+		$geocoder   = new StatefulGeocoder($provider, 'en');
+		$result = $geocoder->reverseQuery(ReverseQuery::fromCoordinates($latLng['lat'], $latLng['lng']))?->first();
+
+		if ($result)
+		{
+			return $result->getFormattedAddress();
+		}
+
+		return '';
+	}
+
+	public static function geocode(string $address): array
+	{
+		$latLng = [
+			'lat' => 0,
+			'long' => 0,
+		];
+
+		$httpClient = new Client();
+		$provider   = new GoogleMaps($httpClient, null, config('filament-google-maps.key'));
+		$geocoder   = new StatefulGeocoder($provider, 'en');
+		$result = $geocoder->geocodeQuery(GeocodeQuery::create($address))->first();
+
+		if ($result)
+		{
+			$latLng['lat'] = $result->getCoordinates()?->getLatitude();
+			$latLng['lng'] = $result->getCoordinates()?->getLongitude();
+		}
+
+		return $latLng;
+	}
+
 	public static function testReverseGeocode(Model $model, $id, $latField, $lngField): array
 	{
 		$formats = [];

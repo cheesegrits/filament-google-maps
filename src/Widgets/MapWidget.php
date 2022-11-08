@@ -6,7 +6,7 @@ use Closure;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Widgets;
 
-class FilamentGoogleMapsWidget extends Widgets\Widget
+class MapWidget extends Widgets\Widget
 {
 	use Widgets\Concerns\CanPoll;
 

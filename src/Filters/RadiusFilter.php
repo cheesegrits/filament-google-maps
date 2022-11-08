@@ -2,8 +2,9 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Filters;
 
-use Cheesegrits\FilamentGoogleMaps\Fields\FilamentGoogleGeocomplete;
+use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete;
 use Closure;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -14,7 +15,7 @@ use Filament\Resources\Form;
 use Filament\Tables\Filters\BaseFilter;
 
 
-class FilamentGoogleMapsRadiusFilter extends BaseFilter
+class RadiusFilter extends BaseFilter
 {
 	protected string|Closure|null $latitude = null;
 
@@ -26,10 +27,41 @@ class FilamentGoogleMapsRadiusFilter extends BaseFilter
 
 	protected bool|string|Closure|null $section = null;
 
+	/**
+	 * @return array|int|null
+	 */
+	public function getColumns(): array|int|null
+	{
+		return 4;
+	}
 
 	protected function setUp(): void
 	{
 		parent::setUp();
+
+		$this->columnSpan(2);
+
+//		$this->getTable()->getFiltersFormWidth('7xl');
+
+		$this->indicateUsing(function (RadiusFilter $filter, array $state): array {
+			if (blank($state['geocomplete'] ?? null))
+			{
+				return [];
+			}
+
+			if (blank($state['radius'] ?? null))
+			{
+				return [];
+			}
+
+			$label = __('filament-google-maps::fgm.radius_filter.indicate', [
+				'radius' => $state['radius'],
+				'units' => $state['unit'],
+				'address' => $state['geocomplete'],
+			]);
+
+			return ["{$this->getIndicator()}: {$label}"];
+		});
 	}
 
 	public function apply(Builder $query, array $data = []): Builder
@@ -73,34 +105,38 @@ class FilamentGoogleMapsRadiusFilter extends BaseFilter
 	}
 
 	public function getFormSchema(): array
+
 	{
 		$form = [
-			FilamentGoogleGeocomplete::make('geocomplete')
-				->label(__('filament-google-maps::fgm.radius_filter.address'))
-				->filterName($this->getName())
-				->lazy(),
-			TextInput::make('radius')
-				->label(__('filament-google-maps::fgm.radius_filter.distance'))
-				->numeric()
-				->lazy(),
-			Hidden::make('latitude'),
-			Hidden::make('longitude'),
+			Group::make()->schema([
+				Geocomplete::make('geocomplete')
+					->label(__('filament-google-maps::fgm.radius_filter.address'))
+					->filterName($this->getName())
+					->lazy(),
+				Group::make()->schema([
+					TextInput::make('radius')
+						->label(__('filament-google-maps::fgm.radius_filter.distance'))
+						->numeric()
+						->lazy(),
+					Select::make('unit')
+						->label(__('filament-google-maps::fgm.radius_filter.unit'))
+						->options([
+							'mi' => __('filament-google-maps::fgm.radius_filter.miles'),
+							'km' => __('filament-google-maps::fgm.radius_filter.kilometers'),
+						])
+						->default(
+							$this->getKilometers() ? 'km' : 'mi'
+						)
+						->visible(fn () => $this->getSelectUnit()),
+				])
+					->columns($this->getSelectUnit() ? 2 : 1),
+				Group::make()->schema([
+					Hidden::make('latitude'),
+					Hidden::make('longitude'),
+				]),
+			])
+				->columnSpan('full')
 		];
-
-		if ($this->getSelectUnit())
-		{
-			$form = array_merge($form, [
-				Select::make('unit')
-					->label(__('filament-google-maps::fgm.radius_filter.unit'))
-					->options([
-						'm' => __('filament-google-maps::fgm.radius_filter.miles'),
-						'k' => __('filament-google-maps::fgm.radius_filter.kilometers'),
-					])
-					->default(
-						$this->getKilometers() ? 'k' : 'm'
-					),
-			]);
-		}
 
 		if ($this->hasSection())
 		{
