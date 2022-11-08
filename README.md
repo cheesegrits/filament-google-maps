@@ -191,7 +191,7 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Map
 ...
 ->schema[
     ...
-    Map::make('location')
+    Map::make('location'),
     ...
 ]
 ```
@@ -344,7 +344,9 @@ to, using the same method as the Map component, documented above.
             'state'  => '%A1',
             'street' => '%n %S',
         ])
-        ->maxLength(1024),
+        ->maxLength(1024)
+        ->prefix('Choose:')
+        ->placeholder('Start typing an address ...'),
 ```
 
 The Geocomplete field also offers many of the samer features as Filament's TextInput,
