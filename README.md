@@ -163,7 +163,11 @@ property referencing a second pair of lat/lng fields.
 The full set of options is as follows.  All option methods support closures, as well as direct values.
 
 ```php
-FilamentGoogleMap::make('location')
+use Cheesegrits\FilamentGoogleMaps\Fields\Map
+
+...
+
+    Map::make('location')
     ->mapControls([
         'mapTypeControl'    => true,
         'scaleControl'      => true,
@@ -250,7 +254,7 @@ If you want the map marker to react to changes to lat or lng fields on your form
 If you wish to update your lat and lng fields on the form when the map marker is moved:
 
 ```php
-    FilamentGoogleMap::make('location')
+    Map::make('location')
         ->reactive()
         ->afterStateUpdated(function ($state, callable $get, callable $set) {
             $set('latitude', $state['lat']);
@@ -270,6 +274,8 @@ will simply fill the field in with the formatted address returned when the user 
 from the dropdown.
 
 ```php
+use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete
+...
     Geocomplete::make('full_address'),
 ```
 
@@ -279,6 +285,8 @@ the form loads, the current lat and lng will be reverse geocoded to a full addre
 the form is saved, the currently selected address will be geocoded to the lat and lng fields.
 
 ```php
+use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete
+...
     Geocomplete::make('location') // field name must be the computed attribute name on your model
         ->isLocation(),
 ```
@@ -310,9 +318,7 @@ Laravel's default cache driver) for a default of 30 days, to prevent excessive A
 
 ```php
 use Cheesegrits\FilamentGoogleMaps\Columns\MapColumn;
-
 ...
-
 MapColumn::make('location')
     ->extraAttributes([
       'class' => 'my-funky-class'
@@ -336,7 +342,9 @@ a numeric distance and an optional unit selection, and the table will be filtere
 within the specified distance of that address.
 
 ```php
-    FilamentGoogleMapsRadiusFilter::make('radius')
+use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
+...
+    RadiusFilter::make('radius')
         ->latitude('lat') // latitude field on your table
         ->longitude('lng') // longitude field on your table
         ->selectUnit() // add a Kilometer / Miles select
@@ -451,6 +459,13 @@ To display a Dealership table map, you would use the same code from above, but e
 the FilamentGoogleMapsTableWidget, and add standard Filament table methods:
 
 ```php
+use Cheesegrits\FilamentGoogleMaps\Widgets\MapTableWidget;
+
+...
+
+class DealershipMap extends MapTableWidget
+{
+...
    protected function getTableQuery(): Builder
     {
         return Dealer::all();
@@ -476,7 +491,8 @@ the FilamentGoogleMapsTableWidget, and add standard Filament table methods:
                 ->relationship('state','state_name'),
         ];
     }
-
+...
+}
 ```
 
 Anything you can do in normal Filament tables, you can do in this table.
