@@ -24,6 +24,34 @@ cache frequently.  Or if you allow public access to forms that use geocoding, an
 We **strongly** suggest you set [usage quotas in your Google Console](https://console.cloud.google.com/projectselector2/google/maps-apis/quotas).
 We are not liable if you get a surprise bill!
 
+## TL/DR
+
+If you just can't handle reading documentation and want to dive right in ...
+
+```sh
+composer install cheesegrits/filament-google-maps
+```
+
+... then follow these instructions to add a computed attribute to your model(s) that will use these components ....
+
+```shell
+php artisan filament-google-maps:model-code
+```
+
+... then start using the components, like ...
+
+```php
+use Cheesegrits\FilamentGoogleMaps\Fields\Map
+...
+->schema[
+    ...
+    // must use the computed attribute name you used on your model
+    // which must NOT exist on the table itself
+    Map::make('location'),
+    ...
+]
+```
+
 ## Components
 
 ### Map Field
@@ -666,6 +694,7 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 ## Roadmap
 
 - [x] Add option for which cache store to use for static maps
+- [x] Add Geocomplete field
 - [x] Add Artisan commands for geocoding / reverse geocoding tables, useful when source tables have addreeses but no coords, or vice versa
 - [ ] Add optional request signing of API calls
 - [x] Add KML layers to field and widget
