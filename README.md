@@ -24,7 +24,9 @@ cache frequently.  Or if you allow public access to forms that use geocoding, an
 We **strongly** suggest you set [usage quotas in your Google Console](https://console.cloud.google.com/projectselector2/google/maps-apis/quotas).
 We are not liable if you get a surprise bill!
 
-### Components
+## Components
+
+### Map Field
 
 The **Map** field displays (unsurprisingly) a Google map, with a comprehensive set of configuration
 options.  It supports coordinate updating both ways between map and form, forward and revese geocompletion, reverse
@@ -32,33 +34,42 @@ geocoding and KML layers.
 
 ![Map Field](images/form-map.png)
 
+### Geocomplete Field
+
 The **Geocomplete** field turns a text field on your form into a Google geocomplete field,
 with optional reverse geocoding of address components.
 
 ![Geocomplete Field](images/form-geocode.png)
+
+### Map Widget
 
 The **MapWidget** displays a filterable set of locations from a model, with 
 optional clustering, templatable labels, customizable icons, etc.
 
 ![Map Widget](images/widget-maps.png)
 
+### Map Table Widget
+
 The **MapTableWidget** displays a map widget, along with a Filament Table,
 and reacts to all filtering and searching on the table.
 
 ![Map Table Widget](images/widget-table-map.png)
 
+### Map Column
 
 The **MapColumn** displays a customizable static map image, with the images cached locally
 to reduce API overhead.
 
 ![Map Column](images/table-map.png)
 
+### Radius Filter
 
 The **RadiusFilter** provides radius filtering against a geocomplete address,
 in kilometers or miles.
 
 ![Radius Filter](images/radius.png)
 
+### Batch Commands
 
 The **Artisan commands** allow you to do batch processing on your location tables, either geocoding
 a combination of address fields into lat lng, or reverse geocoding lat and lng to address fields.
@@ -69,6 +80,8 @@ a combination of address fields into lat lng, or reverse geocoding lat and lng t
 
 
 <!-- GETTING STARTED -->
+## Getting Started 
+
 ### Prerequisites
 
 This package is built on Filament V2, and Laravel 9.  It may run on earlier versions of
