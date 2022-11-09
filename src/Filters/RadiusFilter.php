@@ -77,7 +77,7 @@ class RadiusFilter extends BaseFilter
 
 			if ($this->getSelectUnit())
 			{
-				$kilometers = ($data['unit'] ?? null) === 'k';
+				$kilometers = ($data['unit'] ?? null) === 'km';
 			}
 
 			$latName = $this->getLatitude();

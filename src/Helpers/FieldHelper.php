@@ -47,14 +47,14 @@ class FieldHelper
 	
 	public static function blankLocation($location): bool
 	{
-		if (blank($location))
+		if (empty($location))
 		{
 			return true;
 		}
 		
 		if (array_key_exists('lat', $location) && array_key_exists('lng', $location))
 		{
-			return blank($location['lat']) && blank($location['lng']); 
+			return empty($location['lat']) && empty($location['lng']);
 		}
 		
 		return true;

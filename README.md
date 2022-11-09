@@ -365,10 +365,10 @@ use Cheesegrits\FilamentGoogleMaps\Columns\MapColumn;
 MapColumn::make('location')
     ->extraAttributes([
       'class' => 'my-funky-class'
-    ]) // set any additional attributes, merged into the wrapper div around the image tag
+    ]) // Optionally set any additional attributes, merged into the wrapper div around the image tag
     ->extraImgAttributes(
         fn ($record): array => ['title' => $record->latitude . ',' . $record->longitude]
-    ) // set any additional attributes you want on the img tag
+    ) // Optionally set any additional attributes you want on the img tag
     ->height('150') // API setting for map height in PX
     ->width('250') // API setting got map width in PX
     ->type('hybrid') // API setting for map type (hybrid, satellite, roadmap, tarrain)
@@ -391,7 +391,7 @@ use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
         ->latitude('lat') // latitude field on your table
         ->longitude('lng') // longitude field on your table
         ->selectUnit() // add a Kilometer / Miles select
-        ->kilometers() // use (or default the select to) kilometers
+        ->kilometers() // use (or default the select to) kilometers (defaults to miles)
         ->section('Radius Search') // wrap the filter in a section with heading
 ```
 
@@ -449,7 +449,7 @@ class DealershipMap extends MapWidget
     }
 }
 ```
-... then call it in your front end Blade template ...
+... then call it somewhere in a front end Blade template ...
 
 ```php
     <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1 md:grid-cols-2">
@@ -461,7 +461,7 @@ class DealershipMap extends MapWidget
 
 Optionally you can render your labels with Blade templates (see the Google
 API docs for restrictions on what HTML markup and styling you can use), and
-provide an icon ...
+provide an icon (svg or png) ...
 
 ```php
                 $data[] = [

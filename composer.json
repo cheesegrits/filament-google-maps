@@ -14,7 +14,9 @@
     },
     "autoload": {
         "psr-4": {
-            "Cheesegrits\\FilamentGoogleMaps\\": "src/"
+            "Cheesegrits\\FilamentGoogleMaps\\": "src/",
+            "Cheesegrits\\FilamentGoogleMaps\\Tests\\": "tests/src",
+            "Cheesegrits\\FilamentGoogleMaps\\Tests\\Database\\Factories\\": "tests/database/factories"
         }
     },
     "extra": {
@@ -31,6 +33,16 @@
         }
     ],
     "require-dev": {
-        "filament/filament": "^2.0"
+        "filament/filament": "^2.0",
+        "pestphp/pest": "^1.22",
+        "pestphp/pest-plugin-laravel": "^1.3",
+        "orchestra/testbench": "^7.11",
+        "pestphp/pest-plugin-livewire": "^1.0",
+        "nonsapiens/realaddressfactory": "^2.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
