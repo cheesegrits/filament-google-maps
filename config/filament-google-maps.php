@@ -6,6 +6,13 @@ return [
 
     'key' => env('GOOGLE_MAPS_API_KEY'),
 
+	'keys' => [
+		'web_key' => env('FILAMENT_GOOGLE_MAPS_WEB_API_KEY', env('GOOGLE_MAPS_API_KEY')),
+		'server_key' => env('FILAMENT_GOOGLE_MAPS_SERVER_API_KEY', env('GOOGLE_MAPS_API_KEY')),
+	],
+
+	'server_key' => env('FILAMENT_GOOGLE_MAPS_SERVER_API_KEY'),
+
 	/*
 	 | Rate limit for API calls, although you REALLY should also set usage quota limits in your Google Console
 	 */

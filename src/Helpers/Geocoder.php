@@ -53,7 +53,7 @@ class Geocoder
 			)
 		);
 		$this->httpClient = new Client(['handler' => $this->stack, 'timeout' => 30.0]);
-		$this->provider   = new GoogleMaps($this->httpClient, null, config('filament-google-maps.key'));
+		$this->provider   = new GoogleMaps($this->httpClient, null, config('filament-google-maps.keys.server_key'));
 		$this->geocoder   = new StatefulGeocoder($this->provider, 'en');
 		$this->formatter  = new StringFormatter();
 	}

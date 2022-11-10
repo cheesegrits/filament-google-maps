@@ -50,7 +50,5 @@ class TestCase extends BaseTestCase
 			'cities' => ['New York, NY', 'Los Angeles, CA', 'San Francisco, CA', 'Dallas, TX', 'Chicago, IL', 'Houston, TX', 'Phoenix, AZ', 'San Diego, CA'],
 		]);
 		$app['config']->set('realaddress.rate-limiter', 100);
-
-
 	}
 }
