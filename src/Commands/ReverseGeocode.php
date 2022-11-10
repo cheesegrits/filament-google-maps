@@ -3,21 +3,21 @@
 namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
 
-use Cheesegrits\FilamentGoogleMaps\Helpers\GeocodeHelper;
+use Cheesegrits\FilamentGoogleMaps\Helpers\Geocoder;
 use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Throwable;
 
 class ReverseGeocode extends Command
 {
     use CanValidateInput;
 
-    protected $signature = 'filament-google-maps:reverse-geocode {model?} {--lat=} {--lng=} {--fields=*} {--rate-limit=} {--verbose?}}';
+    protected $signature = 'filament-google-maps:reverse-geocode {model?} {--lat=} {--lng=} {--fields=*} {--processed=} {--rate-limit=} {--verbose?}}';
 
     protected $description = 'Geocode a table';
 
-    public function handle()
+    public function handle(): int
     {
 		$prompted = false;
         $verbose = $this->option('verbose');
@@ -33,21 +33,39 @@ class ReverseGeocode extends Command
 
         try
         {
-            $model = new $modelName();
-			$modelName .= '::class';
-        } catch (\Throwable $e)
+	        /** @noinspection PhpUnusedLocalVariableInspection */
+	        $model     = new $modelName();
+        }
+        catch (Throwable $e)
         {
             try
             {
-                $model = new ('\\App\\Models\\' . $modelName)();
-	            $modelName = '\\App\\Models\\' . $modelName . '::class';
-            } catch (\Throwable $e)
+	            /** @noinspection PhpUnusedLocalVariableInspection */
+	            $model     = new ('\\App\\Models\\' . $modelName)();
+	            $modelName = '\\App\\Models\\' . $modelName;
+            }
+            catch (Throwable $e)
             {
-                echo "Can't find class {$modelName} or \\App\\Models\\{$modelName}\n";
+                echo "Can't find class $modelName or \\App\\Models\\$modelName\n";
 
                 return static::INVALID;
             }
         }
+
+	    $rateLimit = (int) $this->option('rate-limit');
+
+	    while ($rateLimit > 300 || $rateLimit < 1)
+	    {
+		    $prompted = true;
+
+		    $rateLimit = (int) $this->askRequired(
+			    'Rate limit as API calls per minute (max 300)',
+			    'rate-limit',
+			    config('filament-google-maps.rate-limit', 150),
+		    );
+	    }
+
+	    $geocoder = new Geocoder($rateLimit);
 
 	    $lat = $this->option('lat');
 		
@@ -73,6 +91,23 @@ class ReverseGeocode extends Command
 		    );
 	    }
 
+	    $processedField = $this->option('processed');
+
+	    if (empty($processedField))
+	    {
+		    $prompted = true;
+
+		    $processedField = $this->ask(
+			    'Optional name of field to set to 1 when record is processed (e.g. `processed`)',
+		    );
+	    }
+
+		if (empty($processedField) || $processedField === 'no-processed-field')
+		{
+			$processedField = null;
+		}
+
+
 	    $fields = $this->option('fields');
 
 		if (empty($fields))
@@ -81,7 +116,7 @@ class ReverseGeocode extends Command
 
 			$this->table(
 				['Component', 'Format'],
-				GeocodeHelper::getFormats()
+				Geocoder::getFormats()
 			);
 			
 			$this->info('Use the table above to enter your address component mapping.');
@@ -92,12 +127,17 @@ class ReverseGeocode extends Command
 			$this->newLine();
 			$this->line('Each mapping should be of the form <field name>=<format symbol(s)>, for example');
 			$this->line('to map (say) a street address to your `street_name` field, you would need ...');
+			$this->newLine();
 			$this->line('street_name=%n %S');
+			$this->newLine();
 			$this->line('... and you might also add ...');
+			$this->newLine();
 			$this->line('city=%L');
 			$this->line('state=%A2');
 			$this->line('zip=%z');
+			$this->newLine();
 			$this->line('... or just ...');
+			$this->newLine();
 			$this->line('formatted_address=%s %S, %L, %A2, %z');
 			$this->newLine();
 			$this->line('You may enter as many mappings as you need, enter a blank line to continue.');
@@ -113,16 +153,13 @@ class ReverseGeocode extends Command
 			
 			if (!empty($id))
 			{
-				$formats = GeocodeHelper::testReverseGeocode($model, $id, $lat, $lng);
+				$formats = $geocoder->testReverse($modelName, $id, $lat, $lng);
 				
 				$this->table(
 					['Symbol', 'Result'],
 					$formats,
 				);
 			}
-			
-			
-			$field = '';
 
 			do
 			{
@@ -135,19 +172,7 @@ class ReverseGeocode extends Command
 			} while (!empty($field));
 		}
 
-        $rateLimit = (int) $this->option('rate-limit');
-
-        while ($rateLimit > 300 || $rateLimit < 1)
-        {
-			$prompted = true;
-
-            $rateLimit = (int) $this->askRequired(
-                'Rate limit as API calls per minute (max 300)',
-                'rate-limit'
-            );
-        }
-
-        list($processed, $updated) = GeocodeHelper::batchReverseGeocode($model, $lat, $lng, $fields, $rateLimit, $verbose);
+        list($processed, $updated) = $geocoder->reverseBatch($modelName, $lat, $lng, $fields, $processedField, $verbose);
 
 		$this->info('Results');
 		$this->line('API Lookups: ' . $processed);
@@ -157,11 +182,12 @@ class ReverseGeocode extends Command
 		{
 
 			$summary = sprintf(
-				'php artisan filament-google-maps:reverse-geocode %s %s --lat=%s --lng=%s --rate-limit=%s',
+				'php artisan filament-google-maps:reverse-geocode %s %s --lat=%s --lng=%s --processed=%s --rate-limit=%s',
 				$ogModelName,
 				implode(' ', array_map(fn ($field) => '--fields="' . $field . '"', $fields)),
 				$lat,
 				$lng,
+				$processedField ? $processedField : 'no-processed-field',
 				$rateLimit
 			);
 			$this->newLine();

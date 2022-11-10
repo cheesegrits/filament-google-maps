@@ -9,8 +9,8 @@ use function Pest\Livewire\livewire;
 uses(TestCase::class);
 
 it('can filter records by radius', function () {
-	$east = Location::factory()->withRealAddress('united-states-of-america', 'New York, NY')->count(5)->create();
-	$west = Location::factory()->withRealAddress('united-states-of-america', 'Los Angeles, CA')->count(5)->create();
+	$east = Location::factory()->withRealAddressAndLatLang('united-states-of-america', 'New York, NY')->count(5)->create();
+	$west = Location::factory()->withRealAddressAndLatLang('united-states-of-america', 'Los Angeles, CA')->count(5)->create();
 
 	livewire(LocationTable::class)
 		->assertCanSeeTableRecords($east)
