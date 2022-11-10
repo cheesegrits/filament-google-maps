@@ -29,9 +29,13 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 
 	protected Closure|string|null $filterName = null;
 
+	protected Closure|string|null $placeField = null;
+
 	protected Closure|bool $isLocation = false;
 
 	protected Closure|array $reverseGeocode = [];
+
+	protected Closure|array $types = [];
 
 
 	/**
@@ -125,6 +129,51 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 		return $statePaths;
 	}
 
+	/**
+	 * And array of place types, see "Constrain Place Types" section of Google Places API doc:
+	 *
+	 * https://developers.google.com/maps/documentation/javascript/place-autocomplete
+	 *
+	 * In particular, note the restrictions on number of types (5), and not mixing from tables 1 or 2 with
+	 * table 3.
+	 *
+	 * Defaults to 'geocode'
+	 *
+	 * @param Closure|array $types
+	 *
+	 * @return $this
+	 */
+	public function types(Closure|array $types): static
+	{
+		$this->types = $types;
+
+		return $this;
+	}
+
+	public function getTypes(): array
+	{
+		$types = $this->evaluate($this->types);
+
+		if (count($types) === 0)
+		{
+			$types = ['geocode'];
+		}
+
+		return $types;
+	}
+
+	public function placeField(Closure|string $placeField): static
+	{
+		$this->placeField = $placeField;
+
+		return $this;
+	}
+
+	public function getPlaceField(): string|null
+	{
+		return $this->evaluate($this->placeField) ?? 'formatted_address';
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -133,7 +182,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 			if ($component->getIsLocation())
 			{
 				$state = static::getLocationState($state);
-				
+
 				if (!FieldHelper::blankLocation($state))
 				{
 					$state = GeocodeHelper::reverseGeocode($state);
@@ -177,6 +226,8 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 			'statePath'            => $this->getStatePath(),
 			'location'             => $this->getIsLocation(),
 			'reverseGeocodeFields' => $this->getReverseGeocode(),
+			'types'                => $this->getTypes(),
+			'placeField'           => $this->getPlaceField(),
 			'gmaps'                => $gmaps,
 		]);
 

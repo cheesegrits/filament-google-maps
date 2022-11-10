@@ -4,6 +4,11 @@ namespace Cheesegrits\FilamentGoogleMaps\Helpers;
 
 class GeocodeHelper
 {
+	public static function reverseGeocode(array|string $lat, ?string $lng = null)
+	{
+		return (new Geocoder())->reverse(GeocodeHelper::getLatLng($lat, $lng));
+	}
+
 	public static function getCountyFromAddress(string $address): string
 	{
 		$geocoder = new Geocoder();

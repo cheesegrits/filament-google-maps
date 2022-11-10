@@ -7,7 +7,28 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
             gmaps: '',
             filterName: null,
             reverseGeocodeFields: {},
+            types: [],
             location: null,
+            placeField: 'formatted_address',
+        },
+        symbols: {
+            '%n': ["street_number"],
+            '%z': ["postal_code"],
+            '%S': ["street_address", "route"],
+            '%A1': ["administrative_area_level_1"],
+            '%A2': ["administrative_area_level_2"],
+            '%A3': ["administrative_area_level_3"],
+            '%A4': ["administrative_area_level_4"],
+            '%A5': ["administrative_area_level_5"],
+            '%a1': ["administrative_area_level_1"],
+            '%a2': ["administrative_area_level_2"],
+            '%a3': ["administrative_area_level_3"],
+            '%a4': ["administrative_area_level_4"],
+            '%a5': ["administrative_area_level_5"],
+            '%L': ["locality"],
+            '%D': ["sublocality"],
+            '%C': ["country"],
+            '%c': ["country"],
         },
 
         loadGMaps: function () {
@@ -43,10 +64,16 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
         createAutocomplete: function () {
             window.filamentGoogleMapsAPILoaded = true;
 
+            let fields = ["address_components", "formatted_address", "geometry", "name"];
+
+            if (!fields.includes(this.config.placeField)) {
+                fields.push(this.config.placeField);
+            }
+
             const geocompleteOptions = {
-                fields: ["address_components", "formatted_address", "geometry", "name"],
+                fields: fields,
                 strictBounds: false,
-                types: ["geocode"],
+                types: this.config.types,
             };
 
             const geoComplete = document.getElementById(this.config.statePath);
@@ -77,7 +104,7 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
             }
         },
         setLocation: function (place) {
-            $wire.set(this.config.statePath, place.formatted_address);
+            $wire.set(this.config.statePath, place[this.config.placeField]);
 
             if (this.config.filterName) {
                 const latPath = this.config.filterName + '.latitude';
@@ -108,6 +135,11 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
                             replaced = replaced.split(replacement).join(replacements[replacement]);
                         }
 
+                        for (const symbol in this.symbols) {
+                            replaced = replaced.split(symbol).join('');
+                        }
+
+                        replaced = replaced.trim();
                         $wire.set(field, replaced)
                     }
 
@@ -115,31 +147,11 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
             }
         },
         getReplacements: function (address_components) {
-            const symbols = {
-                '%n': ["street_number"],
-                '%z': ["postal_code"],
-                '%S': ["street_address", "route"],
-                '%A1': ["administrative_area_level_1"],
-                '%A2': ["administrative_area_level_2"],
-                '%A3': ["administrative_area_level_3"],
-                '%A4': ["administrative_area_level_4"],
-                '%A5': ["administrative_area_level_5"],
-                '%a1': ["administrative_area_level_1"],
-                '%a2': ["administrative_area_level_2"],
-                '%a3': ["administrative_area_level_3"],
-                '%a4': ["administrative_area_level_4"],
-                '%a5': ["administrative_area_level_5"],
-                '%L': ["locality"],
-                '%D': ["sublocality"],
-                '%C': ["country"],
-                '%c': ["country"],
-            };
-
             let replacements = {};
 
             address_components.forEach(component => {
-                for (const symbol in symbols) {
-                    if (symbols[symbol].indexOf(component.types[0]) !== -1) {
+                for (const symbol in this.symbols) {
+                    if (this.symbols[symbol].indexOf(component.types[0]) !== -1) {
                         if (symbol  === symbol.toLowerCase()) {
                             replacements[symbol] = component.short_name;
                         } else {
