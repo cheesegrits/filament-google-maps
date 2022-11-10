@@ -73,33 +73,6 @@ class Geocoder
 		return $formats;
 	}
 
-	public static function getLatLng(array|string $lat, ?string $lng = null): array
-	{
-		if (is_array($lat))
-		{
-			if (array_key_exists('lat', $lat) && array_key_exists('lng', $lat))
-			{
-				return $lat;
-			}
-			else if (count($lat) === 2)
-			{
-				return [
-					'lat' => $lat[0],
-					'lng' => $lat[1],
-				];
-			}
-		}
-		else if (isset($lng))
-		{
-			return [
-				'lat' => $lat,
-				'lng' => $lng,
-			];
-		}
-
-		return [0, 0];
-	}
-
 	public function geocode(string $address): array
 	{
 		$latLng = [
@@ -129,7 +102,7 @@ class Geocoder
 
 	public function reverse(array|string $lat, ?string $lng = null): string
 	{
-		$result = $this->reverseQuery(static::getLatLng($lat, $lng))->first();
+		$result = $this->reverseQuery(GeocodeHelper::getLatLng($lat, $lng))->first();
 
 		if ($result)
 		{
