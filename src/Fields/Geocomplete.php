@@ -33,6 +33,8 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 
 	protected Closure|bool $isLocation = false;
 
+	protected Closure|bool $geocodeOnLoad = false;
+
 	protected Closure|array $reverseGeocode = [];
 
 	protected Closure|array $types = [];
@@ -78,9 +80,21 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 		return $this;
 	}
 
-	public function getIsLocation(): string|null
+	public function getIsLocation(): bool|null
 	{
 		return $this->evaluate($this->isLocation);
+	}
+
+	public function geocodeOnLoad(Closure|bool $geocodeOnLoad = true): static
+	{
+		$this->geocodeOnLoad = $geocodeOnLoad;
+
+		return $this;
+	}
+
+	public function getGeocodeOnLoad(): bool|null
+	{
+		return $this->evaluate($this->geocodeOnLoad);
 	}
 
 
@@ -179,7 +193,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 		parent::setUp();
 
 		$this->afterStateHydrated(static function (Geocomplete $component, $state) {
-			if ($component->getIsLocation())
+			if ($component->getIsLocation() && $this->getGeocodeOnLoad())
 			{
 				$state = static::getLocationState($state);
 

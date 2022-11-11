@@ -164,17 +164,76 @@ Once you have a key, either add it to your .env file as:
 GOOGLE_MAPS_API_KEY=your_map_key_here
 ```
 ... or publish and edit the filament-google-maps.php config file.  We recommend using
-an environment variable.
+an environment variable.  Note that we deliberately use the same key name used by most Google related Laravel
+packages, just to make life easier.  However, if need to use a different key for this package, you may do so -
+refer to the config file in the next section.
 
 ### Publish the configuration
 
-You may optionally publish the package configuration, if you would rather set your API key
-directly rather than using a .env variable.
+You may optionally publish the package configuration.
 
 ```sh
 php artisan vendor:publish --tag="filament-google-maps-config"
 ```
 ... which can then be found in ./config/filament-google-maps.php
+
+Of particular note are the config settings for your API Keys and the cache store.  By default, we will cache all API
+responses for 30 days, using your default cache driver.  For most normal usage this is sufficient, but if you expect
+heavy usage, we suggest setting up a dedicated Redis store in your cache.php config, and specify this with the
+FILAMENT_GOOGLE_MAPS_CACHE_STORE environment variable.
+
+
+<details>
+  <summary> (<i>click to expand</i>)</summary>
+  <!-- have to be followed by an empty line! -->
+
+<?php
+return [
+	/*
+	 | Your Google Maps API key, usually set in .env (but see 'keys' section below).
+	 */
+
+    'key' => env('GOOGLE_MAPS_API_KEY'),
+
+	/*
+	 | If you need to use both a browser key (restricted by HTTP Referrer) for use in the Javascript API on the
+	 | front end, and a server key (restricted by IP address) for server side API calls, you will need to set those
+	 | keys here (or preferably set the appropriate env keys)
+	 */
+
+	'keys' => [
+		'web_key' => env('FILAMENT_GOOGLE_MAPS_WEB_API_KEY', env('GOOGLE_MAPS_API_KEY')),
+		'server_key' => env('FILAMENT_GOOGLE_MAPS_SERVER_API_KEY', env('GOOGLE_MAPS_API_KEY')),
+	],
+
+	/*
+	 | Rate limit for API calls, although you REALLY should also set usage quota limits in your Google Console
+	 */
+
+	'rate-limit' => env('FILAMENT_GOOGLE_MAPS_RATE_LIMIT', 150),
+
+	/*
+	 | Log channel to use, default is 'null' (no logging), set to your desired channel from logging.php if you want
+	 | logs.  Typically only useful for debugging, or if youw ant to keep track of a scheduled geocoding task.
+	 */
+	'log' => [
+		'channel' => env('FILAMENT_GOOGLE_MAPS_LOG_CHANNEL', 'null'),
+	],
+
+	/*
+	 | Cache store and duration (in seconds) to use for API results.  Specify store as null to use the default from
+	 | your cache.php config, false will disable caching (STRONGLY discouraged, unless you want a big Google
+	 | API bill!).  For heavy usage, we suggest using a dedicated redis store.  Max cache duration permitted by
+	 | Google is 30 days.
+	 */
+
+	'cache' => [
+		'duration' => env('FILAMENT_GOOGLE_MAPS_CACHE_DURATION_SECONDS', 60 * 60 * 24 * 30),
+		'store' => env('FILAMENT_GOOGLE_MAPS_CACHE_STORE', null),
+	]
+];
+
+</details>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -321,18 +380,35 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete
 ```
 
 The second mode is isLocation() mode, where you use it with the 'location' computed attribute field
-from your model.  In this usage, the component will synchronize with your lat and lng fields.  When
-the form loads, the current lat and lng will be reverse geocoded to a full address, and when
-the form is saved, the currently selected address will be geocoded to the lat and lng fields.
+from your model.  In this usage, when the form is saved, the currently selected address will be geocoded to your
+lat and lng fields. When the form loads, if geocodeOnLoad() is specified, the current lat and lng will be reverse
+geocoded to a full address (using the formatted_address field from Google).
+
+**NOTE** - the geocodeOnLoad() feature requires API access from your server.  If you are using an API key which is restricted
+to HTTP Referrers, this will not work.  You will need to add another key using the FILAMENT_GOOGLE_MAPS_SERVER_API_KEY
+(see Config section), which is restricted by IP address.
 
 ```php
 use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete
 ...
     Geocomplete::make('location') // field name must be the computed attribute name on your model
-        ->isLocation(),
+        ->isLocation()
+        ->geocodeOnLoad(),
 ```
 
-In both modes, you may optionally specify fields to reverse geocode address component data
+In both modes, you can specify the type(s) of place to show, and the Places response field to use to fill the field.
+Refer to the Google Places API documentation for the [Place Types](https://developers.google.com/maps/documentation/places/web-service/supported_types)
+and [Place Data Fields](https://developers.google.com/maps/documentation/javascript/place-data-fields).  Pay particular
+to the limitations on the number and mix of types - either 1 from Table 3 (like 'address' or 'establishment'), or up to
+5 from tables 1 or 2 (like 'airport', 'subway_station', etc).
+
+```php
+    Geocomplete::make('location')
+        ->types(['car_dealer', 'car_rental', 'car_repair'])
+        ->placesField('name')
+```
+
+In both modes, you may optionally specify fields to reverse geocode the selected address component data
 to, using the same method as the Map component, documented above.
 
 ```php
@@ -695,11 +771,13 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 <!-- ROADMAP -->
 ## Roadmap
 
+- [x] Add caching for all API usage
 - [x] Add option for which cache store to use for static maps
 - [x] Add Geocomplete field
+- [ ] Improve Geocomplete field Places Data Field handling (allow more than one to be combined)
 - [x] Add Artisan commands for geocoding / reverse geocoding tables, useful when source tables have addreeses but no coords, or vice versa
 - [ ] Add optional request signing of API calls
-- [x] Add KML layers to field and widget
+- [x] Add KML layers to field and widgets
 - [x] Add more geocoding options for form fields, for individual address components (street, city, zip, etc)
 - [ ] Write test suite
 
