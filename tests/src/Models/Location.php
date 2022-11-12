@@ -18,8 +18,9 @@ class Location extends Model
         'city',
         'state',
         'zip',
-        'full_address',
+        'formatted_address',
         'processed',
+	    'location',
     ];
 
     protected $casts = [
@@ -72,10 +73,13 @@ class Location extends Model
      * @param array $location
      * @return void
      */
-    function setLocationAttribute(array $location): void
+    function setLocationAttribute(?array $location): void
     {
-        $this->attributes['lat'] = $location['lat'];
-        $this->attributes['lng'] = $location['lng'];
+		if (is_array($location))
+		{
+			$this->attributes['lat'] = $location['lat'];
+			$this->attributes['lng'] = $location['lng'];
+		}
     }
 
 	protected static function newFactory()

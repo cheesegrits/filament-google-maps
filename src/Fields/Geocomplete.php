@@ -193,7 +193,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 		parent::setUp();
 
 		$this->afterStateHydrated(static function (Geocomplete $component, $state) {
-			if ($component->getIsLocation() && $this->getGeocodeOnLoad())
+			if ($component->getIsLocation() && $component->getGeocodeOnLoad())
 			{
 				$state = static::getLocationState($state);
 
@@ -211,15 +211,19 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 			}
 		});
 
-		$this->beforeStateDehydrated(static function (string|array|null $state, $record, $model, Geocomplete $component) {
+		$this->dehydrateStateUsing(static function (string|array|null $state, $record, $model, Geocomplete $component) {
 			if (!blank($state))
 			{
 				if ($component->getIsLocation())
 				{
 					$latLang = GeocodeHelper::geocode($state);
-					$record->setLocationAttribute($latLang);
+
+					//$record->setLocationAttribute($latLang);
+					return $latLang;
 				}
 			}
+
+			return $state;
 		});
 	}
 
@@ -238,7 +242,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 		$config = json_encode([
 			'filterName'           => $this->getFilterName(),
 			'statePath'            => $this->getStatePath(),
-			'location'             => $this->getIsLocation(),
+			'isLocation'             => $this->getIsLocation(),
 			'reverseGeocodeFields' => $this->getReverseGeocode(),
 			'types'                => $this->getTypes(),
 			'placeField'           => $this->getPlaceField(),

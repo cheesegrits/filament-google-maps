@@ -7,6 +7,9 @@ use BladeUI\Icons\BladeIconsServiceProvider;
 use Cheesegrits\FilamentGoogleMaps\Tests\Models\User;
 use Filament\FilamentServiceProvider;
 use Filament\Forms\FormsServiceProvider;
+use Filament\Notifications\NotificationsServiceProvider;
+//use Filament\SpatieLaravelSettingsPluginServiceProvider;
+//use Filament\SpatieLaravelTranslatablePluginServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -14,6 +17,7 @@ use Cheesegrits\FilamentGoogleMaps\FilamentGoogleMapsServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Cheesegrits\FilamentGoogleMaps\Tests\Columns\ColumnsServiceProvider;
 use Geocoder\Laravel\Providers\GeocoderService;
+use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
 
 
 class TestCase extends BaseTestCase
@@ -22,15 +26,20 @@ class TestCase extends BaseTestCase
 	{
 		return [
 			FilamentGoogleMapsServiceProvider::class,
-			LivewireServiceProvider::class,
 			ColumnsServiceProvider::class,
-			FilamentServiceProvider::class,
-			TablesServiceProvider::class,
-			SupportServiceProvider::class,
+			GeocoderService::class,
+
+			BladeCaptureDirectiveServiceProvider::class,
 			BladeHeroiconsServiceProvider::class,
 			BladeIconsServiceProvider::class,
+			FilamentServiceProvider::class,
 			FormsServiceProvider::class,
-			GeocoderService::class,
+			LivewireServiceProvider::class,
+			NotificationsServiceProvider::class,
+//			SpatieLaravelSettingsPluginServiceProvider::class,
+//			SpatieLaravelTranslatablePluginServiceProvider::class,
+			SupportServiceProvider::class,
+			TablesServiceProvider::class,
 		];
 	}
 

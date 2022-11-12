@@ -8,7 +8,7 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
             filterName: null,
             reverseGeocodeFields: {},
             types: [],
-            location: null,
+            isLocation: false,
             placeField: 'formatted_address',
         },
         symbols: {
@@ -104,7 +104,9 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
             }
         },
         setLocation: function (place) {
-            $wire.set(this.config.statePath, place[this.config.placeField]);
+            if (this.config.isLocation) {
+                $wire.set(this.config.statePath, place[this.config.placeField]);
+            }
 
             if (this.config.filterName) {
                 const latPath = this.config.filterName + '.latitude';

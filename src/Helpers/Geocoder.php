@@ -77,7 +77,7 @@ class Geocoder
 	{
 		$latLng = [
 			'lat'  => 0,
-			'long' => 0,
+			'lng' => 0,
 		];
 
 		$result = $this->geocodeQuery($address)->first();

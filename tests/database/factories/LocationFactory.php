@@ -28,7 +28,7 @@ class LocationFactory extends Factory
 		];
 	}
 
-	public function withRealAddressAndLatLang(string $country = 'united-states-of-america', ?string $city = null): LocationFactory
+	public function withRealAddressAndLatLng(string $country = 'united-states-of-america', ?string $city = null): LocationFactory
 	{
 //		$address = $this->faker->realAddress($country, $city);
 		$f = new RealAddressFactory();
