@@ -23,9 +23,17 @@ class Location extends Model
 	    'location',
     ];
 
+	protected $guarded = [
+		'location',
+	];
+
     protected $casts = [
         'processed' => 'bool',
     ];
+
+	protected $appends = [
+		'location',
+	];
 
     /**
      * Insert this code in your model, overwriting any existing $appends array (we already merged any existing
@@ -40,10 +48,6 @@ class Location extends Model
      * You may of course strip all comments, if you don't feel verbose.
      */
 
-//    protected $appends = [
-//        'location',
-//    ];
-
     /**
      * Returns the 'lat' and 'lng' attributes as the computed 'location' attribute,
      * as a standard Google Maps style Point array with 'lat' and 'lng' attributes, JSON encoded.
@@ -56,12 +60,7 @@ class Location extends Model
      */
     function getLocationAttribute(): array
     {
-//        return json_encode([
-//            "lat" => (float)$this->lat,
-//            "lng" => (float)$this->lng,
-//        ]);
-
-	    return [
+		return [
 		    "lat" => (float)$this->lat,
 		    "lng" => (float)$this->lng,
 	    ];
@@ -75,7 +74,7 @@ class Location extends Model
      *
      * Requires the 'location' attribute be included in this model's $appends array.
      *
-     * @param array $location
+     * @param ?array $location
      * @return void
      */
     function setLocationAttribute(?array $location): void

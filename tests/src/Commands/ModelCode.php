@@ -26,11 +26,27 @@ it ('asks the right questions for the artisan model-code command', function () {
 		);
 });
 
+it ('outputs the appends array model-code', function () {
+	$this->artisan(
+		'filament-google-maps:model-code',
+		[
+			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+			'--lat' => 'lat',
+			'--lng' => 'lng',
+			'--location' => 'location',
+		]
+	)
+		->expectsOutputToContain(convertNewlines('
+    protected $appends = [
+        \'location\',
+    ];'));
+});
+
 it ('outputs the fillable array model-code', function () {
 	$this->artisan(
 		'filament-google-maps:model-code',
 		[
-			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/Location',
+			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
 			'--lat' => 'lat',
 			'--lng' => 'lng',
 			'--location' => 'location',
@@ -48,6 +64,22 @@ it ('outputs the fillable array model-code', function () {
         \'formatted_address\',
         \'processed\',
         \'location\',
+    ];'));
+});
+
+it ('outputs the guarded array model-code', function () {
+	$this->artisan(
+		'filament-google-maps:model-code',
+		[
+			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationGuarded',
+			'--lat' => 'lat',
+			'--lng' => 'lng',
+			'--location' => 'location',
+		]
+	)
+		->expectsOutputToContain(convertNewlines('
+    protected $guarded = [
+        \'id\',
     ];'));
 });
 
@@ -76,18 +108,21 @@ it ('outputs the set attribute model-code', function () {
 	$this->artisan(
 		'filament-google-maps:model-code',
 		[
-			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/Location',
+			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
 			'--lat' => 'lat',
 			'--lng' => 'lng',
 			'--location' => 'location',
 		]
 	)
 		->expectsOutputToContain(convertNewlines('
-    function setLocationAttribute(array $location): void
+    function setLocationAttribute(?array $location): void
     {
-        $this->attributes[\'lat\'] = $location[\'lat\'];
-        $this->attributes[\'lng\'] = $location[\'lng\'];
-        $this->attributes[\'location\'] = json_encode($location);
+        if (is_array($location))
+        {
+            $this->attributes[\'lat\'] = $location[\'lat\'];
+            $this->attributes[\'lng\'] = $location[\'lng\'];
+            $this->attributes[\'location\'] = json_encode($location);
+        }
     }'));
 });
 

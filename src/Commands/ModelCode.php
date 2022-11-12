@@ -52,20 +52,72 @@ class ModelCode extends Command
             ?? $this->askRequired('Computed location attribute name (e.g. `location`)', 'location');
 
 
+	    $guardedStr = '';
+		$guarded = $model->getGuarded();
+
+		if (in_array($locationField, $guarded))
+	    {
+		    unset($guarded[array_search($locationField, $guarded)]);
+		    $guardedAttributes = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $guarded));
+		    $guardedStr = <<<EOT
+
+    protected \$guarded = [
+        {$guardedAttributes},
+    ];
+EOT;
+	    }
+
+		$fillableStr = '';
         $fillable = $model->getFillable();
 
-        if (!in_array($locationField, $fillable))
+        if (count($fillable) > 0 && !in_array($locationField, $fillable))
         {
             $fillable[] = $locationField;
+	        $fillableAttributes = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $fillable));
+			$fillableStr = <<<EOT
+
+    protected \$fillable = [
+        {$fillableAttributes},
+    ];
+EOT;
         }
 
-        $fillableStr = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $fillable));
-        $locationStr = Str::studly($locationField);
+	    $appendsStr = '';
+	    $appends = $model->getAppends();
 
-        $modelCode = <<<EOT
+	    if (!in_array($locationField, $appends))
+	    {
+		    $appends[] = $locationField;
+		    $appendsAttributes = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $appends));
+		    $appendsStr = <<<EOT
+    protected \$appends = [
+        {$appendsAttributes},
+    ];
+EOT;
+	    }
+
+        $locationStr = Str::studly($locationField);
+	    $modelCode = '';
+
+		if (!empty($guardedStr) || !empty($fillableStr) || !empty($appendsStr))
+		{
+			$modelCode .= <<<EOT
     /**
-     * Insert this code in your model, overwriting any existing \$fillable array (we already merged any existing
-     * fillable attributes from your model here).
+     * REPLACE THE FOLLOWING ARRAYS IN YOUR MODEL
+     *
+     * Replace your existing \$fillable and/or \$guarded and/or \$appends arrays with these - we already merged
+     * any existing attributes from your model, and only included the one(s) that need changing.
+     */
+{$fillableStr}
+{$guardedStr}
+{$appendsStr}
+
+EOT;
+		}
+
+        $modelCode .= <<<EOT
+    /**
+     * ADD THE FOLLOWING METHODS TO YOUR MODEL
      *
      * The '{$latField}' and '{$lngField}' attributes should exist as fields in your table schema,
      * holding standard decimal latitude and longitude coordinates.
@@ -75,10 +127,6 @@ class ModelCode extends Command
      *
      * You may of course strip all comments, if you don't feel verbose.
      */
-    
-    protected \$fillable = [
-        {$fillableStr},
-    ];
     
     /**
     * Returns the '{$latField}' and '{$lngField}' attributes as the computed '{$locationField}' attribute,
@@ -106,14 +154,17 @@ class ModelCode extends Command
     *
     * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
     * 
-    * @param array \$location
+    * @param ?array \$location
     * @return void
     */
-    function set{$locationStr}Attribute(array \$location): void
+    function set{$locationStr}Attribute(?array \$location): void
     {
-        \$this->attributes['{$latField}'] = \$location['lat'];
-        \$this->attributes['{$lngField}'] = \$location['lng'];
-        \$this->attributes['{$locationField}'] = json_encode(\$location);
+        if (is_array(\$location))
+        {
+            \$this->attributes['{$latField}'] = \$location['lat'];
+            \$this->attributes['{$lngField}'] = \$location['lng'];
+            \$this->attributes['{$locationField}'] = json_encode(\$location);
+        }
     }
 
 
