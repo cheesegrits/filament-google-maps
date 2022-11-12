@@ -82,20 +82,20 @@ class ModelCode extends Command
     
     /**
     * Returns the '{$latField}' and '{$lngField}' attributes as the computed '{$locationField}' attribute,
-    * as a standard Google Maps style Point array with 'lat' and 'lng' attributes, JSON encoded.
+    * as a standard Google Maps style Point array with 'lat' and 'lng' attributes.
     * 
     * Used by the Filament Google Maps package.
     * 
     * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
     * 
-    * @return string
+    * @return array
     */
-    function get{$locationStr}Attribute(): string
+    function get{$locationStr}Attribute(): array
     {
-        return json_encode([
+        return [
             "lat" => (float)\$this->{$latField},
             "lng" => (float)\$this->{$lngField},
-        ]);
+        ];
     }
 
     /**
