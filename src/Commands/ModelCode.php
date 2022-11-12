@@ -52,20 +52,20 @@ class ModelCode extends Command
             ?? $this->askRequired('Computed location attribute name (e.g. `location`)', 'location');
 
 
-        $appends = $model->getAppends();
+        $fillable = $model->getFillable();
 
-        if (!in_array($locationField, $appends))
+        if (!in_array($locationField, $fillable))
         {
-            $appends[] = $locationField;
+            $fillable[] = $locationField;
         }
 
-        $appendStr = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $appends));
+        $fillableStr = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $fillable));
         $locationStr = Str::studly($locationField);
 
         echo <<<EOT
     /**
-     * Insert this code in your model, overwriting any existing \$appends array (we already merged any existing
-     * append attributes from your model here).
+     * Insert this code in your model, overwriting any existing \$fillable array (we already merged any existing
+     * fillable attributes from your model here).
      *
      * The '{$latField}' and '{$lngField}' attributes should exist as fields in your table schema,
      * holding standard decimal latitude and longitude coordinates.
@@ -76,8 +76,8 @@ class ModelCode extends Command
      * You may of course strip all comments, if you don't feel verbose.
      */
     
-    protected \$appends = [
-        {$appendStr},
+    protected \$fillable = [
+        {$fillableStr},
     ];
     
     /**
@@ -86,7 +86,7 @@ class ModelCode extends Command
     * 
     * Used by the Filament Google Maps package.
     * 
-    * Requires the '{$locationField}' attribute be included in this model's \$appends array.
+    * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
     * 
     * @return string
     */
@@ -104,7 +104,7 @@ class ModelCode extends Command
     * 
     * Used by the Filament Google Maps package.
     *
-    * Requires the '{$locationField}' attribute be included in this model's \$appends array.
+    * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
     * 
     * @param array \$location
     * @return void
@@ -113,9 +113,10 @@ class ModelCode extends Command
     {
         \$this->attributes['{$latField}'] = \$location['lat'];
         \$this->attributes['{$lngField}'] = \$location['lng'];
+        // Uncomment this line if you particularly want to have your location field on the table
+        // \$this->attributes['{$locationField}'] = json_encode(\$location);
     }
-
-
+    
 EOT;
 
         return static::SUCCESS;
