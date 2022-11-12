@@ -113,6 +113,10 @@
         @if (($suffixAction = $getSuffixAction()) && (! $suffixAction->isHidden()))
             {{ $suffixAction }}
         @endif
+
+        @capture($foo)
+           <span>hello</span>
+        @endcapture
     </div>
 </x-dynamic-component>
 

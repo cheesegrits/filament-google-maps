@@ -40,9 +40,9 @@ class Location extends Model
      * You may of course strip all comments, if you don't feel verbose.
      */
 
-    protected $appends = [
-        'location',
-    ];
+//    protected $appends = [
+//        'location',
+//    ];
 
     /**
      * Returns the 'lat' and 'lng' attributes as the computed 'location' attribute,
@@ -52,14 +52,19 @@ class Location extends Model
      *
      * Requires the 'location' attribute be included in this model's $appends array.
      *
-     * @return string
+     * @return array
      */
-    function getLocationAttribute(): string
+    function getLocationAttribute(): array
     {
-        return json_encode([
-            "lat" => (float)$this->lat,
-            "lng" => (float)$this->lng,
-        ]);
+//        return json_encode([
+//            "lat" => (float)$this->lat,
+//            "lng" => (float)$this->lng,
+//        ]);
+
+	    return [
+		    "lat" => (float)$this->lat,
+		    "lng" => (float)$this->lng,
+	    ];
     }
 
     /**

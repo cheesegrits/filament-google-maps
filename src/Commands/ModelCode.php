@@ -12,7 +12,7 @@ class ModelCode extends Command
 
     protected $signature = 'filament-google-maps:model-code {model?} {--lat=} {--lng=} {--location=} ';
 
-    protected $description = 'Produce computed property code for model';
+    protected $description = 'Produce computed map `location` property code for model';
 
     public function handle()
     {
@@ -113,10 +113,10 @@ class ModelCode extends Command
     {
         \$this->attributes['{$latField}'] = \$location['lat'];
         \$this->attributes['{$lngField}'] = \$location['lng'];
-        // Uncomment this line if you particularly want to have your location field on the table
-        // \$this->attributes['{$locationField}'] = json_encode(\$location);
+        \$this->attributes['{$locationField}'] = json_encode(\$location);
     }
-    
+
+
 EOT;
 
         return static::SUCCESS;
