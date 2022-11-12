@@ -44,7 +44,7 @@
                 @if($geoHasCss())
                     if(!document.getElementById('filament-google-geocomplete-css')){
                         const link  = document.createElement('link');
-                        link.id   = 'filament-google-maps-css';
+                        link.id   = 'filament-google-geocomplete-css';
                         link.rel  = 'stylesheet';
                         link.type = 'text/css';
                         link.href = '{{ $geoCssUrl() }}';
@@ -55,7 +55,7 @@
                 @if($geoHasJs())
                     if(!document.getElementById('filament-google-geocomplete-js')){
                         const script = document.createElement('script');
-                        script.id   = 'filament-google-maps-js';
+                        script.id   = 'filament-google-geocomplete-js';
                         script.src = '{{ $geoJsUrl() }}';
                         document.head.appendChild(script);
                     }
