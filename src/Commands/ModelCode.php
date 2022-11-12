@@ -62,7 +62,7 @@ class ModelCode extends Command
         $fillableStr = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $fillable));
         $locationStr = Str::studly($locationField);
 
-        echo <<<EOT
+        $modelCode = <<<EOT
     /**
      * Insert this code in your model, overwriting any existing \$fillable array (we already merged any existing
      * fillable attributes from your model here).
@@ -118,6 +118,8 @@ class ModelCode extends Command
 
 
 EOT;
+
+		$this->line($modelCode);
 
         return static::SUCCESS;
     }
