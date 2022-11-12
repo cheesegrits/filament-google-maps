@@ -41,22 +41,22 @@
 
                  x-init="
             (async () => {
-                @if($hasCss())
+                @if($geoHasCss())
                     if(!document.getElementById('filament-google-geocomplete-css')){
                         const link  = document.createElement('link');
                         link.id   = 'filament-google-maps-css';
                         link.rel  = 'stylesheet';
                         link.type = 'text/css';
-                        link.href = '{{ $cssUrl() }}';
+                        link.href = '{{ $geoCssUrl() }}';
                         link.media = 'all';
                         document.head.appendChild(link);
                     }
                 @endif
-                @if($hasJs())
+                @if($geoHasJs())
                     if(!document.getElementById('filament-google-geocomplete-js')){
                         const script = document.createElement('script');
                         script.id   = 'filament-google-maps-js';
-                        script.src = '{{ $jsUrl() }}';
+                        script.src = '{{ $geoJsUrl() }}';
                         document.head.appendChild(script);
                     }
                  @endif
@@ -64,7 +64,7 @@
                 do {
                     await (new Promise(resolve => setTimeout(resolve, 100)));
                 } while (window.filamentGoogleGeocomplete === undefined);
-                fgm = filamentGoogleGeocomplete($wire, {{ $getMapConfig()}});
+                fgm = filamentGoogleGeocomplete($wire, {{ $getGeocompleteConfig()}});
                 fgm.init();
             })()
 

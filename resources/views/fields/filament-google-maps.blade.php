@@ -10,28 +10,28 @@
     <div
         x-data="{
 
-            location: $wire.entangle('data.location'),
+            location: $wire.entangle('{{ $getStatePath() }}'),
             fgm: {},
         }"
 
         x-init="
             (async () => {
-                @if($hasCss())
+                @if($mapsHasCss())
                     if(!document.getElementById('filament-google-maps-css')){
                         const link  = document.createElement('link');
                         link.id   = 'filament-google-maps-css';
                         link.rel  = 'stylesheet';
                         link.type = 'text/css';
-                        link.href = '{{ $cssUrl() }}';
+                        link.href = '{{ $mapsCssUrl() }}';
                         link.media = 'all';
                         document.head.appendChild(link);
                     }
                 @endif
-                @if($hasJs())
+                @if($mapsHasJs())
                     if(!document.getElementById('filament-google-maps-js')){
                         const script = document.createElement('script');
                         script.id   = 'filament-google-maps-js';
-                        script.src = '{{ $jsUrl() }}';
+                        script.src = '{{ $mapsJsUrl() }}';
                         document.head.appendChild(script);
                     }
                  @endif

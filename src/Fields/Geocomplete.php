@@ -231,7 +231,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 	 * Create json configuration string
 	 * @return string
 	 */
-	public function getMapConfig(): string
+	public function getGeocompleteConfig(): string
 	{
 		$gmaps = 'https://maps.googleapis.com/maps/api/js'
 			. '?key=' . config('filament-google-maps.key')
@@ -276,24 +276,24 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 		}
 	}
 
-	public function hasJs(): bool
+	public function geoHasJs(): bool
 	{
 		return true;
 	}
 
-	public function jsUrl(): string
+	public function geoJsUrl(): string
 	{
 		$manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
 		return url($manifest['/cheesegrits/filament-google-maps/filament-google-geocomplete.js']);
 	}
 
-	public function hasCss(): bool
+	public function geoHasCss(): bool
 	{
 		return false;
 	}
 
-	public function cssUrl(): string
+	public function geoCssUrl(): string
 	{
 		$manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 

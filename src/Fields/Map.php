@@ -429,24 +429,24 @@ class Map extends Field
 		}
 	}
 
-	public function hasJs(): bool
+	public function mapsHasJs(): bool
 	{
 		return true;
 	}
 
-	public function jsUrl(): string
+	public function mapsJsUrl(): string
 	{
 		$manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
 		return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.js']);
 	}
 
-	public function hasCss(): bool
+	public function mapsHasCss(): bool
 	{
 		return false;
 	}
 
-	public function cssUrl(): string
+	public function mapsCssUrl(): string
 	{
 		$manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
