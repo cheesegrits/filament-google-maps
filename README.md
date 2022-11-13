@@ -32,7 +32,8 @@ If you just can't handle reading documentation and want to dive right in ...
 composer install cheesegrits/filament-google-maps
 ```
 
-... then follow these instructions to add a computed attribute to your model(s) that will use these components ....
+... then follow these instructions to add a computed attribute to any  model(s) that will use these components (which
+should already have separate lat and lng fields, even if they are empty, see the Batch Commands section) ...
 
 ```shell
 php artisan filament-google-maps:model-code
