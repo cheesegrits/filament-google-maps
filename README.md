@@ -9,11 +9,11 @@ either as part of an admin panel, or in standalone front end forms, tables and d
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-### Pre-Release
+### First release
 
-**NOTE** that this project is currently in a pre-release state, and breaking changes may be introduced
-without warning, until the first release tag is applied (expected to be some time week commencing
-Nov 7th, 2022).
+v1.0.0 has been released, so there will be no more breaking changes.  I'm sure there will be bugs, though. Please report
+any you find either on the [GitHub Issues](https://github.com/cheesegrits/filament-google-maps/issues) page,
+or find me (@cheesegrits) on the [Filament Discord server](https://filamentphp.com/discord).
 
 ### API Usage
 
