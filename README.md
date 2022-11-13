@@ -630,13 +630,68 @@ Anything you can do in normal Filament tables, you can do in this table.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Command Line Batching
+## Artisan Commands
+
+### Helper commands
+
+It is often useful to be able to test a single geocode lookup.  We provide two commands ...
+
+```shell
+php artisan filament-google-maps:geocode --address="1600 Pennsylvania Avenue NW, Washington, DC 20500" -A -C -G
+
+lat: 38.8976633
+lng: -77.0365739
+
+[
+    'lat' => 38.8976633
+    'lng' => -77.0365739
+[
+
+--lat=38.8976633 --lng=-77.0365739
+
+php artisan filament-google-maps:reverse-geocode --lat=38.8976633 --lng=-77.0365739
+
+``` 
+
+... where the switches are optional and control what format(s) the lat/lng are given, useful for (say) getting the array to use
+for setting a default location on a Map field.  Or, as we are doing here, finding the coordinates of an address to use
+in the reverse lookup command, so we can check the address components formats ...
+
+
+```shell
+php artisan filament-google-maps:reverse-geocode --lat=38.8976633 --lng=-77.0365739
++--------+-------------------------------+
+| Symbol | Result                        |
++--------+-------------------------------+
+| %n     | 1600                          |
+| %S     | Pennsylvania Avenue Northwest |
+| %L     | Washington                    |
+| %D     |                               |
+| %z     | 20502                         |
+| %A1    | District of Columbia          |
+| %A2    |                               |
+| %A3    |                               |
+| %A4    |                               |
+| %A5    |                               |
+| %a1    | DC                            |
+| %a2    |                               |
+| %a3    |                               |
+| %a4    |                               |
+| %a5    |                               |
+| %C     | United States                 |
+| %c     | US                            |
+| %T     |                               |
++--------+-------------------------------+
+
+```
+
+### Batch Commands
 
 When dealing with location data, it is common to have tables which have lat and lng date
 but no address data, or vice versa.  This package provides a convenient way to process tables
 to either geocode or reverse geocode them to fill in the blanks.
 
-### Geocoding
+#### Batch Geocoding
 
 To add lat and lng coordinates to a table with address data, run this command:
 
@@ -665,7 +720,7 @@ field is a foreign key, you can specify that in dotted notation, like 'states.st
 The command will select all records from your table where either the lat or lng fields
 are empty (0, null or empty string).
 
-### Reverse Geocoding
+#### Batch Reverse Geocoding
 
 Reverse geocoding from the command line is a little trickier, as we have to decompose and
 map the rather complicated address format Google returns.  For this, we use a standard printf style
