@@ -632,6 +632,9 @@ Anything you can do in normal Filament tables, you can do in this table.
 
 ## Artisan Commands
 
+The following commands can also be referenced as fgm: instead of filament-google-maps:, as yes, we get tired typing that
+as well.
+
 ### Helper commands
 
 It is often useful to be able to test a single geocode lookup.  We provide two commands ...
