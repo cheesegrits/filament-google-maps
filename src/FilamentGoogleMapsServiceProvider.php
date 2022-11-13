@@ -29,7 +29,9 @@ class FilamentGoogleMapsServiceProvider extends PluginServiceProvider
     {
         return [
             Commands\ModelCode::class,
+            Commands\GeocodeTable::class,
             Commands\Geocode::class,
+            Commands\ReverseGeocodeTable::class,
             Commands\ReverseGeocode::class,
         ];
     }

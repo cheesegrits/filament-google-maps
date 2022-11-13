@@ -2,6 +2,7 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Helpers;
 
+use Geocoder\Exception\InvalidServerResponse;
 use Geocoder\Formatter\StringFormatter;
 use Geocoder\Provider\GoogleMaps\GoogleMaps;
 use Geocoder\Query\GeocodeQuery;
@@ -12,6 +13,7 @@ use GuzzleHttp\HandlerStack;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\GuzzleRateLimiterMiddleware\RateLimiterMiddleware;
@@ -34,6 +36,27 @@ class Geocoder
 	private static array $formatSymbols = [
 		'%n', '%S', '%L', '%D', '%z', '%A1', '%A2', '%A3', '%A4', '%A5',
 		'%a1', '%a2', '%a3', '%a4', '%a5', '%C', '%c', '%T',
+	];
+
+	private static array $symbolComponents = [
+		'%n' => 'street_number',
+		'%S' => 'street_address',
+		'%L' => 'locality',
+		'%D' => 'sublocality',
+		'%z' => 'postal_code',
+		'%A1' => 'administrative_area_level_1',
+		'%A2' => 'administrative_area_level_2',
+		'%A3' => 'administrative_area_level_3',
+		'%A4' => 'administrative_area_level_4',
+		'%A5' => 'administrative_area_level_5',
+		'%a1' => 'administrative_area_level_1',
+		'%a2' => 'administrative_area_level_2',
+		'%a3' => 'administrative_area_level_3',
+		'%a4' => 'administrative_area_level_4',
+		'%a5' => 'administrative_area_level_5',
+		'%C' => 'country',
+		'%c' => 'country',
+		'%T' => 'timezone',
 	];
 
 	protected HandlerStack $stack;
@@ -288,8 +311,28 @@ class Geocoder
 		return [$lookups, $processed];
 	}
 
+	public function testReverse(array|string $lat, ?string $lng = null, $withComponents = false): array
+	{
+		$formats = [];
 
-	public function testReverse(string $model, $id, $latField, $lngField): array
+		$result = $this->reverseQuery(GeocodeHelper::getLatLng($lat, $lng))->first();
+
+		if ($result)
+		{
+			foreach (static::$symbolComponents as $symbol => $component)
+			{
+				$formats[] = [
+					$symbol,
+					$this->formatter->format($result, $symbol),
+					... ($withComponents ? [$component] : []),
+				];
+			}
+		}
+
+		return $formats;
+	}
+
+	public function testReverseModel(string $model, $id, $latField, $lngField): array
 	{
 		$formats = [];
 
@@ -297,21 +340,10 @@ class Geocoder
 
 		if ($record)
 		{
-			$result = $this->reverseQuery([
+			$formats = $this->testReverse([
 				'lat' => $record->{$latField},
 				'lng' => $record->{$lngField}
-			])->first();
-
-			if ($result)
-			{
-				foreach (static::$formatSymbols as $symbol)
-				{
-					$formats[] = [
-						$symbol,
-						$this->formatter->format($result, $symbol),
-					];
-				}
-			}
+			]);
 		}
 
 		return $formats;
@@ -337,18 +369,33 @@ class Geocoder
 		$duration       = config("filament-google-maps.cache.duration", 0);
 		$store          = config('filament-google-maps.cache.store');
 
-		$result = app("cache")
-			->store($store)
-			->remember(
-				$hashedCacheKey,
-				$duration,
-				function () use ($cacheKey, $queryElements, $queryType) {
-					return [
-						"key"   => $cacheKey,
-						"value" => collect($this->geocoder->{$queryType}(...$queryElements)),
-					];
-				}
-			);
+		try
+		{
+			$result = app("cache")
+				->store($store)
+				->remember(
+					$hashedCacheKey,
+					$duration,
+					function () use ($cacheKey, $queryElements, $queryType) {
+						return [
+							"key"   => $cacheKey,
+							"value" => collect($this->geocoder->{$queryType}(...$queryElements)),
+						];
+					}
+				);
+		}
+		catch (InvalidServerResponse $e)
+		{
+			Log::channel(config('filament-google-maps.log.channel', 'null'))
+				->error('Error in Maps API call: ' . $e->getMessage());
+
+			if (App::runningInConsole())
+			{
+				echo "Error from Maps API: " . $e->getMessage();
+
+				exit;
+			}
+		}
 
 		$result = $this->preventCacheKeyHashCollision(
 			$result,
