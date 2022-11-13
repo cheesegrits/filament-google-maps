@@ -848,6 +848,7 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 - [ ] Improve Geocomplete field Places Data Field handling (allow more than one to be combined)
 - [x] Add Artisan commands for geocoding / reverse geocoding tables, useful when source tables have addreeses but no coords, or vice versa
 - [ ] Add optional request signing of API calls
+- [ ] Add locale to all API calls
 - [x] Add KML layers to field and widgets
 - [x] Add more geocoding options for form fields, for individual address components (street, city, zip, etc)
 - [ ] Improve reverse geocoding format grammar, like alternates ... %A3|%A2 (is %A3 empty, try %A2), etc
