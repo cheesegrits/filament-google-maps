@@ -16,7 +16,7 @@ class ReverseGeocode extends Command
 
     protected $signature = 'filament-google-maps:reverse-geocode {--lat=} {--lng=} {--C|components}';
 
-    protected $description = 'Geocode a table';
+    protected $description = 'Geocode a single lat/lng tuple';
 
     public function handle()
     {

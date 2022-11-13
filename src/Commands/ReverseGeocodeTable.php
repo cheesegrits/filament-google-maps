@@ -15,7 +15,7 @@ class ReverseGeocodeTable extends Command
 
     protected $signature = 'filament-google-maps:reverse-geocode-table {model?} {--lat=} {--lng=} {--fields=*} {--processed=} {--rate-limit=} {--verbose?}}';
 
-    protected $description = 'Geocode a table';
+    protected $description = 'Reverse geocode a table';
 
     public function handle(): int
     {

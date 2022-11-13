@@ -16,7 +16,7 @@ class Geocode extends Command
 
     protected $signature = 'filament-google-maps:geocode {--address=} {--A|array} {--C|command} {--G|args}';
 
-    protected $description = 'Geocode a table';
+    protected $description = 'Geocode a single address';
 
     public function handle()
     {

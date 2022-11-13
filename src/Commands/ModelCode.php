@@ -12,7 +12,7 @@ class ModelCode extends Command
 
     protected $signature = 'filament-google-maps:model-code {model?} {--lat=} {--lng=} {--location=} ';
 
-    protected $description = 'Produce computed map `location` property code for model';
+    protected $description = 'Produce computed attribute code for a model to work with Filament Google Maps';
 
     public function handle()
     {

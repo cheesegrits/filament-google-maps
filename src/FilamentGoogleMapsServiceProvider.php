@@ -27,13 +27,27 @@ class FilamentGoogleMapsServiceProvider extends PluginServiceProvider
 
     protected function getCommands(): array
     {
-        return [
+        $commands = [
             Commands\ModelCode::class,
             Commands\GeocodeTable::class,
             Commands\Geocode::class,
             Commands\ReverseGeocodeTable::class,
             Commands\ReverseGeocode::class,
         ];
+
+	    $aliases = [];
+
+	    foreach ($commands as $command) {
+		    $class = 'Cheesegrits\\FilamentGoogleMaps\\Commands\\Aliases\\' . class_basename($command);
+
+		    if (! class_exists($class)) {
+			    continue;
+		    }
+
+		    $aliases[] = $class;
+	    }
+
+	    return array_merge($commands, $aliases);
     }
 
     public function packageRegistered(): void
