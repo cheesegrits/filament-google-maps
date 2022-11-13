@@ -77,7 +77,7 @@ class Location extends Model
      * @param ?array $location
      * @return void
      */
-    function setLocationAttribute(?array $location): void
+    function setLocationAttribute(array|string $location): void
     {
 		if (is_array($location))
 		{
@@ -85,6 +85,14 @@ class Location extends Model
 			$this->attributes['lng'] = $location['lng'];
 		}
     }
+
+	public static function getLatLngAttributes(): array
+	{
+		return [
+			'lat' => 'lat',
+			'lng' => 'lng',
+		];
+	}
 
 	protected static function newFactory()
 	{

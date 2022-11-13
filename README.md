@@ -153,6 +153,9 @@ exist on your table, just use 'location'.
 
 It will then spit out the code for you to copy and paste to your model class.
 
+**NOTE** - this script also gives you modified $fillable and $appends arrays if required, which will merge
+any existing content of these arrays, make sure you replace the existing ones if you already have them.
+
 ### Setting your Google Maps API Key
 
 All use of the Google Maps API requires an API key.  If you don't have one, refer to
@@ -170,7 +173,9 @@ refer to the config file in the next section.
 
 ### Publish the configuration
 
-You may optionally publish the package configuration.
+You may optionally publish the package configuration.  The configuration comes with a set of sane defaults, so
+we suggest not publishing unless you actually need to change something ... and even then, best to do it with
+.env variables.
 
 ```sh
 php artisan vendor:publish --tag="filament-google-maps-config"
@@ -182,11 +187,11 @@ responses for 30 days, using your default cache driver.  For most normal usage t
 heavy usage, we suggest setting up a dedicated Redis store in your cache.php config, and specify this with the
 FILAMENT_GOOGLE_MAPS_CACHE_STORE environment variable.
 
-
 <details>
   <summary> (<i>click to expand</i>)</summary>
   <!-- have to be followed by an empty line! -->
 
+```php
 <?php
 return [
 	/*
@@ -198,7 +203,7 @@ return [
 	/*
 	 | If you need to use both a browser key (restricted by HTTP Referrer) for use in the Javascript API on the
 	 | front end, and a server key (restricted by IP address) for server side API calls, you will need to set those
-	 | keys here (or preferably set the appropriate env keys)
+	 | keys here (or preferably set the appropriate .env variables)
 	 */
 
 	'keys' => [
@@ -214,7 +219,7 @@ return [
 
 	/*
 	 | Log channel to use, default is 'null' (no logging), set to your desired channel from logging.php if you want
-	 | logs.  Typically only useful for debugging, or if youw ant to keep track of a scheduled geocoding task.
+	 | logs.  Typically only useful for debugging, or if you want to keep track of a scheduled geocoding task.
 	 */
 	'log' => [
 		'channel' => env('FILAMENT_GOOGLE_MAPS_LOG_CHANNEL', 'null'),
@@ -223,7 +228,7 @@ return [
 	/*
 	 | Cache store and duration (in seconds) to use for API results.  Specify store as null to use the default from
 	 | your cache.php config, false will disable caching (STRONGLY discouraged, unless you want a big Google
-	 | API bill!).  For heavy usage, we suggest using a dedicated redis store.  Max cache duration permitted by
+	 | API bill!).  For heavy usage, we suggest using a dedicated Redis store.  Max cache duration permitted by
 	 | Google is 30 days.
 	 */
 
@@ -232,8 +237,9 @@ return [
 		'store' => env('FILAMENT_GOOGLE_MAPS_CACHE_STORE', null),
 	]
 ];
-
+```
 </details>
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -393,8 +399,12 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete
 ...
     Geocomplete::make('location') // field name must be the computed attribute name on your model
         ->isLocation()
-        ->geocodeOnLoad(),
+        ->geocodeOnLoad(), // server side geocode of lat/lng to address when form is loaded
 ```
+
+In isLocation mode the field on the form will be empty on load (as it's not a text field an address casn be stored in).
+If you want this filled in, you can use geocodeOnLoad() which will do a server side API call to resolve the lat/lng to
+an address.  See the note in the config section about server side API keys.
 
 In both modes, you can specify the type(s) of place to show, and the Places response field to use to fill the field.
 Refer to the Google Places API documentation for the [Place Types](https://developers.google.com/maps/documentation/places/web-service/supported_types)
@@ -420,6 +430,8 @@ to, using the same method as the Map component, documented above.
             'state'  => '%A1',
             'street' => '%n %S',
         ])
+        ->debug() // output the results of reverse geocoding in the browser console, useful for figuring out symbol formats
+        ->updateLatLng() // update the lat/lng fields on your form when a Place is selected
         ->maxLength(1024)
         ->prefix('Choose:')
         ->placeholder('Start typing an address ...'),
@@ -468,7 +480,7 @@ use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
         ->longitude('lng') // longitude field on your table
         ->selectUnit() // add a Kilometer / Miles select
         ->kilometers() // use (or default the select to) kilometers (defaults to miles)
-        ->section('Radius Search') // wrap the filter in a section with heading
+        ->section('Radius Search') // optionally wrap the filter in a section with heading
 ```
 
 ### Map Widget
@@ -779,6 +791,7 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 - [ ] Add optional request signing of API calls
 - [x] Add KML layers to field and widgets
 - [x] Add more geocoding options for form fields, for individual address components (street, city, zip, etc)
+- [ ] Improve reverse geocoding format grammar, like alternates ... %A3|%A2 (is %A3 empty, try %A2), etc
 - [ ] Write test suite
 
 <!-- ISSUES -->

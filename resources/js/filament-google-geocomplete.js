@@ -3,10 +3,12 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
         geocoder: null,
         mapEl: null,
         config: {
+            debug: false,
             statePath: '',
             gmaps: '',
             filterName: null,
             reverseGeocodeFields: {},
+            latLngFields: {},
             types: [],
             isLocation: false,
             placeField: 'formatted_address',
@@ -76,7 +78,8 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
                 types: this.config.types,
             };
 
-            const geoComplete = document.getElementById(this.config.statePath);
+            const geocompleteEl = this.config.isLocation ? this.config.statePath + '-fgm-address' : this.config.statePath;
+            const geoComplete = document.getElementById(geocompleteEl);
 
             if (geoComplete) {
                 window.addEventListener('keydown', function (e) {
@@ -100,11 +103,14 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
 
                     this.setLocation(place);
                     this.updateReverseGeocode(place);
+                    this.updateLatLng(place);
                 });
             }
         },
         setLocation: function (place) {
             if (this.config.isLocation) {
+                $wire.set(this.config.statePath, place.geometry.location);
+            } else {
                 $wire.set(this.config.statePath, place[this.config.placeField]);
             }
 
@@ -114,8 +120,7 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
                 const lat = document.getElementById(latPath);
                 const lng = document.getElementById(lngPath);
 
-                if (lat && lng)
-                {
+                if (lat && lng) {
                     lat.setAttribute('value', place.geometry.location.lat().toString());
                     lng.setAttribute('value', place.geometry.location.lng().toString());
                     $wire.set(latPath, place.geometry.location.lat().toString());
@@ -148,13 +153,21 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
                 }
             }
         },
+        updateLatLng: function(place) {
+            if (Object.keys(this.config.reverseGeocodeFields).length > 0) {
+                if (place.geometry) {
+                    $wire.set(this.config.latLngFields.lat, place.geometry.location.lat().toString())
+                    $wire.set(this.config.latLngFields.lng, place.geometry.location.lng().toString())
+                }
+            }
+        },
         getReplacements: function (address_components) {
             let replacements = {};
 
             address_components.forEach(component => {
                 for (const symbol in this.symbols) {
                     if (this.symbols[symbol].indexOf(component.types[0]) !== -1) {
-                        if (symbol  === symbol.toLowerCase()) {
+                        if (symbol === symbol.toLowerCase()) {
                             replacements[symbol] = component.short_name;
                         } else {
                             replacements[symbol] = component.long_name;

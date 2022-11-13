@@ -27,56 +27,56 @@ beforeEach(function () {
 });
 
 it('can create geocomplete field as computed location attribute', function () {
-	$f       = new RealAddressFactory();
-	$address = $f->make(1, 'united-states-of-america', 'Chicago, IL')->first();
-	$latLang = GeocodeHelper::geocode($address->getFormattedAddress());
+	$location    = Location::factory()->create();
 
 	livewire(CreateLocation::class)
 		->fillForm([
-			'location'          => $address->getFormattedAddress(),
-			'street'            => $address->getStreetAddress(),
-			'city'              => $address->getLocality(),
-			'state'             => $address->getAdminLevels()->get(1)->getName(),
-			'zip'               => $address->getPostalCode(),
-			'formatted_address' => $address->getFormattedAddress(),
+			'location'          => [
+				'lat' => $location->lat,
+				'lng' => $location->lng,
+			],
+			'street'            => $location->street,
+			'city'              => $location->city,
+			'state'             => $location->state,
+			'zip'               => $location->zip,
+			'formatted_address' => $location->formatted_address,
 		])
 		->call('create')
 		->assertHasNoFormErrors();
 
 	$this->assertDatabaseHas(Location::class, [
-		'lat' => $latLang['lat'],
-		'lng' => $latLang['lng'],
+		'lat' => $location->lat,
+		'lng' => $location->lng,
 	]);
 });
 
 it('can create geocomplete field as normal field', function () {
-	$f       = new RealAddressFactory();
-	$address = $f->make(1, 'united-states-of-america', 'Chicago, IL')->first();
+	$location    = Location::factory()->create();
 
 	livewire(CreateGeocomplete::class)
 		->fillForm([
-			'street'            => $address->getStreetAddress(),
-			'city'              => $address->getLocality(),
-			'state'             => $address->getAdminLevels()->get(1)->getName(),
-			'zip'               => $address->getPostalCode(),
-			'formatted_address' => $address->getFormattedAddress(),
+			'street'            => $location->street,
+			'city'              => $location->city,
+			'state'             => $location->state,
+			'zip'               => $location->zip,
+			'formatted_address' => $location->formatted_address,
 		])
 		->call('create')
 		->assertHasNoFormErrors();
 
 	$this->assertDatabaseHas(Location::class, [
-		'formatted_address' => $address->getFormattedAddress(),
+		'formatted_address' => $location->formatted_address,
 	]);
 });
 
-it('can edit geocomplete field as computed location attribute', function () {
-	$location = Location::factory()->withRealAddressAndLatLng()->create();
+it('can edit geocomplete field as computed location attribute without geocodeOnLoad', function () {
+	$location = Location::factory()->create();
 
 	livewire(EditLocation::class, [
 		'record' => $location->getKey(),
 	])
 		->assertFormSet([
-//			'location'          => $location->formatted_address,
+			'location'          => '',
 			'street'            => $location->street,
 			'city'              => $location->city,
 			'state'             => $location->state,
@@ -98,32 +98,6 @@ it('can edit geocomplete field as normal field', function () {
 			'zip'               => $location->zip,
 			'formatted_address' => $location->formatted_address,
 		]);
-});
-
-it('can save geocomplete field on computed attribute with geocoding on save', function () {
-	$location    = Location::factory()->withRealAddressAndLatLng()->create();
-	$newLocation = Location::factory()->withRealAddressAndLatLng()->make();
-
-	livewire(LocationResource\Pages\EditLocation::class, [
-		'record' => $location->getKey(),
-	])
-		->fillForm([
-			'street'   => $newLocation->street,
-			'city'     => $newLocation->city,
-			'state'    => $newLocation->state,
-			'zip'      => $newLocation->zip,
-			'location' => $newLocation->formatted_address,
-		])
-		->call('save')
-		->assertHasNoFormErrors();
-
-	expect($location->refresh())
-		->street->toBe($newLocation->street)
-		->city->toBe($newLocation->city)
-		->zip->toBe($newLocation->zip)
-		->state->toBe($newLocation->state)
-		->lat->toBe((string)$newLocation->lat)
-		->lng->toBe((string)$newLocation->lng);
 });
 
 it('can edit map field as computed location attribute', function () {

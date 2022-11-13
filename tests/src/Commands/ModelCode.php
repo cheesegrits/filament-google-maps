@@ -126,6 +126,26 @@ it ('outputs the set attribute model-code', function () {
     }'));
 });
 
+it ('outputs the get lat lng model-code', function () {
+	$this->artisan(
+		'filament-google-maps:model-code',
+		[
+			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+			'--lat' => 'lat',
+			'--lng' => 'lng',
+			'--location' => 'location',
+		]
+	)
+		->expectsOutputToContain(convertNewlines('
+    public static function getLatLngAttributes(): array
+    {
+        return [
+            \'lat\' => \'lat\',
+            \'lng\' => \'lng\',
+        ];
+    }'));
+});
+
 function convertNewlines($text)
 {
 	$text = implode("\n", explode("\r\n", $text));

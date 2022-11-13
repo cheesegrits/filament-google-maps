@@ -168,7 +168,7 @@ class Map extends Field
 
 			if ($fieldId)
 			{
-				$statePaths[] = $format;
+				$statePaths[$fieldId] = $format;
 			}
 		}
 

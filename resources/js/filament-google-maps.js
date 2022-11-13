@@ -32,6 +32,25 @@ window.filamentGoogleMaps = ($wire, config) => {
             defaultZoom: 8,
             gmaps: '',
         },
+        symbols: {
+            '%n': ["street_number"],
+            '%z': ["postal_code"],
+            '%S': ["street_address", "route"],
+            '%A1': ["administrative_area_level_1"],
+            '%A2': ["administrative_area_level_2"],
+            '%A3': ["administrative_area_level_3"],
+            '%A4': ["administrative_area_level_4"],
+            '%A5': ["administrative_area_level_5"],
+            '%a1': ["administrative_area_level_1"],
+            '%a2': ["administrative_area_level_2"],
+            '%a3': ["administrative_area_level_3"],
+            '%a4': ["administrative_area_level_4"],
+            '%a5': ["administrative_area_level_5"],
+            '%L': ["locality"],
+            '%D': ["sublocality"],
+            '%C': ["country"],
+            '%c': ["country"],
+        },
 
         loadGMaps: function () {
             if (!document.getElementById('filament-google-maps-google-maps-js')) {
@@ -199,10 +218,18 @@ window.filamentGoogleMaps = ($wire, config) => {
                                     replaced = replaced.split(replacement).join(replacements[replacement]);
                                 }
 
+                                for (const symbol in this.symbols) {
+                                    replaced = replaced.split(symbol).join('');
+                                }
+
+                                replaced = replaced.trim();
                                 $wire.set(field, replaced)
                             }
 
                         }
+                    })
+                    .catch((error) => {
+                        console.log(error.message);
                     })
             }
         },
@@ -215,10 +242,13 @@ window.filamentGoogleMaps = ($wire, config) => {
                             $wire.set(this.config.autocomplete, response.results[0].formatted_address);
                         }
                     })
+                    .catch((error) => {
+                        console.log(error.message);
+                    })
             }
         },
         setCoordinates: function (position) {
-            $wire.set(this.config.statePath, position, false);
+            $wire.set(this.config.statePath, position);
         },
         getCoordinates: function () {
             let location = $wire.get(this.config.statePath)
@@ -229,32 +259,12 @@ window.filamentGoogleMaps = ($wire, config) => {
         },
 
         getReplacements: function (address_components) {
-            const symbols = {
-                '%n': ["street_number"],
-                '%z': ["postal_code"],
-                '%S': ["street_address", "route"],
-                '%A1': ["administrative_area_level_1"],
-                '%A2': ["administrative_area_level_2"],
-                '%A3': ["administrative_area_level_3"],
-                '%A4': ["administrative_area_level_4"],
-                '%A5': ["administrative_area_level_5"],
-                '%a1': ["administrative_area_level_1"],
-                '%a2': ["administrative_area_level_2"],
-                '%a3': ["administrative_area_level_3"],
-                '%a4': ["administrative_area_level_4"],
-                '%a5': ["administrative_area_level_5"],
-                '%L': ["locality"],
-                '%D': ["sublocality"],
-                '%C': ["country"],
-                '%c': ["country"],
-            };
-
             let replacements = {};
 
             address_components.forEach(component => {
-                for (const symbol in symbols) {
-                    if (symbols[symbol].indexOf(component.types[0]) !== -1) {
-                        if (symbol  === symbol.toLowerCase()) {
+                for (const symbol in this.symbols) {
+                    if (this.symbols[symbol].indexOf(component.types[0]) !== -1) {
+                        if (symbol === symbol.toLowerCase()) {
                             replacements[symbol] = component.short_name;
                         } else {
                             replacements[symbol] = component.long_name;

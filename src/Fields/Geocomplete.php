@@ -37,7 +37,11 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 
 	protected Closure|array $reverseGeocode = [];
 
+	protected Closure|bool $updateLatLng = false;
+
 	protected Closure|array $types = [];
+
+	protected Closure|bool $debug = false;
 
 
 	/**
@@ -67,6 +71,70 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 	}
 
 	/**
+	 * Prints out reverse geocode components on the debug console, useful for figuring out the format
+	 * strings to use.
+	 *
+	 * @param Closure|bool $debug
+	 *
+	 * @return $this
+	 */
+	public function debug(Closure|bool $debug = true): static
+	{
+		$this->debug = $debug;
+
+		return $this;
+	}
+
+	public function getDebug(): bool
+	{
+		return $this->evaluate($this->debug);
+	}
+
+
+	/**
+	 * If set to true, will update lat and lng fields on the form when a place is selected from the dropdown.  Requires
+	 * the getLatLngAttributes() method on the model, as per the filament-google-maps:model-code Artisan command.
+	 *
+	 * @param Closure|bool $debug
+	 *
+	 * @return $this
+	 */
+	public function updateLatLng(Closure|bool $updateLatLng = true): static
+	{
+		$this->updateLatLng = $updateLatLng;
+
+		return $this;
+	}
+
+	public function getUpdateLatLng(): bool
+	{
+		return $this->evaluate($this->updateLatLng);
+	}
+
+	private function getUpdateLatLngFields(): array
+	{
+		$statePaths = [];
+
+		if ($this->getUpdateLatLng())
+		{
+			$fields = $this->getModel()::getLatLngAttributes();
+
+
+			foreach ($fields as $field)
+			{
+				$fieldId = FieldHelper::getFieldId($field, $this);
+
+				if ($fieldId)
+				{
+					$statePaths[$field] = $fieldId;
+				}
+			}
+		}
+
+		return $statePaths;
+	}
+
+	/**
 	 * Optionally set this to true, if you want the geocomplete to update lat/lng fields on your form
 	 *
 	 * @param Closure|string $name
@@ -85,6 +153,15 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 		return $this->evaluate($this->isLocation);
 	}
 
+	/**
+	 * If set to true, the current location (lat/lng) will be reverse geocoded to this field a formatted address.
+	 * This incurs and extra server side API call, and requires that you have an API key set to allow your server IP.
+	 * Defaults to false.
+	 *
+	 * @param Closure|bool $geocodeOnLoad
+	 *
+	 * @return $this
+	 */
 	public function geocodeOnLoad(Closure|bool $geocodeOnLoad = true): static
 	{
 		$this->geocodeOnLoad = $geocodeOnLoad;
@@ -96,7 +173,6 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 	{
 		return $this->evaluate($this->geocodeOnLoad);
 	}
-
 
 	/**
 	 * Optionally provide an array of field names and format strings as key and value, if you would like the map to reverse geocode
@@ -193,14 +269,21 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 		parent::setUp();
 
 		$this->afterStateHydrated(static function (Geocomplete $component, $state) {
-			if ($component->getIsLocation() && $component->getGeocodeOnLoad())
+			if ($component->getIsLocation())
 			{
-				$state = static::getLocationState($state);
-
-				if (!FieldHelper::blankLocation($state))
+				if ($component->getGeocodeOnLoad())
 				{
-					$state = GeocodeHelper::reverseGeocode($state);
+					$state = static::getLocationState($state);
 
+					if (!FieldHelper::blankLocation($state))
+					{
+						$state = GeocodeHelper::reverseGeocode($state);
+
+					}
+					else
+					{
+						$state = '';
+					}
 				}
 				else
 				{
@@ -212,16 +295,16 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 		});
 
 		$this->dehydrateStateUsing(static function (string|array|null $state, $record, $model, Geocomplete $component) {
-			if (!blank($state))
-			{
-				if ($component->getIsLocation())
-				{
-					$latLang = GeocodeHelper::geocode($state);
-
-					//$record->setLocationAttribute($latLang);
-					return $latLang;
-				}
-			}
+//			if (!blank($state))
+//			{
+//				if ($component->getIsLocation())
+//				{
+//					if ($latLang = GeocodeHelper::geocode($state))
+//					{
+//						return $latLang;
+//					}
+//				}
+//			}
 
 			return $state;
 		});
@@ -242,10 +325,12 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 		$config = json_encode([
 			'filterName'           => $this->getFilterName(),
 			'statePath'            => $this->getStatePath(),
-			'isLocation'             => $this->getIsLocation(),
+			'isLocation'           => $this->getIsLocation(),
 			'reverseGeocodeFields' => $this->getReverseGeocode(),
+			'latLngFields'         => $this->getUpdateLatLngFields(),
 			'types'                => $this->getTypes(),
 			'placeField'           => $this->getPlaceField(),
+			'debug'                => $this->getDebug(),
 			'gmaps'                => $gmaps,
 		]);
 

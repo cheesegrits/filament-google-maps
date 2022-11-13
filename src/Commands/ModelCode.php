@@ -166,6 +166,14 @@ EOT;
             \$this->attributes['{$locationField}'] = json_encode(\$location);
         }
     }
+    
+    public static function getLatLngAttributes(): array
+    {
+        return [
+            'lat' => '{$latField}',
+            'lng' => '{$lngField}',
+        ];
+    }
 
 
 EOT;

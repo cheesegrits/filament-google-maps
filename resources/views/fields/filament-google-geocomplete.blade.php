@@ -1,8 +1,8 @@
 @php
     $affixLabelClasses = [
-        'whitespace-nowrap group-focus-within:text-primary-500',
-        'text-gray-400' => ! $errors->has($getStatePath()),
-        'text-danger-400' => $errors->has($getStatePath()),
+    'whitespace-nowrap group-focus-within:text-primary-500',
+    'text-gray-400' => ! $errors->has($getStatePath()),
+    'text-danger-400' => $errors->has($getStatePath()),
     ];
 @endphp
 
@@ -25,7 +25,7 @@
         @endif
 
         @if ($icon = $getPrefixIcon())
-            <x-dynamic-component :component="$icon" class="w-5 h-5" />
+            <x-dynamic-component :component="$icon" class="w-5 h-5"/>
         @endif
 
         @if ($label = $getPrefixLabel())
@@ -34,12 +34,12 @@
             </span>
         @endif
 
-            <div class="w-full"
-                 x-data="{
+        <div class="w-full"
+             x-data="{
             fgm: {},
         }"
 
-                 x-init="
+             x-init="
             (async () => {
                 @if($geoHasCss())
                     if(!document.getElementById('filament-google-geocomplete-css')){
@@ -69,36 +69,48 @@
             })()
 
         "
-                 wire:ignore
-            >
-        <div class="flex-1">
-            <input x-data="{}"
-            {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
-            type="text"
+             wire:ignore
+        >
+            <div class="flex-1">
+                <input x-data="{}"
+                @if(!$getIsLocation())
+                    {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
+                @endif
 
-            dusk="filament.forms.{{ $getStatePath() }}"
-            {!! $isAutofocused() ? 'autofocus' : null !!}
-            {!! $isDisabled() ? 'disabled' : null !!}
-            id="{{ $getId() }}"
-            {!! ($inputMode = $getInputMode()) ? "inputmode=\"{$inputMode}\"" : null !!}
-            {!! ($placeholder = $getPlaceholder()) ? "placeholder=\"{$placeholder}\"" : null !!}
-            @if (! $isConcealed())
-                {!! filled($length = $getMaxLength()) ? "maxlength=\"{$length}\"" : null !!}
-                {!! filled($length = $getMinLength()) ? "minlength=\"{$length}\"" : null !!}
-                {!! $isRequired() ? 'required' : null !!}
-            @endif
-            {{ $getExtraInputAttributeBag()->class([
+                type="text"
+
+                dusk="filament.forms.{{ $getStatePath() }}"
+                {!! $isAutofocused() ? 'autofocus' : null !!}
+                {!! $isDisabled() ? 'disabled' : null !!}
+                id="{{ $getIsLocation() ? $getId() . '-fgm-address' : $getId() }}"
+                {!! ($inputMode = $getInputMode()) ? "inputmode=\"{$inputMode}\"" : null !!}
+                {!! ($placeholder = $getPlaceholder()) ? "placeholder=\"{$placeholder}\"" : null !!}
+                @if (! $isConcealed())
+                    {!! filled($length = $getMaxLength()) ? "maxlength=\"{$length}\"" : null !!}
+                    {!! filled($length = $getMinLength()) ? "minlength=\"{$length}\"" : null !!}
+                    {!! $isRequired() ? 'required' : null !!}
+                @endif
+                {{ $getExtraInputAttributeBag()->class([
                 'block w-full transition duration-75 rounded-lg shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-inset focus:ring-primary-500 disabled:opacity-70',
                 'dark:bg-gray-700 dark:text-white dark:focus:border-primary-500' => config('forms.dark_mode'),
-            ]) }}
-            x-bind:class="{
-                    'border-gray-300': ! (@js($getStatePath()) in $wire.__instance.serverMemo.errors),
-                    'dark:border-gray-600': ! (@js($getStatePath()) in $wire.__instance.serverMemo.errors) && @js(config('forms.dark_mode')),
-                    'border-danger-600 ring-danger-600': (@js($getStatePath()) in $wire.__instance.serverMemo.errors),
-                }"
-            />
-        </div>
+                ]) }}
+                x-bind:class="{
+				'border-gray-300': ! (@js($getStatePath()) in $wire.__instance.serverMemo.errors),
+				'dark:border-gray-600': ! (@js($getStatePath())
+                in $wire.__instance.serverMemo.errors) && @js(config('forms.dark_mode')),
+				'border-danger-600 ring-danger-600': (@js($getStatePath()) in $wire.__instance.serverMemo.errors),
+				}"
+                />
             </div>
+
+            @if($getIsLocation())
+                <input
+                {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
+                type="hidden"
+                id="{{ $getId() }}"
+                />
+            @endif
+        </div>
 
         @if ($label = $getSuffixLabel())
             <span @class($affixLabelClasses)>
@@ -107,16 +119,12 @@
         @endif
 
         @if ($icon = $getSuffixIcon())
-            <x-dynamic-component :component="$icon" class="w-5 h-5" />
+            <x-dynamic-component :component="$icon" class="w-5 h-5"/>
         @endif
 
         @if (($suffixAction = $getSuffixAction()) && (! $suffixAction->isHidden()))
             {{ $suffixAction }}
         @endif
-
-        @capture($foo)
-           <span>hello</span>
-        @endcapture
     </div>
 </x-dynamic-component>
 
