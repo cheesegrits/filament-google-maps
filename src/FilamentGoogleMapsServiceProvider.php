@@ -33,6 +33,7 @@ class FilamentGoogleMapsServiceProvider extends PluginServiceProvider
             Commands\Geocode::class,
             Commands\ReverseGeocodeTable::class,
             Commands\ReverseGeocode::class,
+	        Commands\MakeWidgetCommand::class
         ];
 
 	    $aliases = [];

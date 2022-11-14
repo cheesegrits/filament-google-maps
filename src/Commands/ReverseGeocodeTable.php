@@ -172,7 +172,7 @@ class ReverseGeocodeTable extends Command
 			} while (!empty($field));
 		}
 
-        list($processed, $updated) = $geocoder->reverseBatch($modelName, $lat, $lng, $fields, $processedField, $verbose);
+        list($records, $processed, $updated) = $geocoder->reverseBatch($modelName, $lat, $lng, $fields, $processedField, null, $verbose);
 
 		$this->info('Results');
 		$this->line('API Lookups: ' . $processed);
@@ -182,7 +182,7 @@ class ReverseGeocodeTable extends Command
 		{
 
 			$summary = sprintf(
-				'php artisan filament-google-maps:reverse-geocode %s %s --lat=%s --lng=%s --processed=%s --rate-limit=%s',
+				'php artisan filament-google-maps:reverse-geocode %s %s --lat=%s --lng=%s --processed=%s',
 				$ogModelName,
 				implode(' ', array_map(fn ($field) => '--fields="' . $field . '"', $fields)),
 				$lat,

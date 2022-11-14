@@ -403,7 +403,7 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete
         ->geocodeOnLoad(), // server side geocode of lat/lng to address when form is loaded
 ```
 
-In isLocation mode the field on the form will be empty on load (as it's not a text field an address casn be stored in).
+In isLocation mode the field on the form will be empty on load (as it's not a text field an address can be stored in).
 If you want this filled in, you can use geocodeOnLoad() which will do a server side API call to resolve the lat/lng to
 an address.  See the note in the config section about server side API keys.
 
@@ -477,8 +477,8 @@ within the specified distance of that address.
 use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
 ...
     RadiusFilter::make('radius')
-        ->latitude('lat') // latitude field on your table
-        ->longitude('lng') // longitude field on your table
+        ->latitude('lat')  // optional lat and lng fields on your table, default to the getLatLngAttributes() method
+        ->longitude('lng') // you should have one your model from the fgm:model-code command when you installed
         ->selectUnit() // add a Kilometer / Miles select
         ->kilometers() // use (or default the select to) kilometers (defaults to miles)
         ->section('Radius Search') // optionally wrap the filter in a section with heading
@@ -709,12 +709,13 @@ php artisan filament-google-maps:geocode
 - fields - an ordered, comma separated list of the fields that make up an address, like 'street,city,state,zip'
 - lat - your lat field
 - lng - your lng field
+- processed - optional field name that will get set to 1 when geocoded, and excluded if it is set to 1
 - rate-limit - max number of lookups per minute (max is 300, which is Google's hard limit, suggested max is 150)
 
 Or you can skip the hand holding and issue it as ...
 
 ```shell
-php artisan filament-google-maps:geocode Location --fields=street,city,state,zip --lat=lat --lng=lng --rate-limit=100
+php artisan filament-google-maps:geocode-table Location --fields=street,city,state,zip --lat=lat --lng=lng --rate-limit=100
 
 ```
 If any of your address data is a join relationship, like say you have a 'states' table and the 'state'
@@ -744,6 +745,9 @@ fgm> php artisan filament-google-maps:reverse-geocode Location
 
  Name of longitude element on table (e.g. `longitude`):
  > lng
+ 
+ Optional name of field to set to 1 when record is processed (e.g. `processed`)
+ > processed
 
 +------------------------------+-------------------------+
 | Component                    | Format                  |
@@ -767,12 +771,17 @@ as summarixed in the table above to extract the address components.
 
 Each mapping should be of the form <field name>=<format symbol(s)>, for example
 to map (say) a street address to your `street_name` field, you would need ...
+
 street_name=%n %S
+
 ... and you might also add ...
+
 city=%L
 state=%A2
 zip=%z
+
 ... or just ...
+
 formatted_address=%s %S, %L, %A2, %z
 
 You may enter as many mappings as you need, enter a blank line to continue.
@@ -834,10 +843,11 @@ API Lookups: 2
 Records Updated: 2
 
 Command summary - you may wish to copy and save this somewhere!
-php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S" --fields="city=%L" --fields="state=%A1" --fields="zip=%z" --fields="formatted_address=%n %S, %L, %z %a1" --lat=lat --lng=lng --rate-limit=100
+php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S" --fields="city=%L" --fields="state=%A1" --fields="zip=%z" --fields="formatted_address=%n %S, %L, %z %a1" --lat=lat --lng=lng --processed=processed --rate-limit=100
 
 ```
 </details>
+
 
 <!-- ROADMAP -->
 ## Roadmap

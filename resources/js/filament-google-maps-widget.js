@@ -32,9 +32,9 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
         },
 
         loadGMaps: function () {
-            if (!document.getElementById('filament-google-maps-widget-google-maps-js')) {
+            if (!document.getElementById('filament-google-maps-google-maps-js')) {
                 const script = document.createElement('script');
-                script.id = 'filament-google-maps-widget-google-maps-js';
+                script.id = 'filament-google-maps-google-maps-js';
                 window.filamentGoogleMapsAsyncLoad = this.createMap.bind(this);
                 script.src = this.config.gmaps + '&callback=filamentGoogleMapsAsyncLoad';
                 document.head.appendChild(script);

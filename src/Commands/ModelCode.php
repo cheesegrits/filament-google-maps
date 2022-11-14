@@ -167,12 +167,31 @@ EOT;
         }
     }
     
+    /**
+     * Get the lat and lng attribute/field names used on this table
+     *
+     * Used by the Filament Google Maps package.
+     *
+     * @return string[]
+     */
     public static function getLatLngAttributes(): array
     {
         return [
             'lat' => '{$latField}',
             'lng' => '{$lngField}',
         ];
+    }
+    
+    /**
+     * Get the name of the computed location attribute
+     *
+     * Used by the Filament Google Maps package.
+     * 
+     * @return string
+     */
+    public static function getComputedLocation(): string
+    {
+        return '{$locationField}';
     }
 
 

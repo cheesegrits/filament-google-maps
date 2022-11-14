@@ -14,6 +14,8 @@
             fgm: {},
         }"
 
+        id="{{  $getId() . '-alpine' }}"
+
         x-init="
             (async () => {
                 @if($mapsHasCss())

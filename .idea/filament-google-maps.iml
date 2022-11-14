@@ -159,6 +159,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/nonsapiens/realaddressfactory" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/http-interop/http-factory-guzzle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/igorw/get-in" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/timacdonald/log-fake" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

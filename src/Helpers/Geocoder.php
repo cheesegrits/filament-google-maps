@@ -144,12 +144,31 @@ class Geocoder
 		return $this->cacheRequest($cacheKey, [$query], "reverseQuery");
 	}
 
-	public function geocodeBatch(string $modelName, string $latField, string $lngField, string $fields, ?string $processedField = null, ?bool $verbose = false): array
+	/**
+	 * @param string      $modelName
+	 * @param string      $latField
+	 * @param string      $lngField
+	 * @param string      $fields
+	 * @param string|null $processedField
+	 * @param int|null    $limit
+	 * @param bool|null   $verbose
+	 *
+	 * @return int[]
+	 */
+	public function geocodeBatch(
+		string  $modelName,
+		string  $latField,
+		string  $lngField,
+		string  $fields,
+		?string $processedField = null,
+		?int    $limit = null,
+		?bool   $verbose = false): array
 	{
 		Log::channel(config('filament-google-maps.log.channel'))->info('geocodeBatch started');
 
 		$lookups   = 0;
 		$processed = 0;
+		$records = 0;
 
 		$model = new $modelName();
 
@@ -169,9 +188,16 @@ class Geocoder
 			);
 		}
 
+		if ($limit)
+		{
+			$query->limit($limit);
+		}
+
 		// lazily fetch the records 10 at a time (could bump this)
 		$query->lazyById(10)->each(
-			function ($record) use (&$lookups, &$processed, $joins, $latField, $lngField, $processedField, $model, $fields) {
+			function ($record) use (&$lookups, &$processed, &$records, $joins, $latField, $lngField, $processedField, $model, $fields) {
+				$records++;
+
 				// stitch the address together from the record
 				$address = $this->getAddressFromModel($record, $fields, $joins);
 
@@ -201,18 +227,26 @@ class Geocoder
 		);
 
 		Log::channel(config('filament-google-maps.log.channel'))->info(
-			sprintf('reverseBatch completed, %d API calls, %d records updated', $lookups, $processed)
+			sprintf('geocodeBatch completed, %d API calls, %d records updated', $lookups, $processed)
 		);
 
-		return [$lookups, $processed];
+		return [$records, $lookups, $processed];
 	}
 
-	public function reverseBatch(string $modelName, string $latField, string $lngField, array $fields, ?string $processedField = null, ?bool $verbose = false): array
+	public function reverseBatch(
+		string  $modelName,
+		string  $latField,
+		string  $lngField,
+		array   $fields,
+		?string $processedField = null,
+		?int    $limit = null,
+		?bool   $verbose = false): array
 	{
 		Log::channel(config('filament-google-maps.log.channel'))->info('reverseBatch started');
 
 		$lookups   = 0;
 		$processed = 0;
+		$records = 0;
 
 		// allow fields to be either keyed by field name like ['name' => '%format'] or ['name=%format'],
 		// convert to keyed version here if the latter
@@ -237,8 +271,14 @@ class Geocoder
 			);
 		}
 
+		if ($limit)
+		{
+			$query->limit($limit);
+		}
+
 		$query->lazyById(10)->each(
-			function ($record) use (&$lookups, &$processed, $joins, $latField, $lngField, $processedField, $model, $fields) {
+			function ($record) use (&$lookups, &$processed, &$records, $joins, $latField, $lngField, $processedField, $model, $fields) {
+				$records++;
 				$lat = $record->{$latField} ?? null;
 				$lng = $record->{$lngField} ?? null;
 
@@ -308,7 +348,7 @@ class Geocoder
 			sprintf('reverseBatch completed, %d API calls, %d records updated', $lookups, $processed)
 		);
 
-		return [$lookups, $processed];
+		return [$records, $lookups, $processed];
 	}
 
 	public function testReverse(array|string $lat, ?string $lng = null, $withComponents = false): array

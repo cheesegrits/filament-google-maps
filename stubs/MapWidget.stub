@@ -1,0 +1,42 @@
+<?php
+
+namespace {{ namespace }};
+
+use Cheesegrits\FilamentGoogleMaps\Widgets\MapWidget;
+
+class {{ class }} extends MapWidget
+{
+    protected static ?string $heading = 'Map';
+
+    protected static ?int $sort = 1;
+
+    protected static ?string $pollingInterval = null;
+
+    protected static ?bool $clustering = true;
+
+    protected static ?bool $fitToBounds = true;
+
+    protected static ?int $zoom = 12;
+
+    protected function getData(): array
+    {
+        $locations = {{ model }}::all()->limit(500);
+
+        $data = [];
+
+        foreach ($locations as $location)
+        {
+
+            $data[] = [
+                'location'  => [
+                    'lat' => $location->{{ lat }} ? round(floatval($location->{{ lat }}), static::$precision) : 0,
+                    'lng' => $location->{{ lng }} ? round(floatval($location->{{ lng }}), static::$precision) : 0,
+                ],
+                'label'     => $location->{{ lat }} . ',' . $location->{{ lng }},
+            ];
+
+        }
+
+        return $data;
+    }
+}

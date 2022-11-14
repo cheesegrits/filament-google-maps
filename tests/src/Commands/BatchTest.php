@@ -16,7 +16,7 @@ it('can reverse geocode a table', function () {
 	assertCount(0, $locations);
 
 	$geocode = new Geocoder(config('filament-google-maps.rate-limit', 150));
-	list($lookups, $processed) = $geocode->reverseBatch(
+	list($records, $lookups, $processed) = $geocode->reverseBatch(
 		Location::class,
 		'lat',
 		'lng',
@@ -41,7 +41,7 @@ it('it can reverse geocode a table twice and only process once', function () {
 	assertCount(0, $locations);
 
 	$geocode = new Geocoder(config('filament-google-maps.rate-limit', 150));
-	list($lookups, $processed) = $geocode->reverseBatch(
+	list($records, $lookups, $processed) = $geocode->reverseBatch(
 		Location::class,
 		'lat',
 		'lng',
@@ -58,7 +58,7 @@ it('it can reverse geocode a table twice and only process once', function () {
 	$locations = Location::where(['processed' => 1])->get();
 	assertCount(5, $locations);
 
-	list($lookups, $processed) = $geocode->reverseBatch(
+	list($records, $lookups, $processed) = $geocode->reverseBatch(
 		Location::class,
 		'lat',
 		'lng',
@@ -82,7 +82,7 @@ it('can geocode a table', function () {
 	assertCount(0, $locations);
 
 	$geocode = new Geocoder(config('filament-google-maps.rate-limit', 150));
-	list($lookups, $processed) = $geocode->geocodeBatch(
+	list($records, $lookups, $processed) = $geocode->geocodeBatch(
 		Location::class,
 		'lat',
 		'lng',
@@ -102,7 +102,7 @@ it('it can geocode a table twice and only process once', function () {
 	assertCount(0, $locations);
 
 	$geocode = new Geocoder(config('filament-google-maps.rate-limit', 150));
-	list($lookups, $processed) = $geocode->geocodeBatch(
+	list($records, $lookups, $processed) = $geocode->geocodeBatch(
 		Location::class,
 		'lat',
 		'lng',
@@ -114,7 +114,7 @@ it('it can geocode a table twice and only process once', function () {
 	$locations = Location::where(['processed' => 1])->get();
 	assertCount(5, $locations);
 
-	list($lookups, $processed) = $geocode->reverseBatch(
+	list($records, $lookups, $processed) = $geocode->reverseBatch(
 		Location::class,
 		'lat',
 		'lng',

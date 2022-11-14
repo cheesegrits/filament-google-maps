@@ -122,7 +122,7 @@ class GeocodeTable extends Command
 		    $processedField = null;
 	    }
 
-	    list($processed, $updated) = $geocoder->geocodeBatch($modelName, $lat, $lng, $fields, $processedField, $verbose);
+	    list($records, $processed, $updated) = $geocoder->geocodeBatch($modelName, $lat, $lng, $fields, $processedField, null, $verbose);
 
 	    $this->info('Results');
 	    $this->line('API Lookups: ' . $processed);

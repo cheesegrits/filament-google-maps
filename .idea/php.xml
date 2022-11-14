@@ -163,6 +163,7 @@
       <path value="$PROJECT_DIR$/vendor/nonsapiens/realaddressfactory" />
       <path value="$PROJECT_DIR$/vendor/http-interop/http-factory-guzzle" />
       <path value="$PROJECT_DIR$/vendor/igorw/get-in" />
+      <path value="$PROJECT_DIR$/vendor/timacdonald/log-fake" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
