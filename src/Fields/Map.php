@@ -3,6 +3,7 @@
 namespace Cheesegrits\FilamentGoogleMaps\Fields;
 
 use Cheesegrits\FilamentGoogleMaps\Helpers\FieldHelper;
+use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Exception;
 use Filament\Forms\Components\Component;
@@ -133,7 +134,7 @@ class Map extends Field
 	/**
 	 * Optionally provide an array of field names and format strings as key and value, if you would like the map to reverse geocode
 	 * address components to individual fields on your form.  See documentation for full explanation of format strings.
-	 * 
+	 *
 	 * ->reverseGeocode(['street' => '%n %s', 'city' => '%L', 'state' => %A1', 'zip' => '%z'])
 	 *
 	 * Street Number: %n
@@ -145,7 +146,7 @@ class Map extends Field
 	 * Admin Level Code: %a1, %a2, %a3, %a4, %a5
 	 * Country: %C
 	 * Country Code: %c
-	 * 
+	 *
 	 * @param Closure|array $reverseGeocode
 	 *
 	 * @return $this
@@ -367,7 +368,7 @@ class Map extends Field
 		{
 			return FieldHelper::getFieldId($autoCompleteField, $this);
 		}
-		
+
 		return null;
 	}
 
@@ -377,12 +378,6 @@ class Map extends Field
 	 */
 	public function getMapConfig(): string
 	{
-		$gmaps = 'https://maps.googleapis.com/maps/api/js'
-			. '?key=' . config('filament-google-maps.key')
-			. '&libraries=places'
-			. '&v=weekly'
-			. '&language=' . app()->getLocale();
-
 		$config = json_encode(
 			array_merge($this->mapConfig, [
 				'autocomplete'         => $this->getAutocompleteId(),
@@ -396,7 +391,7 @@ class Map extends Field
 				'reverseGeocodeFields' => $this->getReverseGeocode(),
 				'defaultZoom'          => $this->getDefaultZoom(),
 				'debug'                => $this->getDebug(),
-				'gmaps'                => $gmaps,
+				'gmaps'                => MapsHelper::mapsUrl(),
 			])
 		);
 

@@ -7,6 +7,7 @@ This package provides a comprehensive set of tools for using Google Maps within 
 either as part of an admin panel, or in standalone front end forms, tables and dashboards.
 
 <!-- ABOUT THE PROJECT -->
+<a name="about"/>
 ## About The Project
 
 ### First release
@@ -24,7 +25,7 @@ cache frequently.  Or if you allow public access to forms that use geocoding, an
 We **strongly** suggest you set [usage quotas in your Google Console](https://console.cloud.google.com/projectselector2/google/maps-apis/quotas).
 We are not liable if you get a surprise bill!
 
-## TL/DR
+### TL/DR
 
 If you just can't handle reading documentation and want to dive right in ...
 
@@ -52,6 +53,8 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Map
     ...
 ]
 ```
+
+<a name="components"/>
 
 ## Components
 
@@ -109,6 +112,7 @@ a combination of address fields into lat lng, or reverse geocoding lat and lng t
 
 
 <!-- GETTING STARTED -->
+<a name="getting-started"/>
 ## Getting Started 
 
 ### Prerequisites
@@ -245,6 +249,7 @@ return [
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
+<a name="usage"/>
 ## Usage
 
 ### Form Field
@@ -489,9 +494,51 @@ use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
 The map widget can be used either in the Filament Admin panel (see Filament docs), or
 standalone as a normal Livewire component.
 
-Here is an example of using the widget on a front end dashboard.  Create a component somewhere
-in your Livewire folder, like ./Http/Livewire/Widgets/Dealerships.php, which extends the
-FilamentGoogleMapsWidget class.
+To generate the code for a widget, run this Artisan command:
+
+```shell
+php artisan fgm:make-widget
+
+
+ Widget type (just a map, or map with integrated table [Map]:
+  [0] Map
+  [1] Map & Table
+ > 1
+
+ Name (e.g. `DealershipMap`):
+ > LocationMapTableWidget
+
+ Model (e.g. `Location` or `Maps/Dealership`):
+ > Location
+
+ (Optional) Resource (e.g. `LocationResource`):
+ > LocationResource
+
+Successfully created the LocationMapTableWidget in your LocationResource resource class.
+
+Make sure to register the widget both in `LocationResource::getWidgets()`,
+and in either `getHeaderWidgets()` or `getFooterWidgets()` of any `LocationResource` page.
+
+
+```
+
+If you omit the Resource, the widget will be created in the main widget folder at /Filament/Widgets, and the command will
+tell you what to do if you want to use it on the front end:
+
+```shell
+Your widget has been created as: App/Filament/Resources/LocationMapTableWidget.php
+
+If you want to use it on the front end, copy/move it to somewhere in your Livewire folder, say ...
+
+/Http/Livewire/Widgets/LocationMapTableWidget.php
+
+... and then invoke it from a front end Blade template like ...
+
+@livewire('widgets.location_map_table_widget')
+
+```
+
+The created code will look something like this:
 
 ```php
 <?php
@@ -527,25 +574,26 @@ class DealershipMap extends MapWidget
                         'lat' => $dealership->latitude,
                         'lng' => $dealership->longitude,
                     ],
+                    
                     'label' => $dealership->name,
+                    
+                    /**
+                     * Optionally you can provide custom icons for the map markers,
+                     * either as scalable SVG's, or PNG, which doesn't support scaling.
+                     * If you don't provide icons, the map will use the standard Google marker pin.
+                     */
+                    'icon' => [
+                        'url' => url('images/dealership.svg'),
+                        'type' => 'svg',
+                        'scale' => [35,35],
+                    ],
                 ];               
             }
-
-
         }
 
         return $data;
     }
 }
-```
-... then call it somewhere in a front end Blade template ...
-
-```php
-    <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1 md:grid-cols-2">
-        <div class="p-6 col-span-2">
-            @livewire('widgets.dealerships-map')
-        </div>
-    </div>
 ```
 
 Optionally you can render your labels with Blade templates (see the Google
@@ -554,10 +602,7 @@ provide an icon (svg or png) ...
 
 ```php
                 $data[] = [
-                    'location'  => [
-                        'lat' => $dealership->latitude,
-                        'lng' => $dealership->longitude,
-                    ],
+                    // ...
                     'label'     => view(
                         'widgets.dealership-label',
                         [
@@ -566,16 +611,7 @@ provide an icon (svg or png) ...
                             'dealershipIcon' => $dealership->icon,
                         ]
                     )->render(),
-                    'icon' => [
-                        'url' => url('images/dealership.svg'),
-                        'type' => 'svg',
-                        'scale' => [35,35],
-                    ],
-                    // ... or png, which doesn't support scaling ...             
-//                    'icon' => [
-//                        'url' => url('images/dealership.png'),
-//                        'type' => 'png',
-//                    ]
+                    // ...
                 ]; 
 ```
 
@@ -587,18 +623,19 @@ The map table widget has all the features of the vanilla widget, but with the ad
 of a Filament table underneath it.  The map responds to all filtering and searching
 on the table, which is done with standard Filament Table methods and schemas.
 
-To display a Dealership table map, you would use the same code from above, but extend
-the FilamentGoogleMapsTableWidget, and add standard Filament table methods:
+To generate a Dealership table map, you would run the same Artisan command, but choose the Map & Table
+option.  The generated code will look similar to the Map option, but with the addition of the familiar
+Filament methods to define the 
 
 ```php
 use Cheesegrits\FilamentGoogleMaps\Widgets\MapTableWidget;
 
-...
+// ...
 
 class DealershipMap extends MapTableWidget
 {
-...
-   protected function getTableQuery(): Builder
+    // ...
+    protected function getTableQuery(): Builder
     {
         return Dealer::all();
     }
@@ -623,7 +660,7 @@ class DealershipMap extends MapTableWidget
                 ->relationship('state','state_name'),
         ];
     }
-...
+    // ...
 }
 ```
 
@@ -631,6 +668,8 @@ Anything you can do in normal Filament tables, you can do in this table.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<-- ARTISAN COMMANDS -->
+<a name="artisan"/>
 ## Artisan Commands
 
 The following commands can also be referenced as fgm: instead of filament-google-maps:, as yes, we get tired typing that
@@ -848,8 +887,10 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 ```
 </details>
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
+<a name="roadmap"/>
 ## Roadmap
 
 - [x] Add caching for all API usage
@@ -858,14 +899,17 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 - [ ] Improve Geocomplete field Places Data Field handling (allow more than one to be combined)
 - [x] Add Artisan commands for geocoding / reverse geocoding tables, useful when source tables have addreeses but no coords, or vice versa
 - [ ] Add optional request signing of API calls
-- [ ] Add locale to all API calls
+- [x] Add locale to all API calls
+- [x] Add make-widget artisan command
 - [x] Add KML layers to field and widgets
 - [x] Add more geocoding options for form fields, for individual address components (street, city, zip, etc)
 - [ ] Improve reverse geocoding format grammar, like alternates ... %A3|%A2 (is %A3 empty, try %A2), etc
 - [ ] Write test suite
 
-<!-- ISSUES -->
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- ISSUES -->
+<a name="issues"/>
 ## Issues
 
 If (when) you find bugs, please report them on the [issues page](https://github.com/cheesegrits/filament-google-maps/issues)
@@ -874,6 +918,7 @@ and we'll fix them ASAP.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
+<a name="contributing"/>
 ## Contributing
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
@@ -886,9 +931,8 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- LICENSE -->
+<a name="license"/>
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
@@ -898,6 +942,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 
 <!-- CONTACT -->
+<a name="contact"/>
 ## Contact
 
 Hugh Messenger - [@cheesegrits](https://twitter.com/@cheesegrits) - hugh.messenger@gmail.com
@@ -906,9 +951,8 @@ Project Link: [https://github.com/cheesegrits/filament-google-maps](https://gith
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- ACKNOWLEDGMENTS -->
+<a name="acknowledgements"/>
 ## Acknowledgments
 
 * [Filament PHP](https://filamentphp.com)

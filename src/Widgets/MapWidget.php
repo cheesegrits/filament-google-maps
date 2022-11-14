@@ -2,6 +2,7 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Widgets;
 
+use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Filament\Widgets;
@@ -118,11 +119,6 @@ class MapWidget extends Widgets\Widget
 
 	public function getMapConfig(): string
 	{
-		$gmaps = 'https://maps.googleapis.com/maps/api/js'
-			. '?key=' . config('filament-google-maps.key')
-			. '&libraries=places&v=weekly'
-			. '&language=' . app()->getLocale();
-
 		return json_encode(
 			array_merge($this->mapConfig, [
 				'clustering' => self::getClustering(),
@@ -130,7 +126,7 @@ class MapWidget extends Widgets\Widget
 				'zoom'       => $this->getZoom(),
 				'controls'   => $this->controls,
 				'fit'        => $this->getFitToBounds(),
-				'gmaps'      => $gmaps,
+				'gmaps'      => MapsHelper::mapsUrl(),
 			])
 		);
 	}

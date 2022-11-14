@@ -3,7 +3,7 @@
 namespace Cheesegrits\FilamentGoogleMaps\Fields;
 
 use Cheesegrits\FilamentGoogleMaps\Helpers\FieldHelper;
-use Cheesegrits\FilamentGoogleMaps\Helpers\GeocodeHelper;
+use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Exception;
 use Filament\Forms\Components\Component;
@@ -117,6 +117,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 
 		if ($this->getUpdateLatLng())
 		{
+			/** @noinspection PhpUndefinedMethodInspection */
 			$fields = $this->getModel()::getLatLngAttributes();
 
 
@@ -275,9 +276,9 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 				{
 					$state = static::getLocationState($state);
 
-					if (!FieldHelper::blankLocation($state))
+					if (!MapsHelper::isLocationEmpty($state))
 					{
-						$state = GeocodeHelper::reverseGeocode($state);
+						$state = MapsHelper::reverseGeocode($state);
 
 					}
 					else
@@ -299,7 +300,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 //			{
 //				if ($component->getIsLocation())
 //				{
-//					if ($latLang = GeocodeHelper::geocode($state))
+//					if ($latLang = MapsHelper::geocode($state))
 //					{
 //						return $latLang;
 //					}
@@ -316,12 +317,6 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 	 */
 	public function getGeocompleteConfig(): string
 	{
-		$gmaps = 'https://maps.googleapis.com/maps/api/js'
-			. '?key=' . config('filament-google-maps.key')
-			. '&libraries=places'
-			. '&v=weekly'
-			. '&language=' . app()->getLocale();
-
 		$config = json_encode([
 			'filterName'           => $this->getFilterName(),
 			'statePath'            => $this->getStatePath(),
@@ -331,7 +326,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 			'types'                => $this->getTypes(),
 			'placeField'           => $this->getPlaceField(),
 			'debug'                => $this->getDebug(),
-			'gmaps'                => $gmaps,
+			'gmaps'                => MapsHelper::mapsUrl(),
 		]);
 
 		//ray($config);

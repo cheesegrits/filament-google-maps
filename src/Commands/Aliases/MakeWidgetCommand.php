@@ -8,6 +8,6 @@ class MakeWidgetCommand extends Commands\MakeWidgetCommand
 {
 	protected $hidden = true;
 
-	protected $signature = 'fgm:make-widget {name?} {model?} {--R|resource=} {--M|map} {--T|map-table}  {--F|force}';
+	protected $signature = 'fgm:make-widget {name?} {model?} {--R|resource=} {--M|map} {--T|table} {--F|force}';
 
 }

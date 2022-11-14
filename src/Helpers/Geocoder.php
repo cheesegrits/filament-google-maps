@@ -76,8 +76,8 @@ class Geocoder
 			)
 		);
 		$this->httpClient = new Client(['handler' => $this->stack, 'timeout' => 30.0]);
-		$this->provider   = new GoogleMaps($this->httpClient, null, config('filament-google-maps.keys.server_key'));
-		$this->geocoder   = new StatefulGeocoder($this->provider, 'en');
+		$this->provider   = new GoogleMaps($this->httpClient, null, MapsHelper::mapsKey(true));
+		$this->geocoder   = new StatefulGeocoder($this->provider, config('filament-google-maps.locale.language'));
 		$this->formatter  = new StringFormatter();
 	}
 
@@ -125,7 +125,7 @@ class Geocoder
 
 	public function reverse(array|string $lat, ?string $lng = null): string
 	{
-		$result = $this->reverseQuery(GeocodeHelper::getLatLng($lat, $lng))->first();
+		$result = $this->reverseQuery(MapsHelper::getLatLng($lat, $lng))->first();
 
 		if ($result)
 		{
@@ -355,7 +355,7 @@ class Geocoder
 	{
 		$formats = [];
 
-		$result = $this->reverseQuery(GeocodeHelper::getLatLng($lat, $lng))->first();
+		$result = $this->reverseQuery(MapsHelper::getLatLng($lat, $lng))->first();
 
 		if ($result)
 		{
@@ -376,6 +376,7 @@ class Geocoder
 	{
 		$formats = [];
 
+		/** @noinspection PhpUndefinedMethodInspection */
 		$record = $model::find($id);
 
 		if ($record)

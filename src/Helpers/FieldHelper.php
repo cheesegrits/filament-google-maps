@@ -44,19 +44,5 @@ class FieldHelper
 
 		return null;
 	}
-	
-	public static function blankLocation($location): bool
-	{
-		if (empty($location))
-		{
-			return true;
-		}
-		
-		if (array_key_exists('lat', $location) && array_key_exists('lng', $location))
-		{
-			return empty($location['lat']) && empty($location['lng']);
-		}
-		
-		return true;
-	}
+
 }

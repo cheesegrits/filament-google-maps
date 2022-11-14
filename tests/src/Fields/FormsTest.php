@@ -1,7 +1,7 @@
 <?php
 
 
-use Cheesegrits\FilamentGoogleMaps\Helpers\GeocodeHelper;
+use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources\GeocompleteResource;
 use Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources\GeocompleteResource\Pages\CreateGeocomplete;
 use Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources\GeocompleteResource\Pages\EditGeocomplete;

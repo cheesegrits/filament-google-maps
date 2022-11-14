@@ -15,6 +15,25 @@ return [
 	'keys' => [
 		'web_key' => env('FILAMENT_GOOGLE_MAPS_WEB_API_KEY', env('GOOGLE_MAPS_API_KEY')),
 		'server_key' => env('FILAMENT_GOOGLE_MAPS_SERVER_API_KEY', env('GOOGLE_MAPS_API_KEY')),
+		'signing_key' => env('FILAMENT_GOOGLE_MAPS_SIGNING_KEY', null),
+	],
+
+	/*
+	 | Region and country codes.
+	 |
+	 | Google STRONGLY ENCOURAGED you to set a region code (US, GB, etc) which they use to bias the results
+	 |
+	 | https://developers.google.com/maps/coverage
+	 |
+	 | Google discourage you from setting a language, as this should be controlled by the user's browser setting,
+	 | and only controls localization of the UI.  So we do not apply a language code to the Javascript API.  However,
+	 | we will apply any language code set here to server side API calls like static maps (as used in the Column).
+	 |
+	 | https://developers.google.com/maps/faq#languagesupport
+	 */
+	'locale' => [
+		'region' => env('FILAMENT_GOOGLE_MAPS_REGION_CODE', null),
+		'language' => env('FILAMENT_GOOGLE_MAPS_LANGUAGE_CODE', null),
 	],
 
 	/*

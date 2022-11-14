@@ -164,6 +164,7 @@
       <path value="$PROJECT_DIR$/vendor/http-interop/http-factory-guzzle" />
       <path value="$PROJECT_DIR$/vendor/igorw/get-in" />
       <path value="$PROJECT_DIR$/vendor/timacdonald/log-fake" />
+      <path value="$PROJECT_DIR$/vendor/mastani/laravel-google-static-map" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
