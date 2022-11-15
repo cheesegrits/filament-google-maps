@@ -234,7 +234,7 @@ EOT;
         {
             \$this->attributes['{$latField}'] = \$location['lat'];
             \$this->attributes['{$lngField}'] = \$location['lng'];
-            \$this->attributes['{$locationField}'] = json_encode(\$location);
+            unset(\$this->attributes['{$locationField}']);
         }
     }
     
