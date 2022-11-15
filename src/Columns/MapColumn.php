@@ -248,7 +248,7 @@ class MapColumn extends Column
 		return $src;
 	}
 
-	private function cacheImage($url): string|null
+	public static function cacheImage($url): string|null
 	{
 		$cacheKey = 'fgm-' . md5($url);
 
@@ -256,9 +256,13 @@ class MapColumn extends Column
 		{
 			$map = file_get_contents($url);
 
+			$store          = config('filament-google-maps.cache.store', null);
+			$duration       = config("filament-google-maps.cache.duration", 0);
+
+
 			if ($map)
 			{
-				Cache::put($cacheKey, $map, $this->getTtl());
+				Cache::store($store)->put($cacheKey, $map, $duration);
 			}
 			else
 			{
@@ -281,7 +285,7 @@ class MapColumn extends Column
 			return null;
 		}
 
-		$cacheKey = $this->cacheImage($url);
+		$cacheKey = static::cacheImage($url);
 
 		if (empty($cacheKey))
 		{
