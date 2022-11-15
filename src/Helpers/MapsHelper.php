@@ -34,7 +34,7 @@ class MapsHelper
 
 	public static function mapsUrl($server = false): string
 	{
-		$gmaps = Request::getScheme() ?? 'https' . '://maps.googleapis.com/maps/api/js'
+		$gmaps = (Request::getScheme() ?? 'https') . '://maps.googleapis.com/maps/api/js'
 			. '?key=' . self::mapsKey($server)
 			. '&libraries=places'
 			. '&v=weekly';
