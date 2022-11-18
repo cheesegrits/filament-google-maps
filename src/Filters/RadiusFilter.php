@@ -4,6 +4,7 @@ namespace Cheesegrits\FilamentGoogleMaps\Filters;
 
 use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete;
 use Closure;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
@@ -26,6 +27,10 @@ class RadiusFilter extends BaseFilter
 	protected bool|Closure|null $selectUnit = false;
 
 	protected bool|string|Closure|null $section = null;
+
+	protected int|Closure|null $radius = null;
+
+
 
 	/**
 	 * @return array|int|null
@@ -117,6 +122,7 @@ class RadiusFilter extends BaseFilter
 					TextInput::make('radius')
 						->label(__('filament-google-maps::fgm.radius_filter.distance'))
 						->numeric()
+						->default($this->getRadius() ?? 10)
 						->lazy(),
 					Select::make('unit')
 						->label(__('filament-google-maps::fgm.radius_filter.unit'))
@@ -141,7 +147,7 @@ class RadiusFilter extends BaseFilter
 		if ($this->hasSection())
 		{
 			$form = [
-				Section::make($this->getSection())->schema($form),
+				Fieldset::make($this->getSection())->schema($form),
 			];
 		}
 
@@ -158,6 +164,18 @@ class RadiusFilter extends BaseFilter
 	public function getKilometers(): string
 	{
 		return $this->evaluate($this->kilometers);
+	}
+
+	public function radius(bool|Closure $radius = true): static
+	{
+		$this->radius = $radius;
+
+		return $this;
+	}
+
+	public function getRadius(): int|null
+	{
+		return $this->evaluate($this->radius);
 	}
 
 	public function selectUnit(bool|Closure $selectUnit = true): static

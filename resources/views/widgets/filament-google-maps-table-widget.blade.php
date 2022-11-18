@@ -3,7 +3,7 @@
     $filters = $this->getFilters();
 @endphp
 
-<x-filament::widget class="filament-google-maps-widget">
+<x-filament-widgets::widget class="filament-google-maps-widget">
     <x-filament::card>
         @if ($heading || $filters)
             <div class="flex items-center justify-between gap-8">
@@ -34,7 +34,7 @@
             <x-filament::hr/>
         @endif
 
-{{--        <div {!! ($pollingInterval = $this->getPollingInterval()) ? "wire:poll.{$pollingInterval}=\"updateMapData\"" : '' !!}>--}}
+        {{--        <div {!! ($pollingInterval = $this->getPollingInterval()) ? "wire:poll.{$pollingInterval}=\"updateMapData\"" : '' !!}>--}}
         <div class="">
             <div
                     wire:key="{{ rand() }}"
@@ -75,7 +75,9 @@
                 window.fgm{{ $this->getMapId() }}.update({{ json_encode($this->getCachedData()) }});
             }
 
-        })()"
+
+        })()
+        "
 
                     wire:ignore
                     @if ($maxHeight = $this->getMaxHeight())
@@ -83,8 +85,16 @@
                     @endif
             >
             </div>
+            <div
+                    @if($this->mapIsFilter())
+                        wire:@entangle('mapFilterIds')
+                    @endif
 
-            <div wire:ignore id="map-{{ $this->getMapId() }}" x-ref="map" class="w-full" style="min-height: 50vh; z-index: 1 !important;"></div>
+                    @setmapcenter.window='window.fgm{{ $this->getMapId() }}.recenter($event.detail)'
+                    wire:ignore
+                    id="map-{{ $this->getMapId() }}" x-ref="map" class="w-full"
+                    style="min-height: 50vh; z-index: 1 !important;"
+            ></div>
 
         </div>
     </x-filament::card>
@@ -92,4 +102,5 @@
     <x-filament::card>
         {{ $this->table }}
     </x-filament::card>
-</x-filament::widget>
+
+</x-filament-widgets::widget>

@@ -25,7 +25,6 @@ it('can cache static map images', function () {
 	$cache = Cache::getStore();
 	$this->assertCount(0, invade($cache)->storage);
 
-
 	livewire(LocationTable::class);
 
 	$this->assertCount(5, invade($cache)->storage);

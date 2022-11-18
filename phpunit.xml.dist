@@ -26,6 +26,8 @@
         <env name="APP_ENV" value="self-testing"/>
         <env name="APP_KEY" value="base64:yk+bUVuZa1p86Dqjk9OjVK2R1pm6XHxC6xEKFq8utH0="/>
         <env name="GOOGLE_MAPS_API_KEY" value="your-key-here"/>
+        <env name="GOOGLE_MAPS_API_SERVER_KEY" value="your-server-key-here"/>
+        <env name="FILAMENT_GOOGLE_MAPS_SIGNING_KEY" value="your-signing-key-here="/>
         <env name="DB_CONNECTION" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
     </php>

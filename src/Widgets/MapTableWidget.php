@@ -22,12 +22,18 @@ class MapTableWidget extends MapWidget implements Tables\Contracts\HasTable
 
     protected static ?string $heading = null;
 
-    protected static ?string $mapId = null;
+	protected static ?bool $filtered = true;
 
-    public function getMapId(): string|null
-    {
-        return static::$mapId;
-    }
+	public ?bool $mapIsFilter = false;
+
+	public array $mapFilterIds = [];
+	
+	public bool $mapFilterFirstTime = true;
+
+	public function mapIsFilter(): bool
+	{
+		return $this->mapIsFilter;
+	}
 
     protected function getTableHeading(): string | Htmlable | Closure | null
     {
@@ -45,13 +51,29 @@ class MapTableWidget extends MapWidget implements Tables\Contracts\HasTable
 
     protected function getRecords()
     {
-        return $this->traitGetTableRecords();
+		if (static::$filtered)
+		{
+			return $this->traitGetTableRecords();
+		}
+		else
+	    {
+		    return $this->getTableModel()::all();
+	    }
     }
 
     public function getTableRecords(): Collection|Paginator
     {
-        $this->emitSelf('updateTableMapData');
-
-        return $this->traitGetTableRecords();
+		return $this->traitGetTableRecords();
     }
+
+	public function getConfig(): array
+	{
+		$config = parent::getConfig();
+		
+		$config = array_merge($config, [
+			'mapIsFilter' => $this->mapIsFilter,
+		]);
+
+		return $config;
+	}
 }

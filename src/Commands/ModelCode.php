@@ -26,7 +26,7 @@ class ModelCode extends Command
 			$modelName = $this->askRequired('Model (e.g. `Location` or `Maps/Dealership`)', 'model');
 		}
 
-		$model = (string) Str::of($modelName)
+		$modelName = (string) Str::of($modelName)
 			->studly()
 			->trim('/')
 			->trim('\\')

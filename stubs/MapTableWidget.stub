@@ -47,6 +47,18 @@ class {{ class }} extends MapTableWidget
 			RadiusFilter::make('{{ location }}')
 				->section('Radius Filter')
 				->selectUnit(),
+            MapIsFilter::make('map'),
+		];
+	}
+
+	protected function getTableActions(): array
+	{
+		return [
+			Tables\Actions\ViewAction::make(),
+			Tables\Actions\EditAction::make(),
+			GoToAction::make()
+				->zoom(14),
+			RadiusAction::make(),
 		];
 	}
 
@@ -63,6 +75,7 @@ class {{ class }} extends MapTableWidget
 					'lat' => $location->{{ lat }} ? round(floatval($location->{{ lat }}), static::$precision) : 0,
                     'lng' => $location->{{ lng }} ? round(floatval($location->{{ lng }}), static::$precision) : 0,
 				],
+                'id'      => $location->{{ pk }},
 			];
 		}
 

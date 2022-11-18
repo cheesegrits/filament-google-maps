@@ -3,7 +3,7 @@
     $filters = $this->getFilters();
 @endphp
 
-<x-filament::widget class="filament-widgets-chart-widget">
+<x-filament-widgets::widget class="filament-widgets-chart-widget">
     <x-filament::card>
         @if ($heading || $filters)
             <div class="flex items-center justify-between gap-8">
@@ -67,6 +67,14 @@
             fgm = filamentGoogleMapsWidget($wire, {{ $this->getMapConfig()}});
             fgm.init({{ json_encode($this->getCachedData()) }}, $refs.map);
 
+            if (!window.fgm{{ $this->getMapId() }}) {
+                window.fgm{{ $this->getMapId() }} = filamentGoogleMapsWidget($wire, {{ $this->getMapConfig()}});
+                window.fgm{{ $this->getMapId() }}.init({{ json_encode($this->getCachedData()) }}, $refs.map);
+            }
+            else {
+                window.fgm{{ $this->getMapId() }}.update({{ json_encode($this->getCachedData()) }});
+            }
+
         })()"
 
                     wire:ignore
@@ -79,4 +87,4 @@
 
         </div>
     </x-filament::card>
-</x-filament::widget>
+</x-filament-widgets::widget>
