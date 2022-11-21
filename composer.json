@@ -36,7 +36,7 @@
         }
     ],
     "require-dev": {
-        "filament/filament": "*",
+        "filament/filament": "^3.0",
         "pestphp/pest": "^1.22",
         "pestphp/pest-plugin-laravel": "^1.3",
         "orchestra/testbench": "^7.11",
@@ -48,5 +48,13 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
-    }
+    },
+    "repositories": {
+        "filament-v3": {
+            "type": "path",
+            "url": "../../gits/filament-v3/packages/*"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

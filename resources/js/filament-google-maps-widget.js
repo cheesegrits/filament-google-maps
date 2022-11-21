@@ -278,29 +278,32 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             }
         },
         idle: function () {
-            const debouncedMoved = debounce(this.moved, 1000).bind(this);
+            if (this.config.mapIsFilter) {
+                let that = self;
+                const debouncedMoved = debounce(this.moved, 1000).bind(this);
 
-            google.maps.event.addListener(this.map, 'idle', (event) => {
-                if (this.isMapDragging) {
-                    this.idleSkipped = true;
-                    return;
-                }
-                this.idleSkipped = false;
-                debouncedMoved();
-            });
-            google.maps.event.addListener(this.map, 'dragstart', (event) => {
-                this.isMapDragging = true;
-            });
-            google.maps.event.addListener(this.map, 'dragend', (event) => {
-                this.isMapDragging = false;
-                if (this.idleSkipped === true) {
+                google.maps.event.addListener(this.map, 'idle', (event) => {
+                    if (self.isMapDragging) {
+                        self.idleSkipped = true;
+                        return;
+                    }
+                    self.idleSkipped = false;
                     debouncedMoved();
-                    this.idleSkipped = false;
-                }
-            });
-            google.maps.event.addListener(this.map, 'bounds_changed', (event) => {
-                this.idleSkipped = false;
-            });
+                });
+                google.maps.event.addListener(this.map, 'dragstart', (event) => {
+                    self.isMapDragging = true;
+                });
+                google.maps.event.addListener(this.map, 'dragend', (event) => {
+                    self.isMapDragging = false;
+                    if (self.idleSkipped === true) {
+                        debouncedMoved();
+                        self.idleSkipped = false;
+                    }
+                });
+                google.maps.event.addListener(this.map, 'bounds_changed', (event) => {
+                    self.idleSkipped = false;
+                });
+            }
         },
         update: function (data) {
             this.data = data;
