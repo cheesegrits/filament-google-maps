@@ -37,8 +37,8 @@
         {{--        <div {!! ($pollingInterval = $this->getPollingInterval()) ? "wire:poll.{$pollingInterval}=\"updateMapData\"" : '' !!}>--}}
         <div class="">
             <div
-                    wire:key="{{ rand() }}"
-                    x-data="{
+                wire:key="{{ rand() }}"
+                x-data="{
                     fgm: {},
                 }"
                     x-init="
