@@ -52,7 +52,7 @@
     "repositories": {
         "filament-v3": {
             "type": "path",
-            "url": "../gits/filament-v3/packages/*"
+            "url": "../filament-v3/packages/*"
         }
     },
     "minimum-stability": "dev",
