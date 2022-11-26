@@ -36,7 +36,7 @@
         }
     ],
     "require-dev": {
-        "filament/filament": "^3.0",
+        "filament/filament": "*",
         "pestphp/pest": "^1.22",
         "pestphp/pest-plugin-laravel": "^1.3",
         "orchestra/testbench": "^7.11",
