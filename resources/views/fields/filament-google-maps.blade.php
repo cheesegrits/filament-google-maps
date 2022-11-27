@@ -1,4 +1,4 @@
-<x-forms::field-wrapper
+<x-filament-forms::field-wrapper
         :id="$getId()"
         :label="$getLabel()"
         :label-sr-only="$isLabelHidden()"
@@ -58,4 +58,4 @@
             class="w-full" style="height: {{ $getHeight() }}; min-height: 30vh; z-index: 1 !important;">
         </div>
     </div>
-</x-forms::field-wrapper>
+</x-filament-forms::field-wrapper>
