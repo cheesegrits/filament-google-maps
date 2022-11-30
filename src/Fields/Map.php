@@ -400,7 +400,7 @@ class Map extends Field
 		return $config;
 	}
 
-	public function getState()
+	public function getState(): mixed
 	{
 		$state = parent::getState();
 
