@@ -4,10 +4,11 @@ namespace Cheesegrits\FilamentGoogleMaps;
 
 use Cheesegrits\FilamentGoogleMaps\Widgets\MapTableWidget;
 use Cheesegrits\FilamentGoogleMaps\Widgets\MapWidget;
-use Filament\PluginServiceProvider;
+use Filament\FilamentServiceProvider;
 use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class FilamentGoogleMapsServiceProvider extends PluginServiceProvider
+class FilamentGoogleMapsServiceProvider extends PackageServiceProvider
 {
     protected array $widgets = [
         MapWidget::class,
