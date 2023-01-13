@@ -397,7 +397,7 @@ class Geocoder
 		return $this;
 	}
 
-	private function cacheRequest(string $cacheKey, array $queryElements, string $queryType)
+	private function cacheRequest(string $cacheKey, array $queryElements, string $queryType): ?Collection
 	{
 		if (!$this->isCaching)
 		{
@@ -436,6 +436,8 @@ class Geocoder
 
 				exit;
 			}
+			
+			return null;
 		}
 
 		$result = $this->preventCacheKeyHashCollision(
