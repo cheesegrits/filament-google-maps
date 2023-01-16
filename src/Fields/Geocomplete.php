@@ -119,15 +119,15 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 		{
 			/** @noinspection PhpUndefinedMethodInspection */
 			$fields = $this->getModel()::getLatLngAttributes();
+			
 
-
-			foreach ($fields as $field)
+			foreach ($fields as $fieldKey => $field)
 			{
 				$fieldId = FieldHelper::getFieldId($field, $this);
 
 				if ($fieldId)
 				{
-					$statePaths[$field] = $fieldId;
+					$statePaths[$fieldKey] = $fieldId;
 				}
 			}
 		}
