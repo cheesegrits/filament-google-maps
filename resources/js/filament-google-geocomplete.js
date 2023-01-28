@@ -154,7 +154,7 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
             }
         },
         updateLatLng: function(place) {
-            if (Object.keys(this.config.reverseGeocodeFields).length > 0) {
+            if (Object.keys(this.config.latLngFields).length > 0) {
                 if (place.geometry) {
                     $wire.set(this.config.latLngFields.lat, place.geometry.location.lat().toString())
                     $wire.set(this.config.latLngFields.lng, place.geometry.location.lng().toString())
