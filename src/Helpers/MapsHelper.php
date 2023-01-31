@@ -12,7 +12,7 @@ class MapsHelper
 		return $server ? config('filament-google-maps.keys.server_key') : config('filament-google-maps.keys.web_key');
 	}
 
-	public static function mapsSigningKey(): string|null
+	public static function mapsSigningKey(): ?string
 	{
 		return config('filament-google-maps.keys.signing_key', null);
 	}
