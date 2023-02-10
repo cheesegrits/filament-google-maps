@@ -34,11 +34,11 @@
             <x-filament::hr/>
         @endif
 
-{{--        <div {!! ($pollingInterval = $this->getPollingInterval()) ? "wire:poll.{$pollingInterval}=\"updateMapData\"" : '' !!}>--}}
+        {{--        <div {!! ($pollingInterval = $this->getPollingInterval()) ? "wire:poll.{$pollingInterval}=\"updateMapData\"" : '' !!}>--}}
         <div class="">
             <div
-                    wire:key="{{ rand() }}"
-                    x-data="{
+                wire:key="{{ rand() }}"
+                x-data="{
                     fgm: {},
                 }"
                     x-init="
@@ -75,7 +75,9 @@
                 window.fgm{{ $this->getMapId() }}.update({{ json_encode($this->getCachedData()) }});
             }
 
-        })()"
+
+        })()
+        "
 
                     wire:ignore
                     @if ($maxHeight = $this->getMaxHeight())
@@ -83,8 +85,16 @@
                     @endif
             >
             </div>
+            <div
+                    @if($this->mapIsFilter())
+                        wire:@entangle('mapFilterIds')
+                    @endif
 
-            <div wire:ignore id="map-{{ $this->getMapId() }}" x-ref="map" class="w-full" style="min-height: 50vh; z-index: 1 !important;"></div>
+                    @setmapcenter.window='window.fgm{{ $this->getMapId() }}.recenter($event.detail)'
+                    wire:ignore
+                    id="map-{{ $this->getMapId() }}" x-ref="map" class="w-full"
+                    style="min-height: 50vh; z-index: 1 !important;"
+            ></div>
 
         </div>
     </x-filament::card>

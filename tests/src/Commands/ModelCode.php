@@ -5,12 +5,12 @@ use Illuminate\Support\Facades\Artisan;
 
 uses(TestCase::class);
 
-it ('asks the right questions for the artisan model-code command', function () {
+it('asks the right questions for the artisan model-code command', function () {
 
 	$this->artisan('filament-google-maps:model-code')
 		->expectsQuestion(
 			'Model (e.g. `Location` or `Maps/Dealership`)',
-			'Cheesegrits\FilamentGoogleMaps\Tests\Models\Location'
+			'Cheesegrits/FilamentGoogleMaps/Tests/Models/Location'
 		)
 		->expectsQuestion(
 			'Latitude table field name (e.g. `lat`)',
@@ -23,16 +23,20 @@ it ('asks the right questions for the artisan model-code command', function () {
 		->expectsQuestion(
 			'Computed location attribute name (e.g. `location`)',
 			'lng'
+		)
+		->expectsQuestion(
+			'Include comments in the code?',
+			'no'
 		);
 });
 
-it ('outputs the appends array model-code', function () {
+it('outputs the appends array model-code', function () {
 	$this->artisan(
 		'filament-google-maps:model-code',
 		[
-			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
-			'--lat' => 'lat',
-			'--lng' => 'lng',
+			'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+			'--lat'      => 'lat',
+			'--lng'      => 'lng',
 			'--location' => 'location',
 		]
 	)
@@ -42,13 +46,13 @@ it ('outputs the appends array model-code', function () {
     ];'));
 });
 
-it ('outputs the fillable array model-code', function () {
+it('outputs the fillable array model-code', function () {
 	$this->artisan(
 		'filament-google-maps:model-code',
 		[
-			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
-			'--lat' => 'lat',
-			'--lng' => 'lng',
+			'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+			'--lat'      => 'lat',
+			'--lng'      => 'lng',
 			'--location' => 'location',
 		]
 	)
@@ -67,13 +71,13 @@ it ('outputs the fillable array model-code', function () {
     ];'));
 });
 
-it ('outputs the guarded array model-code', function () {
+it('outputs the guarded array model-code', function () {
 	$this->artisan(
 		'filament-google-maps:model-code',
 		[
-			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationGuarded',
-			'--lat' => 'lat',
-			'--lng' => 'lng',
+			'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests\Models/LocationGuarded',
+			'--lat'      => 'lat',
+			'--lng'      => 'lng',
 			'--location' => 'location',
 		]
 	)
@@ -83,17 +87,17 @@ it ('outputs the guarded array model-code', function () {
     ];'));
 });
 
-it ('outputs the get attribute model-code', function () {
+it('outputs the get attribute model-code', function () {
 
 	$this->artisan(
-			'filament-google-maps:model-code',
-			[
-				'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/Location',
-				'--lat' => 'lat',
-				'--lng' => 'lng',
-				'--location' => 'location',
-			]
-		)
+		'filament-google-maps:model-code',
+		[
+			'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/Location',
+			'--lat'      => 'lat',
+			'--lng'      => 'lng',
+			'--location' => 'location',
+		]
+	)
 		->expectsOutputToContain(convertNewlines('
     function getLocationAttribute(): array
     {
@@ -104,35 +108,47 @@ it ('outputs the get attribute model-code', function () {
     }'));
 });
 
-it ('outputs the set attribute model-code', function () {
+it('outputs the set attribute model-code', function () {
+//	$this->withoutMockingConsoleOutput()->artisan(
+//		'filament-google-maps:model-code',
+//		[
+//			'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+//			'--lat'      => 'lat',
+//			'--lng'      => 'lng',
+//			'--location' => 'location',
+//			'--terse'
+//		]
+//	);
+//
+//	$result = Artisan::output();
 	$this->artisan(
 		'filament-google-maps:model-code',
 		[
-			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
-			'--lat' => 'lat',
-			'--lng' => 'lng',
+			'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+			'--lat'      => 'lat',
+			'--lng'      => 'lng',
 			'--location' => 'location',
+			'--terse'
 		]
-	)
-		->expectsOutputToContain(convertNewlines('
+	)->expectsOutputToContain(convertNewlines('
     function setLocationAttribute(?array $location): void
     {
         if (is_array($location))
         {
             $this->attributes[\'lat\'] = $location[\'lat\'];
             $this->attributes[\'lng\'] = $location[\'lng\'];
-            $this->attributes[\'location\'] = json_encode($location);
+            unset($this->attributes[\'location\']);
         }
     }'));
 });
 
-it ('outputs the get lat lng model-code', function () {
+it('outputs the get lat lng model-code', function () {
 	$this->artisan(
 		'filament-google-maps:model-code',
 		[
-			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
-			'--lat' => 'lat',
-			'--lng' => 'lng',
+			'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+			'--lat'      => 'lat',
+			'--lng'      => 'lng',
 			'--location' => 'location',
 		]
 	)
@@ -146,13 +162,13 @@ it ('outputs the get lat lng model-code', function () {
     }'));
 });
 
-it ('outputs the get computed location model-code', function () {
+it('outputs the get computed location model-code', function () {
 	$this->artisan(
 		'filament-google-maps:model-code',
 		[
-			'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
-			'--lat' => 'lat',
-			'--lng' => 'lng',
+			'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+			'--lat'      => 'lat',
+			'--lng'      => 'lng',
 			'--location' => 'location',
 		]
 	)

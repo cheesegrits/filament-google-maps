@@ -171,6 +171,7 @@ class MakeWidgetCommand extends Command
 					'og-model'  => $ogModelName,
 					'model'     => $modelName,
 					'class'     => $widgetClass,
+					'pk'        => $model->getKeyName(),
 					'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets" . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
 				] + $latLongFields);
 		}
@@ -192,7 +193,7 @@ class MakeWidgetCommand extends Command
 		}
 		else
 		{
-			$livewire = (string) Str::of($widget)->snake();
+			$livewire   = (string) Str::of($widget)->snake();
 			$widgetPath = (string) Str::of($resourceNamespace)->replace('\\', '/') . '/' . $widget . '.php';
 			$this->info("Your widget has been created as: $widgetPath");
 			$this->newLine();

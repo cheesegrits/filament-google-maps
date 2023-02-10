@@ -10,6 +10,9 @@ return [
 		'title'      => 'Radius Search',
 		'indicate'   => 'Within :radius :units of :address',
 	],
+	'map_is_filter' => [
+		'indicate'   => 'showing :count markers in view',
+	],
 	'static_map_action' => [
 		'modal' => [
 			'heading' => 'Download Static Map',
@@ -28,6 +31,21 @@ return [
 		],
 		'button' => [
 			'label' => 'Do A Thing',
+		]
+	],
+	'radius_action' => [
+		'modal' => [
+			'heading' => 'Display Map',
+			'label'   => 'Do it!',
+			'success' => 'Success',
+		],
+		'button' => [
+			'label' => 'Radius',
+		]
+	],
+	'goto_action' => [
+		'button' => [
+			'label' => 'Go To',
 		]
 	],
 ];

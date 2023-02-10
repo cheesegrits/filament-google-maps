@@ -33,6 +33,9 @@ class MapWidget extends Widgets\Widget
 
 	protected static array $layers = [];
 
+	protected static ?string $mapId = null;
+
+
 	protected static string $view = 'filament-google-maps::widgets.filament-google-maps-widget';
 
 	public array $controls = [
@@ -45,7 +48,7 @@ class MapWidget extends Widgets\Widget
 		'zoomControl'       => true,
 	];
 
-	private array $mapConfig = [
+	protected array $mapConfig = [
 		'draggable'  => false,
 		'center'     => [
 			'lat' => 15.3419776,
@@ -117,18 +120,33 @@ class MapWidget extends Widgets\Widget
 		return static::$layers;
 	}
 
+	public function getConfig(): array
+	{
+		return [
+			'clustering' => self::getClustering(),
+			'layers'     => $this->getLayers(),
+			'zoom'       => $this->getZoom(),
+			'controls'   => $this->controls,
+			'fit'        => $this->getFitToBounds(),
+			'gmaps'      => MapsHelper::mapsUrl(),
+		];
+	}
+
 	public function getMapConfig(): string
 	{
+		$config = $this->getConfig();
+
 		return json_encode(
-			array_merge($this->mapConfig, [
-				'clustering' => self::getClustering(),
-				'layers'     => $this->getLayers(),
-				'zoom'       => $this->getZoom(),
-				'controls'   => $this->controls,
-				'fit'        => $this->getFitToBounds(),
-				'gmaps'      => MapsHelper::mapsUrl(),
-			])
+			array_merge(
+				$this->mapConfig,
+				$config,
+			)
 		);
+	}
+
+	public function getMapId(): string|null
+	{
+		return static::$mapId ?? str(get_called_class())->afterLast('\\')->studly()->toString();
 	}
 
 	public function updateMapData()

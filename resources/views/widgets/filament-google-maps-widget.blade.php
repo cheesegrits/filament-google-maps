@@ -67,6 +67,14 @@
             fgm = filamentGoogleMapsWidget($wire, {{ $this->getMapConfig()}});
             fgm.init({{ json_encode($this->getCachedData()) }}, $refs.map);
 
+            if (!window.fgm{{ $this->getMapId() }}) {
+                window.fgm{{ $this->getMapId() }} = filamentGoogleMapsWidget($wire, {{ $this->getMapConfig()}});
+                window.fgm{{ $this->getMapId() }}.init({{ json_encode($this->getCachedData()) }}, $refs.map);
+            }
+            else {
+                window.fgm{{ $this->getMapId() }}.update({{ json_encode($this->getCachedData()) }});
+            }
+
         })()"
 
                     wire:ignore
