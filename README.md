@@ -8,6 +8,7 @@ either as part of an admin panel, or in standalone front end forms, tables and d
 
 <!-- ABOUT THE PROJECT -->
 <a name="about"/>
+
 ## About The Project
 
 ### First release
@@ -113,6 +114,7 @@ a combination of address fields into lat lng, or reverse geocoding lat and lng t
 
 <!-- GETTING STARTED -->
 <a name="getting-started"/>
+
 ## Getting Started 
 
 ### Prerequisites
@@ -250,6 +252,7 @@ return [
 
 <!-- USAGE EXAMPLES -->
 <a name="usage"/>
+
 ## Usage
 
 ### Form Field
@@ -489,6 +492,10 @@ use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
         ->section('Radius Search') // optionally wrap the filter in a section with heading
 ```
 
+### Map Is Filter
+
+See the Map Table Widget section below for details on how to use a map as a filter for a table.
+
 ### Map Widget
 
 The map widget can be used either in the Filament Admin panel (see Filament docs), or
@@ -658,6 +665,7 @@ class DealershipMap extends MapTableWidget
             Tables\Filters\SelectFilter::make('state')
                 ->label('State')
                 ->relationship('state','state_name'),
+            MapIsFilter::make('map'),
         ];
     }
     // ...
@@ -666,10 +674,15 @@ class DealershipMap extends MapTableWidget
 
 Anything you can do in normal Filament tables, you can do in this table.
 
+Also note the use of the MapIsFilter table filter.  With this optionally included in the table filters, your map acts
+as a filter for the attached table, so zooming and panning to change the visible map pins will filter the table
+accordingly.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <-- ARTISAN COMMANDS -->
 <a name="artisan"/>
+
 ## Artisan Commands
 
 The following commands can also be referenced as fgm: instead of filament-google-maps:, as yes, we get tired typing that
@@ -891,6 +904,7 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 
 <!-- ROADMAP -->
 <a name="roadmap"/>
+
 ## Roadmap
 
 - [x] Add caching for all API usage
@@ -910,6 +924,7 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 
 <!-- ISSUES -->
 <a name="issues"/>
+
 ## Issues
 
 If (when) you find bugs, please report them on the [issues page](https://github.com/cheesegrits/filament-google-maps/issues)
@@ -919,6 +934,7 @@ and we'll fix them ASAP.
 
 <!-- CONTRIBUTING -->
 <a name="contributing"/>
+
 ## Contributing
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
@@ -933,6 +949,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 <!-- LICENSE -->
 <a name="license"/>
+
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
@@ -943,6 +960,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <!-- CONTACT -->
 <a name="contact"/>
+
 ## Contact
 
 Hugh Messenger - [@cheesegrits](https://twitter.com/@cheesegrits) - hugh.messenger@gmail.com
@@ -953,6 +971,7 @@ Project Link: [https://github.com/cheesegrits/filament-google-maps](https://gith
 
 <!-- ACKNOWLEDGMENTS -->
 <a name="acknowledgements"/>
+
 ## Acknowledgments
 
 * [Filament PHP](https://filamentphp.com)
