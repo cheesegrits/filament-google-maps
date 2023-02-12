@@ -95,6 +95,13 @@ to reduce API overhead.
 
 ![Map Column](images/table-map.png)
 
+### Static Map Action
+
+The **StaticMapAction** is a bulk action that lets you select any number of table rows, and generate a downloadable
+static map showing those locations.
+
+![Static Map Action](images/static-map-action.png)
+
 ### Radius Filter
 
 The **RadiusFilter** provides radius filtering against a geocomplete address,
@@ -520,9 +527,43 @@ use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
         ->section('Radius Search') // optionally wrap the filter in a section with heading
 ```
 
+When using Radius filtering, there is also a RadiusAction you can use, which allows you to click a button on a row
+in the table to set the address being used for the current Radius Filter ...
+
+```php
+use Cheesegrits\FilamentGoogleMaps\Actions\RadiusAction;
+
+//
+
+    protected function getTableActions(): array
+    {
+        return [
+            //
+            RadiusAction::make(),
+        ];
+    }
+```
+
 ### Map Is Filter
 
 See the Map Table Widget section below for details on how to use a map as a filter for a table.
+
+### Static Map Bulk Action
+
+The Static Map bulk action allows you to select any number of rows in the table, then generate a downloadable static
+map of those locations, with a dialog to specify the map size, type and scale.
+
+```php
+use Cheesegrits\FilamentGoogleMaps\Actions\StaticMapAction;
+
+        //
+            ->bulkActions([
+                //
+                StaticMapAction::make(),
+                //
+            ]);
+        //
+```
 
 ### Map Widget
 
@@ -662,8 +703,6 @@ To generate a Dealership table map, you would run the same Artisan command, but 
 option.  The generated code will look similar to the Map option, but with the addition of the familiar
 Filament methods to define the table columns, filters, actions, etc.
 
-There is also an additional filter available for the Map Table Widget called 
-
 ```php
     protected function getTableFilters(): array
     {
@@ -724,6 +763,9 @@ Anything you can do in normal Filament tables, you can do in this table.
 Also note the use of the MapIsFilter table filter.  With this optionally included in the table filters, your map acts
 as a filter for the attached table, so zooming and panning to change the visible map pins will filter the table
 accordingly.
+
+There is also an additional action, the GoToAction, available for this widget, which will zoom and pan the map to
+the selected location when clicked.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
