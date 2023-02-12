@@ -8,6 +8,7 @@ either as part of an admin panel, or in standalone front end forms, tables and d
 
 <!-- ABOUT THE PROJECT -->
 <a name="about"/>
+
 ## About The Project
 
 ### First release
@@ -94,6 +95,13 @@ to reduce API overhead.
 
 ![Map Column](images/table-map.png)
 
+### Static Map Action
+
+The **StaticMapAction** is a bulk action that lets you select any number of table rows, and generate a downloadable
+static map showing those locations.
+
+![Static Map Action](images/static-map-action.png)
+
 ### Radius Filter
 
 The **RadiusFilter** provides radius filtering against a geocomplete address,
@@ -113,6 +121,7 @@ a combination of address fields into lat lng, or reverse geocoding lat and lng t
 
 <!-- GETTING STARTED -->
 <a name="getting-started"/>
+
 ## Getting Started 
 
 ### Prerequisites
@@ -278,6 +287,7 @@ return [
 
 <!-- USAGE EXAMPLES -->
 <a name="usage"/>
+
 ## Usage
 
 ### Form Field
@@ -517,6 +527,44 @@ use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
         ->section('Radius Search') // optionally wrap the filter in a section with heading
 ```
 
+When using Radius filtering, there is also a RadiusAction you can use, which allows you to click a button on a row
+in the table to set the address being used for the current Radius Filter ...
+
+```php
+use Cheesegrits\FilamentGoogleMaps\Actions\RadiusAction;
+
+//
+
+    protected function getTableActions(): array
+    {
+        return [
+            //
+            RadiusAction::make(),
+        ];
+    }
+```
+
+### Map Is Filter
+
+See the Map Table Widget section below for details on how to use a map as a filter for a table.
+
+### Static Map Bulk Action
+
+The Static Map bulk action allows you to select any number of rows in the table, then generate a downloadable static
+map of those locations, with a dialog to specify the map size, type and scale.
+
+```php
+use Cheesegrits\FilamentGoogleMaps\Actions\StaticMapAction;
+
+        //
+            ->bulkActions([
+                //
+                StaticMapAction::make(),
+                //
+            ]);
+        //
+```
+
 ### Map Widget
 
 The map widget can be used either in the Filament Admin panel (see Filament docs), or
@@ -655,8 +703,6 @@ To generate a Dealership table map, you would run the same Artisan command, but 
 option.  The generated code will look similar to the Map option, but with the addition of the familiar
 Filament methods to define the table columns, filters, actions, etc.
 
-There is also an additional filter available for the Map Table Widget called 
-
 ```php
     protected function getTableFilters(): array
     {
@@ -705,6 +751,7 @@ class DealershipMap extends MapTableWidget
             Tables\Filters\SelectFilter::make('state')
                 ->label('State')
                 ->relationship('state','state_name'),
+            MapIsFilter::make('map'),
         ];
     }
     // ...
@@ -713,10 +760,18 @@ class DealershipMap extends MapTableWidget
 
 Anything you can do in normal Filament tables, you can do in this table.
 
+Also note the use of the MapIsFilter table filter.  With this optionally included in the table filters, your map acts
+as a filter for the attached table, so zooming and panning to change the visible map pins will filter the table
+accordingly.
+
+There is also an additional action, the GoToAction, available for this widget, which will zoom and pan the map to
+the selected location when clicked.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ARTISAN COMMANDS -->
 <a name="artisan"/>
+
 ## Artisan Commands
 
 The following commands can also be referenced as fgm: instead of filament-google-maps:, as yes, we get tired typing that
@@ -938,6 +993,7 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 
 <!-- ROADMAP -->
 <a name="roadmap"/>
+
 ## Roadmap
 
 - [x] Add caching for all API usage
@@ -957,6 +1013,7 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 
 <!-- ISSUES -->
 <a name="issues"/>
+
 ## Issues
 
 If (when) you find bugs, please report them on the [issues page](https://github.com/cheesegrits/filament-google-maps/issues)
@@ -966,6 +1023,7 @@ and we'll fix them ASAP.
 
 <!-- CONTRIBUTING -->
 <a name="contributing"/>
+
 ## Contributing
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
@@ -980,6 +1038,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 <!-- LICENSE -->
 <a name="license"/>
+
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
@@ -990,6 +1049,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <!-- CONTACT -->
 <a name="contact"/>
+
 ## Contact
 
 Hugh Messenger - [@cheesegrits](https://twitter.com/@cheesegrits) - hugh.messenger@gmail.com
@@ -1000,6 +1060,7 @@ Project Link: [https://github.com/cheesegrits/filament-google-maps](https://gith
 
 <!-- ACKNOWLEDGMENTS -->
 <a name="acknowledgements"/>
+
 ## Acknowledgments
 
 * [Filament PHP](https://filamentphp.com)

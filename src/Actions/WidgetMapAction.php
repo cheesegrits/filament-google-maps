@@ -5,7 +5,7 @@ namespace Cheesegrits\FilamentGoogleMaps\Actions;
 use Cheesegrits\FilamentGoogleMaps\Columns\MapColumn;
 use Cheesegrits\FilamentGoogleMaps\Fields\WidgetMap;
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
-use Filament\Support\Actions\Concerns\CanCustomizeProcess;
+use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Forms;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Contracts\HasTable;

@@ -2,19 +2,13 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Actions;
 
-use Filament\Support\Actions\Concerns\CanCustomizeProcess;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\Concerns\InteractsWithRelationship;
-use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
-use Mockery\Matcher\Closure;
+use Closure;
 
 class GoToAction extends Action
 {
-	use CanCustomizeProcess;
-	use InteractsWithRelationship;
-
 	public null|Closure|int $zoom = null;
 
 	public static function getDefaultName(): ?string
@@ -55,7 +49,6 @@ class GoToAction extends Action
 						$this->getZoom()
 					)
 				)
-//				'wire:click' => '$emitUp("setStatusFilter", "processed")'
 			];
 		});
 

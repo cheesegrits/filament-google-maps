@@ -2,9 +2,8 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Actions;
 
-use Filament\Support\Actions\Concerns\CanCustomizeProcess;
+use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\Concerns\InteractsWithRelationship;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
@@ -12,7 +11,6 @@ use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 class RadiusAction extends Action
 {
 	use CanCustomizeProcess;
-	use InteractsWithRelationship;
 
 	public static function getDefaultName(): ?string
 	{
@@ -25,17 +23,9 @@ class RadiusAction extends Action
 
 		$this->label(__('filament-google-maps::fgm.radius_action.button.label'));
 
-//		$this->modalHeading(fn (): string => __('filament-support::actions/detach.single.modal.heading', ['label' => $this->getRecordTitle()]));
-//
-//		$this->modalButton(__('filament-support::actions/detach.single.modal.actions.detach.label'));
-//
-//		$this->successNotificationTitle(__('filament-support::actions/detach.single.messages.detached'));
-
 		$this->color('danger');
 
-		$this->icon('heroicon-s-search-circle');
-
-//		$this->requiresConfirmation();
+		$this->icon('heroicon-s-magnifying-glass-circle');
 
 		$this->action(function (): void {
 			$this->process(function (HasTable $livewire, Model $record): void {
@@ -43,7 +33,7 @@ class RadiusAction extends Action
 
 //				$livewire->tableFilters['radius']['latitude']  = $record->{$latLngFields['lat']};
 //				$livewire->tableFilters['radius']['longitude'] = $record->{$latLngFields['lng']};
-				
+
 //				$address = MapsHelper::reverseGeocode([
 //					'lat' => $record->{$latLngFields['lat']},
 //					'lng' => $record->{$latLngFields['lng']},

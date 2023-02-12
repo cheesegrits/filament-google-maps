@@ -15,7 +15,7 @@ class FieldHelper
 
 	public static function getFlatFields($topComponent): array
 	{
-		$flatFields = [];
+		$flatFields = $topComponent->getContainer()->getFlatFields();
 
 		foreach ($topComponent->getContainer()->getComponents() as $component)
 		{
@@ -35,7 +35,8 @@ class FieldHelper
 
 	public static function getFieldId(string $field, Component $component): string|null
 	{
-		$flatFields = static::getFlatFields($component->getContainer()?->getParentComponent());
+		$topComponent = self::getTopComponent($component);
+		$flatFields = static::getFlatFields($topComponent);
 
 		if (array_key_exists($field, $flatFields))
 		{
