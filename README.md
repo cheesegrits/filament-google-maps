@@ -216,6 +216,34 @@ return [
 	'keys' => [
 		'web_key' => env('FILAMENT_GOOGLE_MAPS_WEB_API_KEY', env('GOOGLE_MAPS_API_KEY')),
 		'server_key' => env('FILAMENT_GOOGLE_MAPS_SERVER_API_KEY', env('GOOGLE_MAPS_API_KEY')),
+	    'signing_key' => env('FILAMENT_GOOGLE_MAPS_SIGNING_KEY', null),
+	],
+	
+	/*
+	 | By default the browser side Google Maps API will be loaded with just the 'places' library.  If you need
+	 | additional libraries for your own custom code, just add them as a comma separated list here (or in the
+	 | appropriate env key) 
+	 */
+	
+	'libraries' => env('FILAMENT_GOOGLE_MAPS_ADDITIONAL_LIBRARIES', null),
+	
+	/*
+	 | Region and country codes.
+	 |
+	 | Google STRONGLY ENCOURAGED you to set a region code (US, GB, etc) which they use to bias the results
+	 |
+	 | https://developers.google.com/maps/coverage
+	 |
+	 | Google discourage you from setting a language, as this should be controlled by the user's browser setting,
+	 | and only controls localization of the UI.  So we do not apply a language code to the Javascript API.  However,
+	 | we will apply any language code set here to server side API calls like static maps (as used in the Column).
+	 |
+	 | https://developers.google.com/maps/faq#languagesupport
+	 */
+	 
+	'locale' => [
+		'region' => env('FILAMENT_GOOGLE_MAPS_REGION_CODE', null),
+		'language' => env('FILAMENT_GOOGLE_MAPS_LANGUAGE_CODE', null),
 	],
 
 	/*
@@ -632,7 +660,26 @@ on the table, which is done with standard Filament Table methods and schemas.
 
 To generate a Dealership table map, you would run the same Artisan command, but choose the Map & Table
 option.  The generated code will look similar to the Map option, but with the addition of the familiar
-Filament methods to define the 
+Filament methods to define the table columns, filters, actions, etc.
+
+There is also an additional filter available for the Map Table Widget called 
+
+```php
+    protected function getTableFilters(): array
+    {
+        return [
+            MapIsFilter::make('map'),
+        ];
+    }
+
+    protected function getTableActions(): array
+    {
+        return [
+            GoToAction::make()
+                ->zoom(14),
+        ];
+    }
+```
 
 ```php
 use Cheesegrits\FilamentGoogleMaps\Widgets\MapTableWidget;

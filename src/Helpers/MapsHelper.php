@@ -16,7 +16,7 @@ class MapsHelper
 	{
 		return config('filament-google-maps.keys.signing_key', null);
 	}
-	
+
 	public static function hasSigningKey(): bool
 	{
 		return !empty(self::mapsSigningKey());
@@ -34,24 +34,31 @@ class MapsHelper
 
 	public static function mapsUrl($server = false): string
 	{
+		$libraries = implode(',', array_unique(
+			array_filter(
+				array_merge(
+					['places'],
+					explode(',', config('filament-google-maps.libraries'))
+				)
+			)
+		));
+
 		$gmaps = (Request::getScheme() ?? 'https') . '://maps.googleapis.com/maps/api/js'
 			. '?key=' . self::mapsKey($server)
-			. '&libraries=places'
+			. '&libraries=' . $libraries
 			. '&v=weekly';
 
 		/**
 		 * https://developers.google.com/maps/faq#languagesupport
 		 */
-		if ($server && $language = self::mapsLanguage())
-		{
+		if ($server && $language = self::mapsLanguage()) {
 			$gmaps .= '&language=' . $language;
 		}
 
 		/**
 		 * https://developers.google.com/maps/coverage
 		 */
-		if ($region = self::mapsRegion())
-		{
+		if ($region = self::mapsRegion()) {
 			$gmaps .= '&region=' . $region;
 		}
 
@@ -73,8 +80,7 @@ class MapsHelper
 		$geocoder = new Geocoder();
 		$result   = $geocoder->geocodeQuery($address)->first();
 
-		if ($result)
-		{
+		if ($result) {
 			return $geocoder->formatter->format($result, '%A2');
 		}
 
@@ -86,8 +92,7 @@ class MapsHelper
 		$geocoder = new Geocoder();
 		$result   = $geocoder->reverseQuery(self::getLatLng($lat, $lng))->first();
 
-		if ($result)
-		{
+		if ($result) {
 			return $geocoder->formatter->format($result, '%A2');
 		}
 
@@ -96,22 +101,18 @@ class MapsHelper
 
 	public static function getLatLng(array|string $lat, ?string $lng = null): array
 	{
-		if (is_array($lat))
-		{
-			if (array_key_exists('lat', $lat) && array_key_exists('lng', $lat))
-			{
+		if (is_array($lat)) {
+			if (array_key_exists('lat', $lat) && array_key_exists('lng', $lat)) {
 				return $lat;
 			}
-			else if (count($lat) === 2)
-			{
+			else if (count($lat) === 2) {
 				return [
 					'lat' => $lat[0],
 					'lng' => $lat[1],
 				];
 			}
 		}
-		else if (isset($lng))
-		{
+		else if (isset($lng)) {
 			return [
 				'lat' => $lat,
 				'lng' => $lng,
@@ -123,18 +124,15 @@ class MapsHelper
 
 	public static function isLocationEmpty($location): bool
 	{
-		if (empty($location))
-		{
+		if (empty($location)) {
 			return true;
 		}
 
-		if (array_key_exists('lat', $location) && array_key_exists('lng', $location))
-		{
+		if (array_key_exists('lat', $location) && array_key_exists('lng', $location)) {
 			return empty($location['lat']) && empty($location['lng']);
 		}
 
-		if (is_array($location) && is_numeric($location[0] && is_numeric($location[1])))
-		{
+		if (is_array($location) && is_numeric($location[0] && is_numeric($location[1]))) {
 			return empty($location[0] && empty($location[1]));
 		}
 

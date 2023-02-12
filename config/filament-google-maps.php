@@ -9,7 +9,8 @@ return [
 	/*
 	 | If you need to use both a browser key (restricted by HTTP Referrer) for use in the Javascript API on the
 	 | front end, and a server key (restricted by IP address) for server side API calls, you will need to set those
-	 | keys here (or preferably set the appropriate env keys)
+	 | keys here (or preferably set the appropriate env keys).  You may also set a signing key here for use with
+	 | static map generation.
 	 */
 
 	'keys' => [
@@ -17,6 +18,14 @@ return [
 		'server_key' => env('FILAMENT_GOOGLE_MAPS_SERVER_API_KEY', env('GOOGLE_MAPS_API_KEY')),
 		'signing_key' => env('FILAMENT_GOOGLE_MAPS_SIGNING_KEY', null),
 	],
+	
+	/*
+	 | By default the browser side Google Maps API will be loaded with just the 'places' library.  If you need
+	 | additional libraries for your own custom code, just add them as a comma separated list here (or in the
+	 | appropriate env key) 
+	 */
+	
+	'libraries' => env('FILAMENT_GOOGLE_MAPS_ADDITIONAL_LIBRARIES', null),
 
 	/*
 	 | Region and country codes.
