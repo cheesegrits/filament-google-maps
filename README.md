@@ -680,7 +680,7 @@ accordingly.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<-- ARTISAN COMMANDS -->
+<!-- ARTISAN COMMANDS -->
 <a name="artisan"/>
 
 ## Artisan Commands
