@@ -668,7 +668,7 @@ Anything you can do in normal Filament tables, you can do in this table.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<-- ARTISAN COMMANDS -->
+<!-- ARTISAN COMMANDS -->
 <a name="artisan"/>
 ## Artisan Commands
 
