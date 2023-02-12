@@ -17,6 +17,14 @@ return [
 		'server_key' => env('FILAMENT_GOOGLE_MAPS_SERVER_API_KEY', env('GOOGLE_MAPS_API_KEY')),
 		'signing_key' => env('FILAMENT_GOOGLE_MAPS_SIGNING_KEY', null),
 	],
+	
+	/*
+	 | By default the browser side Google Maps API will be loaded with just the 'places' library.  If you need
+	 | additional libraries for your own custom code, just add them as a comma separated list here (or in the
+	 | appropriate env key) 
+	 */
+	
+	'libraries' => env('FILAMENT_GOOGLE_MAPS_ADDITIONAL_LIBRARIES', null),
 
 	/*
 	 | Region and country codes.
