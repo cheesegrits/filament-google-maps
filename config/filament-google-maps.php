@@ -9,7 +9,8 @@ return [
 	/*
 	 | If you need to use both a browser key (restricted by HTTP Referrer) for use in the Javascript API on the
 	 | front end, and a server key (restricted by IP address) for server side API calls, you will need to set those
-	 | keys here (or preferably set the appropriate env keys)
+	 | keys here (or preferably set the appropriate env keys).  You may also set a signing key here for use with
+	 | static map generation.
 	 */
 
 	'keys' => [
