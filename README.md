@@ -134,7 +134,7 @@ Laravel, but has not been tested.
 You can install this project via composer:
 
 ```sh
-composer install cheesegrits/filament-google-maps
+composer require cheesegrits/filament-google-maps
 ```
 
 ### Assets
