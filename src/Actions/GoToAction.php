@@ -5,7 +5,6 @@ namespace Cheesegrits\FilamentGoogleMaps\Actions;
 use Filament\Support\Actions\Concerns\CanCustomizeProcess;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\Concerns\InteractsWithRelationship;
-use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use Mockery\Matcher\Closure;
