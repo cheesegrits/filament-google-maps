@@ -6,13 +6,9 @@ use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Exception;
 use Filament\Tables\Columns\Column;
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\ComponentAttributeBag;
 use Mastani\GoogleStaticMap\GoogleStaticMap;
-use Mastani\GoogleStaticMap\MapType;
-use Throwable;
 
 class MapColumn extends Column
 {
