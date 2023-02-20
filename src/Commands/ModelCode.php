@@ -123,7 +123,7 @@ EOT;
      *
      * {$cmd}
      */
-     
+
 EOT;
         }
 
@@ -136,7 +136,7 @@ EOT;
      * Replace your existing \$fillable and/or \$guarded and/or \$appends arrays with these - we already merged
      * any existing attributes from your model, and only included the one(s) that need changing.
      */
-     
+
 EOT;
             }
 
@@ -163,17 +163,17 @@ EOT;
      *
      * You may of course strip all comments, if you don't feel verbose.
      */
-    
+
     /**
-    * Returns the '{$latField}' and '{$lngField}' attributes as the computed '{$locationField}' attribute,
-    * as a standard Google Maps style Point array with 'lat' and 'lng' attributes.
-    * 
-    * Used by the Filament Google Maps package.
-    * 
-    * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
-    * 
-    * @return array
-    */
+     * Returns the '{$latField}' and '{$lngField}' attributes as the computed '{$locationField}' attribute,
+     * as a standard Google Maps style Point array with 'lat' and 'lng' attributes.
+     *
+     * Used by the Filament Google Maps package.
+     *
+     * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
+     *
+     * @return array
+     */
 
 EOT;
         }
@@ -193,16 +193,16 @@ EOT;
             $modelCode .= <<<EOT
 
     /**
-    * Takes a Google style Point array of 'lat' and 'lng' values and assigns them to the
-    * '{$latField}' and '{$lngField}' attributes on this model.
-    * 
-    * Used by the Filament Google Maps package.
-    *
-    * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
-    * 
-    * @param ?array \$location
-    * @return void
-    */
+     * Takes a Google style Point array of 'lat' and 'lng' values and assigns them to the
+     * '{$latField}' and '{$lngField}' attributes on this model.
+     *
+     * Used by the Filament Google Maps package.
+     *
+     * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
+     *
+     * @param ?array \$location
+     * @return void
+     */
 EOT;
         }
 
@@ -217,7 +217,7 @@ EOT;
             unset(\$this->attributes['{$locationField}']);
         }
     }
-    
+
 EOT;
 
         if ($comments) {
@@ -242,16 +242,16 @@ EOT;
             'lng' => '{$lngField}',
         ];
     }
-    
+
 EOT;
         if ($comments) {
             $modelCode .= <<<'EOT'
- 
+
     /**
      * Get the name of the computed location attribute
      *
      * Used by the Filament Google Maps package.
-     * 
+     *
      * @return string
      */
  EOT;
