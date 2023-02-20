@@ -38,11 +38,17 @@ class ModelCode extends Command
         {
             $model = new ('\\App\\Models\\' . $modelName)();
         }
-        catch (\Throwable $e)
+        catch (\Throwable)
         {
-            echo "Can't find class {$modelName} or \\App\\Models\\{$modelName}\n";
+            try
+            {
+                $model = new $modelName;
+            }
+            catch (\Throwable) {
+                echo "Can't find class {$modelName} or \\App\\Models\\{$modelName}\n";
 
-            return static::INVALID;
+                return static::INVALID;
+            }
         }
 
 		$latField = $this->option('lat')
