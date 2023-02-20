@@ -10,34 +10,34 @@ use Livewire\Component;
 
 class CreateLocation extends Component implements Forms\Contracts\HasForms
 {
-	use Forms\Concerns\InteractsWithForms;
+    use Forms\Concerns\InteractsWithForms;
 
-	public $location;
+    public $location;
 
-	public function mount(): void
-	{
-		$this->form->fill();
-	}
+    public function mount(): void
+    {
+        $this->form->fill();
+    }
 
-	protected function getFormSchema(): array
-	{
-		return [
-			Geocomplete::make('location'),
-		];
-	}
+    protected function getFormSchema(): array
+    {
+        return [
+            Geocomplete::make('location'),
+        ];
+    }
 
-	public function create(): void
-	{
-		$location = Location::create($this->form->getState());
-	}
+    public function create(): void
+    {
+        $location = Location::create($this->form->getState());
+    }
 
-	protected function getFormModel(): string
-	{
-		return Location::class;
-	}
+    protected function getFormModel(): string
+    {
+        return Location::class;
+    }
 
-	public function render(): View
-	{
-		return view('forms.fixtures.form');
-	}
+    public function render(): View
+    {
+        return view('forms.fixtures.form');
+    }
 }
