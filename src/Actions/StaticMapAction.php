@@ -65,9 +65,9 @@ class StaticMapAction extends BulkAction
                 Forms\Components\Select::make('type')
                     ->options([
                         'satellite' => 'Satellite',
-                        'hybrid' => 'Hybrid',
-                        'roadmap' => 'Roadmap',
-                        'terrain' => 'Terrain',
+                        'hybrid'    => 'Hybrid',
+                        'roadmap'   => 'Roadmap',
+                        'terrain'   => 'Terrain',
                     ])
                     ->default('roadmap'),
             ])
@@ -77,10 +77,10 @@ class StaticMapAction extends BulkAction
 
         $this->action(function (): void {
             $this->process(function (array $data, Collection $records) {
-                $markers = [];
-                $map = new GoogleStaticMap(MapsHelper::mapsKey(true));
+                $markers      = [];
+                $map          = new GoogleStaticMap(MapsHelper::mapsKey(true));
 
-                $url = $map
+                $url          = $map
                     ->setZoom(0)
                     ->setMapType($data['type'])
                     ->setScale($data['scale'])
@@ -104,13 +104,13 @@ class StaticMapAction extends BulkAction
                     $url->setSecret(MapsHelper::mapsSigningKey());
                 }
 
-                $src = $url->make();
+                $src          = $url->make();
 
                 if ($language = MapsHelper::mapsLanguage(true)) {
                     $src .= '&language='.$language;
                 }
 
-                $cacheKey = MapColumn::cacheImage($src);
+                $cacheKey     = MapColumn::cacheImage($src);
 
                 //				return Response::streamDownload(
                 //					function () use ($cacheKey) {

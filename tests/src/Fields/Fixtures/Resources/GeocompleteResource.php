@@ -17,7 +17,7 @@ use Filament\Tables;
 
 class GeocompleteResource extends Resource
 {
-    protected static ?string $model = Location::class;
+    protected static ?string $model          = Location::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
@@ -119,10 +119,10 @@ class GeocompleteResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGeocompletes::route('/'),
+            'index'  => Pages\ListGeocompletes::route('/'),
             'create' => Pages\CreateGeocomplete::route('/create'),
-            'view' => Pages\ViewGeocomplete::route('/{record}'),
-            'edit' => Pages\EditGeocomplete::route('/{record}/edit'),
+            'view'   => Pages\ViewGeocomplete::route('/{record}'),
+            'edit'   => Pages\EditGeocomplete::route('/{record}/edit'),
         ];
     }
 }

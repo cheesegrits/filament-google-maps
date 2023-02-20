@@ -11,10 +11,10 @@ uses(TestCase::class);
 it('can reverse geocode a table', function () {
     Location::factory()->withRealLatLng()->count(5)->create();
 
-    $locations = Location::where(['processed' => 1])->get();
+    $locations                       = Location::where(['processed' => 1])->get();
     assertCount(0, $locations);
 
-    $geocode = new Geocoder(config('filament-google-maps.rate-limit', 150));
+    $geocode                         = new Geocoder(config('filament-google-maps.rate-limit', 150));
     [$records, $lookups, $processed] = $geocode->reverseBatch(
         Location::class,
         'lat',
@@ -29,17 +29,17 @@ it('can reverse geocode a table', function () {
     );
 
     assertEquals(5, $processed);
-    $locations = Location::where(['processed' => 1])->get();
+    $locations                       = Location::where(['processed' => 1])->get();
     assertCount(5, $locations);
 });
 
 it('it can reverse geocode a table twice and only process once', function () {
     Location::factory()->withRealLatLng()->count(5)->create();
 
-    $locations = Location::where(['processed' => 1])->get();
+    $locations                       = Location::where(['processed' => 1])->get();
     assertCount(0, $locations);
 
-    $geocode = new Geocoder(config('filament-google-maps.rate-limit', 150));
+    $geocode                         = new Geocoder(config('filament-google-maps.rate-limit', 150));
     [$records, $lookups, $processed] = $geocode->reverseBatch(
         Location::class,
         'lat',
@@ -54,7 +54,7 @@ it('it can reverse geocode a table twice and only process once', function () {
     );
 
     assertEquals(5, $processed);
-    $locations = Location::where(['processed' => 1])->get();
+    $locations                       = Location::where(['processed' => 1])->get();
     assertCount(5, $locations);
 
     [$records, $lookups, $processed] = $geocode->reverseBatch(
@@ -76,10 +76,10 @@ it('it can reverse geocode a table twice and only process once', function () {
 it('can geocode a table', function () {
     Location::factory()->withRealAddress()->count(5)->create();
 
-    $locations = Location::where(['processed' => 1])->get();
+    $locations                       = Location::where(['processed' => 1])->get();
     assertCount(0, $locations);
 
-    $geocode = new Geocoder(config('filament-google-maps.rate-limit', 150));
+    $geocode                         = new Geocoder(config('filament-google-maps.rate-limit', 150));
     [$records, $lookups, $processed] = $geocode->geocodeBatch(
         Location::class,
         'lat',
@@ -89,17 +89,17 @@ it('can geocode a table', function () {
     );
 
     assertEquals(5, $processed);
-    $locations = Location::where(['processed' => 1])->get();
+    $locations                       = Location::where(['processed' => 1])->get();
     assertCount(5, $locations);
 });
 
 it('it can geocode a table twice and only process once', function () {
     Location::factory()->withRealAddress()->count(5)->create();
 
-    $locations = Location::where(['processed' => 1])->get();
+    $locations                       = Location::where(['processed' => 1])->get();
     assertCount(0, $locations);
 
-    $geocode = new Geocoder(config('filament-google-maps.rate-limit', 150));
+    $geocode                         = new Geocoder(config('filament-google-maps.rate-limit', 150));
     [$records, $lookups, $processed] = $geocode->geocodeBatch(
         Location::class,
         'lat',
@@ -109,7 +109,7 @@ it('it can geocode a table twice and only process once', function () {
     );
 
     assertEquals(5, $processed);
-    $locations = Location::where(['processed' => 1])->get();
+    $locations                       = Location::where(['processed' => 1])->get();
     assertCount(5, $locations);
 
     [$records, $lookups, $processed] = $geocode->reverseBatch(

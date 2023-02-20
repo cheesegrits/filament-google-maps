@@ -10,53 +10,53 @@ use JsonException;
 
 class WidgetMap extends Field
 {
-    protected string $view = 'filament-google-maps::fields.filament-google-widget-map';
+    protected string $view               = 'filament-google-maps::fields.filament-google-widget-map';
 
-    protected int $precision = 8;
+    protected int $precision             = 8;
 
     protected array|Closure|null $center = [0, 0];
 
-    protected Closure|int $zoom = 8;
+    protected Closure|int $zoom          = 8;
 
-    protected Closure|bool $draggable = true;
+    protected Closure|bool $draggable    = true;
 
-    protected Closure|bool $clickable = false;
+    protected Closure|bool $clickable    = false;
 
     protected Closure|array $mapControls = [];
 
-    protected Closure|array $layers = [];
+    protected Closure|array $layers      = [];
 
-    protected Closure|string $height = '350px';
+    protected Closure|string $height     = '350px';
 
-    protected Closure|bool $clustering = false;
+    protected Closure|bool $clustering   = false;
 
-    protected Closure|bool $fitToBounds = false;
+    protected Closure|bool $fitToBounds  = false;
 
-    protected Closure|array $markers = [];
+    protected Closure|array $markers     = [];
 
     /**
      * Main field config variables
      */
-    private array $mapConfig = [
-        'draggable' => false,
-        'center' => [
+    private array $mapConfig             = [
+        'draggable'  => false,
+        'center'     => [
             'lat' => 15.3419776,
             'lng' => 44.2171392,
         ],
-        'zoom' => 8,
-        'fit' => true,
-        'gmaps' => '',
+        'zoom'       => 8,
+        'fit'        => true,
+        'gmaps'      => '',
         'clustering' => true,
     ];
 
-    public array $controls = [
-        'mapTypeControl' => true,
-        'scaleControl' => true,
+    public array $controls               = [
+        'mapTypeControl'    => true,
+        'scaleControl'      => true,
         'streetViewControl' => true,
-        'rotateControl' => true,
+        'rotateControl'     => true,
         'fullscreenControl' => true,
-        'searchBoxControl' => false,
-        'zoomControl' => false,
+        'searchBoxControl'  => false,
+        'zoomControl'       => false,
     ];
 
     public function getHeading(): string
@@ -255,12 +255,12 @@ class WidgetMap extends Field
         $config = json_encode(
             array_merge($this->mapConfig, [
                 'clustering' => self::getClustering(),
-                'layers' => $this->getLayers(),
-                'zoom' => $this->getZoom(),
-                'controls' => $this->getMapControls(),
+                'layers'     => $this->getLayers(),
+                'zoom'       => $this->getZoom(),
+                'controls'   => $this->getMapControls(),
                 //				'center'     => $this->getCenter(),
-                'fit' => $this->getFitToBounds(),
-                'gmaps' => MapsHelper::mapsUrl(),
+                'fit'        => $this->getFitToBounds(),
+                'gmaps'      => MapsHelper::mapsUrl(),
             ])
         );
 

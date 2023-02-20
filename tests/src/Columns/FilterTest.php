@@ -16,10 +16,10 @@ it('can filter records by radius', function () {
         ->filterTable(
             'radius',
             [
-                'latitude' => '34.0',
+                'latitude'  => '34.0',
                 'longitude' => '-118.2',
-                'unit' => 'km',
-                'radius' => 500,
+                'unit'      => 'km',
+                'radius'    => 500,
             ]
         )
         ->assertCanSeeTableRecords($west)
@@ -33,10 +33,10 @@ it('can reset radius filter', function () {
         ->filterTable(
             'radius',
             [
-                'latitude' => '0.1',
+                'latitude'  => '0.1',
                 'longitude' => '-0.1',
-                'unit' => 'km',
-                'radius' => 1,
+                'unit'      => 'km',
+                'radius'    => 1,
             ]
         )
         ->assertCanNotSeeTableRecords($locations)
@@ -52,10 +52,10 @@ it('can remove radius filter', function () {
         ->filterTable(
             'radius',
             [
-                'latitude' => '0.1',
+                'latitude'  => '0.1',
                 'longitude' => '-0.1',
-                'unit' => 'km',
-                'radius' => 1,
+                'unit'      => 'km',
+                'radius'    => 1,
             ]
         )
         ->assertCanNotSeeTableRecords($locations)

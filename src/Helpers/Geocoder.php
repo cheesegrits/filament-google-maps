@@ -19,30 +19,30 @@ use Spatie\GuzzleRateLimiterMiddleware\RateLimiterMiddleware;
 
 class Geocoder
 {
-    private static array $formats = [
-        'Street Number' => '%n',
-        'Street Name' => '%S',
-        'City (Locality)' => '%L',
+    private static array $formats          = [
+        'Street Number'                => '%n',
+        'Street Name'                  => '%S',
+        'City (Locality)'              => '%L',
         'City District (Sub-Locality)' => '%D',
-        'Zipcode (Postal Code)' => '%z',
-        'Admin Level Name' => '%A1, %A2, %A3, %A4, %A5',
-        'Admin Level Code' => '%a1, %a2, %a3, %a4, %a5',
-        'Country' => '%C',
-        'Country Code' => '%c',
-        'Timezone' => '%T',
+        'Zipcode (Postal Code)'        => '%z',
+        'Admin Level Name'             => '%A1, %A2, %A3, %A4, %A5',
+        'Admin Level Code'             => '%a1, %a2, %a3, %a4, %a5',
+        'Country'                      => '%C',
+        'Country Code'                 => '%c',
+        'Timezone'                     => '%T',
     ];
 
-    private static array $formatSymbols = [
+    private static array $formatSymbols    = [
         '%n', '%S', '%L', '%D', '%z', '%A1', '%A2', '%A3', '%A4', '%A5',
         '%a1', '%a2', '%a3', '%a4', '%a5', '%C', '%c', '%T',
     ];
 
     private static array $symbolComponents = [
-        '%n' => 'street_number',
-        '%S' => 'street_address',
-        '%L' => 'locality',
-        '%D' => 'sublocality',
-        '%z' => 'postal_code',
+        '%n'  => 'street_number',
+        '%S'  => 'street_address',
+        '%L'  => 'locality',
+        '%D'  => 'sublocality',
+        '%z'  => 'postal_code',
         '%A1' => 'administrative_area_level_1',
         '%A2' => 'administrative_area_level_2',
         '%A3' => 'administrative_area_level_3',
@@ -53,9 +53,9 @@ class Geocoder
         '%a3' => 'administrative_area_level_3',
         '%a4' => 'administrative_area_level_4',
         '%a5' => 'administrative_area_level_5',
-        '%C' => 'country',
-        '%c' => 'country',
-        '%T' => 'timezone',
+        '%C'  => 'country',
+        '%c'  => 'country',
+        '%T'  => 'timezone',
     ];
 
     protected HandlerStack $stack;
@@ -68,20 +68,20 @@ class Geocoder
 
     public StringFormatter $formatter;
 
-    protected $isCaching = true;
+    protected $isCaching                   = true;
 
     public function __construct(?int $rateLimit = null)
     {
-        $this->stack = HandlerStack::create();
+        $this->stack      = HandlerStack::create();
         $this->stack->push(
             RateLimiterMiddleware::perMinute(
                 $rateLimit ?? config('filament-google-maps.rate-limit', 150)
             )
         );
         $this->httpClient = new Client(['handler' => $this->stack, 'timeout' => 30.0]);
-        $this->provider = new GoogleMaps($this->httpClient, null, MapsHelper::mapsKey(true));
-        $this->geocoder = new StatefulGeocoder($this->provider, config('filament-google-maps.locale.language'));
-        $this->formatter = new StringFormatter();
+        $this->provider   = new GoogleMaps($this->httpClient, null, MapsHelper::mapsKey(true));
+        $this->geocoder   = new StatefulGeocoder($this->provider, config('filament-google-maps.locale.language'));
+        $this->formatter  = new StringFormatter();
     }
 
     public static function getFormats(): array
@@ -117,7 +117,7 @@ class Geocoder
 
     public function geocodeQuery(string $address): Collection
     {
-        $query = GeocodeQuery::create($address);
+        $query    = GeocodeQuery::create($address);
 
         $cacheKey = serialize($address);
 
@@ -137,7 +137,7 @@ class Geocoder
 
     public function reverseQuery(array $latLng): Collection
     {
-        $query = ReverseQuery::fromCoordinates($latLng['lat'], $latLng['lng']);
+        $query    = ReverseQuery::fromCoordinates($latLng['lat'], $latLng['lng']);
 
         $cacheKey = serialize($query);
 
@@ -158,17 +158,17 @@ class Geocoder
     {
         Log::channel(config('filament-google-maps.log.channel'))->info('geocodeBatch started');
 
-        $lookups = 0;
+        $lookups   = 0;
         $processed = 0;
-        $records = 0;
+        $records   = 0;
 
-        $model = new $modelName();
+        $model     = new $modelName();
 
         // turn the comma separated $fields string into an array of trimmed strings
-        $fields = array_map(fn ($field) => trim($field), explode(',', $fields));
-        $joins = $this->getJoins($fields);
+        $fields    = array_map(fn ($field) => trim($field), explode(',', $fields));
+        $joins     = $this->getJoins($fields);
 
-        $query = DB::table($model->getTable())->select(['*']);
+        $query     = DB::table($model->getTable())->select(['*']);
 
         // if a $processedField name is provided, only select where this field has a truthy value
         if ($processedField) {
@@ -194,8 +194,8 @@ class Geocoder
                 if (! empty($address)) {
                     $lookups++;
                     $result = $this->geocodeQuery($address)->first();
-                    $lat = $result->getCoordinates()?->getLatitude();
-                    $lng = $result->getCoordinates()?->getLongitude();
+                    $lat    = $result->getCoordinates()?->getLatitude();
+                    $lng    = $result->getCoordinates()?->getLongitude();
 
                     if ($lat && $lng) {
                         // yay!  we got a lat/lng, so update and set processed if specified
@@ -232,22 +232,22 @@ class Geocoder
     {
         Log::channel(config('filament-google-maps.log.channel'))->info('reverseBatch started');
 
-        $lookups = 0;
+        $lookups   = 0;
         $processed = 0;
-        $records = 0;
+        $records   = 0;
 
         // allow fields to be either keyed by field name like ['name' => '%format'] or ['name=%format'],
         // convert to keyed version here if the latter
-        $fields = $this->reKeyFields($fields);
+        $fields    = $this->reKeyFields($fields);
 
-        $model = new $modelName();
+        $model     = new $modelName();
 
         // get an array of any dotted field name (which we have to update as relations)
         // and reverse format strings by field name
-        $joins = $this->getJoinsReverse($fields);
+        $joins     = $this->getJoinsReverse($fields);
 
         // build a query, fetching the PK and lat/lng fields
-        $query = DB::table($model->getTable())->select([$model->getKeyName(), $latField, $lngField]);
+        $query     = DB::table($model->getTable())->select([$model->getKeyName(), $latField, $lngField]);
 
         // if a $processedField name is provided, only select where this field has a truthy value
         if ($processedField) {
@@ -277,7 +277,7 @@ class Geocoder
                     ])?->first();
 
                     if ($result) {
-                        $data = [];
+                        $data     = [];
                         $joinData = [];
 
                         // loop through our $formats (like ['city' => '%L']) and format them into data arrays
@@ -330,7 +330,7 @@ class Geocoder
     {
         $formats = [];
 
-        $result = $this->reverseQuery(MapsHelper::getLatLng($lat, $lng))->first();
+        $result  = $this->reverseQuery(MapsHelper::getLatLng($lat, $lng))->first();
 
         if ($result) {
             foreach (static::$symbolComponents as $symbol => $component) {
@@ -350,7 +350,7 @@ class Geocoder
         $formats = [];
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $record = $model::find($id);
+        $record  = $model::find($id);
 
         if ($record) {
             $formats = $this->testReverse([
@@ -378,8 +378,8 @@ class Geocoder
         }
 
         $hashedCacheKey = sha1($cacheKey);
-        $duration = config('filament-google-maps.cache.duration', 0);
-        $store = config('filament-google-maps.cache.store');
+        $duration       = config('filament-google-maps.cache.duration', 0);
+        $store          = config('filament-google-maps.cache.store');
 
         try {
             $result = app('cache')
@@ -389,7 +389,7 @@ class Geocoder
                     $duration,
                     function () use ($cacheKey, $queryElements, $queryType) {
                         return [
-                            'key' => $cacheKey,
+                            'key'   => $cacheKey,
                             'value' => collect($this->geocoder->{$queryType}(...$queryElements)),
                         ];
                     }
@@ -407,7 +407,7 @@ class Geocoder
             return null;
         }
 
-        $result = $this->preventCacheKeyHashCollision(
+        $result         = $this->preventCacheKeyHashCollision(
             $result,
             $hashedCacheKey,
             $cacheKey,
@@ -451,8 +451,8 @@ class Geocoder
                 $parts = explode('=', trim($field));
 
                 if (count($parts) === 2) {
-                    $fieldName = $parts[0];
-                    $format = $parts[1];
+                    $fieldName       = $parts[0];
+                    $format          = $parts[1];
                     $new[$fieldName] = $format;
                 }
             }
@@ -474,7 +474,7 @@ class Geocoder
             if (count($fieldParts) === 2) {
                 $joins[$fieldName] = [
                     'relation' => $fieldParts[0],
-                    'field' => $fieldParts[1],
+                    'field'    => $fieldParts[1],
                 ];
             }
         }
@@ -492,7 +492,7 @@ class Geocoder
             if (count($parts) === 2) {
                 $joins[$field] = [
                     'relation' => $parts[0],
-                    'field' => $parts[1],
+                    'field'    => $parts[1],
                 ];
             }
         }

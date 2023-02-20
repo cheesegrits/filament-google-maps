@@ -16,18 +16,18 @@ class MakeWidgetCommand extends Command
 
     protected $description = 'Creates a Filament Google Maps widget class.';
 
-    protected $signature = 'make:filament-google-maps-widget {name?} {model?} {--R|resource=} {--M|map} {--T|table} {--F|force}';
+    protected $signature   = 'make:filament-google-maps-widget {name?} {model?} {--R|resource=} {--M|map} {--T|table} {--F|force}';
 
     public function handle(): int
     {
-        $path = config('filament.widgets.path', app_path('Filament/Widgets/'));
-        $resourcePath = config('filament.resources.path', app_path('Filament/Resources/'));
-        $namespace = config('filament.widgets.namespace', 'App\\Filament\\Widgets');
+        $path              = config('filament.widgets.path', app_path('Filament/Widgets/'));
+        $resourcePath      = config('filament.resources.path', app_path('Filament/Resources/'));
+        $namespace         = config('filament.widgets.namespace', 'App\\Filament\\Widgets');
         $resourceNamespace = config('filament.resources.namespace', 'App\\Filament\\Resources');
 
-        $type = false;
-        $typeMap = $this->option('map');
-        $typeTable = $this->option('table');
+        $type              = false;
+        $typeMap           = $this->option('map');
+        $typeTable         = $this->option('table');
 
         if ($typeMap) {
             $type = 'map';
@@ -38,20 +38,20 @@ class MakeWidgetCommand extends Command
                 'Widget type (just a map, or map with integrated table',
                 ['Map', 'Map & Table'],
                 0,
-                $maxAttempts = null,
+                $maxAttempts             = null,
                 $allowMultipleSelections = false
             );
 
             $type = $type === 'Map' ? 'map' : 'table';
         }
 
-        $widget = (string) Str::of($this->argument('name') ?? $this->askRequired('Name (e.g. `DealershipMap`)', 'name'))
+        $widget            = (string) Str::of($this->argument('name') ?? $this->askRequired('Name (e.g. `DealershipMap`)', 'name'))
             ->trim('/')
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
 
-        $widgetClass = (string) Str::of($widget)->afterLast('\\');
+        $widgetClass       = (string) Str::of($widget)->afterLast('\\');
 
         if (in_array($widgetClass, $this->widgetClasses)) {
             $this->error("Sorry, you can't call your widget any of: ".implode(', ', $this->widgetClasses));
@@ -59,11 +59,11 @@ class MakeWidgetCommand extends Command
             return static::INVALID;
         }
 
-        $widgetNamespace = Str::of($widget)->contains('\\') ?
+        $widgetNamespace   = Str::of($widget)->contains('\\') ?
             (string) Str::of($widget)->beforeLast('\\') :
             '';
 
-        $ogModelName = $modelName = (string) Str::of($this->argument('model')
+        $ogModelName       = $modelName = (string) Str::of($this->argument('model')
             ?? $this->askRequired('Model (e.g. `Location` or `Maps/Dealership`)', 'model'))
             ->studly()
             ->trim('/')
@@ -78,7 +78,7 @@ class MakeWidgetCommand extends Command
         } catch (\Throwable $e) {
             try {
                 /** @noinspection PhpUnusedLocalVariableInspection */
-                $model = new ('\\App\\Models\\'.$modelName)();
+                $model     = new ('\\App\\Models\\'.$modelName)();
                 $modelName = '\\App\\Models\\'.$modelName;
             } catch (\Throwable $e) {
                 echo "Can't find class $modelName or \\App\\Models\\$modelName\n";
@@ -98,13 +98,13 @@ class MakeWidgetCommand extends Command
             return static::INVALID;
         }
 
-        $resource = null;
-        $resourceClass = null;
+        $resource          = null;
+        $resourceClass     = null;
 
-        $resourceInput = $this->option('resource') ?? $this->ask('(Optional) Resource (e.g. `LocationResource`)');
+        $resourceInput     = $this->option('resource') ?? $this->ask('(Optional) Resource (e.g. `LocationResource`)');
 
         if ($resourceInput !== null) {
-            $resource = (string) Str::of($resourceInput)
+            $resource      = (string) Str::of($resourceInput)
                 ->studly()
                 ->trim('/')
                 ->trim('\\')
@@ -119,7 +119,7 @@ class MakeWidgetCommand extends Command
                 ->afterLast('\\');
         }
 
-        $view = Str::of($widget)->prepend(
+        $view              = Str::of($widget)->prepend(
             (string) Str::of($resource === null ? "{$namespace}\\" : "{$resourceNamespace}\\{$resource}\\widgets\\")
                 ->replace('App\\', '')
         )
@@ -128,14 +128,14 @@ class MakeWidgetCommand extends Command
             ->map(fn ($segment) => Str::lower(Str::kebab($segment)))
             ->implode('.');
 
-        $path = (string) Str::of($widget)
+        $path              = (string) Str::of($widget)
             ->prepend('/')
             ->prepend($resource === null ? $path : "{$resourcePath}\\{$resource}\\Widgets\\")
             ->replace('\\', '/')
             ->replace('//', '/')
             ->append('.php');
 
-        $viewPath = resource_path(
+        $viewPath          = resource_path(
             (string) Str::of($view)
                 ->replace('.', '/')
                 ->prepend('views/')
@@ -148,17 +148,17 @@ class MakeWidgetCommand extends Command
 
         if ($type === 'table') {
             $this->copyStubToApp('MapTableWidget', $path, [
-                'location' => $locationField,
-                'og-model' => $ogModelName,
-                'model' => $modelName,
-                'class' => $widgetClass,
-                'pk' => $model->getKeyName(),
+                'location'  => $locationField,
+                'og-model'  => $ogModelName,
+                'model'     => $modelName,
+                'class'     => $widgetClass,
+                'pk'        => $model->getKeyName(),
                 'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets".($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace.($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
             ] + $latLongFields);
         } else {
             $this->copyStubToApp('MapWidget', $path, [
-                'model' => $modelName,
-                'class' => $widgetClass,
+                'model'     => $modelName,
+                'class'     => $widgetClass,
                 'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets".($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace.($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
             ] + $latLongFields);
         }
@@ -169,7 +169,7 @@ class MakeWidgetCommand extends Command
             $this->info("Make sure to register the widget both in `{$resourceClass}::getWidgets()`,");
             $this->info("and in either `getHeaderWidgets()` or `getFooterWidgets()` of any `{$resourceClass}` page.");
         } else {
-            $livewire = (string) Str::of($widget)->snake();
+            $livewire   = (string) Str::of($widget)->snake();
             $widgetPath = (string) Str::of($resourceNamespace)->replace('\\', '/').'/'.$widget.'.php';
             $this->info("Your widget has been created as: $widgetPath");
             $this->newLine();

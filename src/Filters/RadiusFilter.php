@@ -14,17 +14,17 @@ use Illuminate\Database\Eloquent\Builder;
 
 class RadiusFilter extends BaseFilter
 {
-    protected string|Closure|null $latitude = null;
+    protected string|Closure|null $latitude     = null;
 
-    protected string|Closure|null $longitude = null;
+    protected string|Closure|null $longitude    = null;
 
-    protected bool|Closure|null $kilometers = false;
+    protected bool|Closure|null $kilometers     = false;
 
-    protected bool|Closure|null $selectUnit = false;
+    protected bool|Closure|null $selectUnit     = false;
 
     protected bool|string|Closure|null $section = null;
 
-    protected int|Closure|null $radius = null;
+    protected int|Closure|null $radius          = null;
 
     public function getColumns(): array|int|null
     {
@@ -49,8 +49,8 @@ class RadiusFilter extends BaseFilter
             }
 
             $label = __('filament-google-maps::fgm.radius_filter.indicate', [
-                'radius' => $state['radius'],
-                'units' => $state['unit'],
+                'radius'  => $state['radius'],
+                'units'   => $state['unit'],
                 'address' => $state['geocomplete'],
             ]);
 
@@ -60,9 +60,9 @@ class RadiusFilter extends BaseFilter
 
     public function apply(Builder $query, array $data = []): Builder
     {
-        $latitude = $data['latitude'] ?? null;
+        $latitude  = $data['latitude']  ?? null;
         $longitude = $data['longitude'] ?? null;
-        $distance = $data['radius'] ?? null;
+        $distance  = $data['radius']    ?? null;
 
         if ($latitude && $longitude && $distance) {
             $kilometers = $this->getKilometers();
@@ -71,16 +71,16 @@ class RadiusFilter extends BaseFilter
                 $kilometers = ($data['unit'] ?? null) === 'km';
             }
 
-            $latName = $this->getLatitude();
-            $lngName = $this->getLongitude();
+            $latName    = $this->getLatitude();
+            $lngName    = $this->getLongitude();
 
             //			$sql = "((ACOS(SIN(? * PI() / 180) * SIN(" . $latName . " * PI() / 180) + COS(? * PI() / 180) * COS(" .
             //				$latName . " * PI() / 180) * COS((? - " . $lngName . ") * PI() / 180)) * 180 / PI()) * 60 * ?) as distance";
 
-            $sql = "((ACOS(SIN($latitude * PI() / 180) * SIN(".$latName." * PI() / 180) + COS($latitude * PI() / 180) * COS(".
+            $sql        = "((ACOS(SIN($latitude * PI() / 180) * SIN(".$latName." * PI() / 180) + COS($latitude * PI() / 180) * COS(".
                 $latName." * PI() / 180) * COS(($longitude - ".$lngName.") * PI() / 180)) * 180 / PI()) * 60 * %f) < $distance";
 
-            $sql = sprintf($sql, $kilometers ? (1.1515 * 1.609344) : 1.1515);
+            $sql        = sprintf($sql, $kilometers ? (1.1515 * 1.609344) : 1.1515);
 
             $query->whereIn(
                 $query->getModel()->getKeyName(),
@@ -183,8 +183,7 @@ class RadiusFilter extends BaseFilter
 
     public function getLatitude(): string
     {
-        return $this->evaluate($this->latitude) ??
-            $this->getTable()->getModel()::getLatLngAttributes()['lat'];
+        return $this->evaluate($this->latitude) ?? $this->getTable()->getModel()::getLatLngAttributes()['lat'];
     }
 
     public function longitude(string|Closure|null $name): static
@@ -196,8 +195,7 @@ class RadiusFilter extends BaseFilter
 
     public function getLongitude(): string
     {
-        return $this->evaluate($this->longitude) ??
-            $this->getTable()->getModel()::getLatLngAttributes()['lng'];
+        return $this->evaluate($this->longitude) ?? $this->getTable()->getModel()::getLatLngAttributes()['lng'];
     }
 
     public function section(bool|string|Closure|null $section = true): static

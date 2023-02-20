@@ -10,7 +10,7 @@ class ReverseGeocode extends Command
 {
     use CanValidateInput;
 
-    protected $signature = 'filament-google-maps:reverse-geocode {--lat=} {--lng=} {--C|components}';
+    protected $signature   = 'filament-google-maps:reverse-geocode {--lat=} {--lng=} {--C|components}';
 
     protected $description = 'Geocode a single lat/lng tuple';
 
@@ -18,29 +18,29 @@ class ReverseGeocode extends Command
     {
         $withComponents = $this->option('components');
 
-        $lat = $this->option('lat');
+        $lat            = $this->option('lat');
 
         if (empty($lat)) {
             $prompted = true;
 
-            $lat = $this->askRequired(
+            $lat      = $this->askRequired(
                 'Latitude (e.g. `34.38461`)',
                 'lat'
             );
         }
 
-        $lng = $this->option('lng');
+        $lng            = $this->option('lng');
 
         if (empty($lng)) {
             $prompted = true;
 
-            $lng = $this->askRequired(
+            $lng      = $this->askRequired(
                 'Longitude (e.g. `-83.185639`)',
                 'lng'
             );
         }
 
-        $geocoder = new Geocoder();
+        $geocoder       = new Geocoder();
 
         if ($formats = $geocoder->testReverse($lat, $lng, $withComponents)) {
             $this->table(

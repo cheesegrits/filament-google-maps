@@ -33,9 +33,9 @@ it('outputs the appends array model-code', function () {
     $this->artisan(
         'filament-google-maps:model-code',
         [
-            'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
-            '--lat' => 'lat',
-            '--lng' => 'lng',
+            'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+            '--lat'      => 'lat',
+            '--lng'      => 'lng',
             '--location' => 'location',
         ]
     )
@@ -49,9 +49,9 @@ it('outputs the fillable array model-code', function () {
     $this->artisan(
         'filament-google-maps:model-code',
         [
-            'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
-            '--lat' => 'lat',
-            '--lng' => 'lng',
+            'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+            '--lat'      => 'lat',
+            '--lng'      => 'lng',
             '--location' => 'location',
         ]
     )
@@ -74,9 +74,9 @@ it('outputs the guarded array model-code', function () {
     $this->artisan(
         'filament-google-maps:model-code',
         [
-            'model' => 'Cheesegrits/FilamentGoogleMaps/Tests\Models/LocationGuarded',
-            '--lat' => 'lat',
-            '--lng' => 'lng',
+            'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests\Models/LocationGuarded',
+            '--lat'      => 'lat',
+            '--lng'      => 'lng',
             '--location' => 'location',
         ]
     )
@@ -90,9 +90,9 @@ it('outputs the get attribute model-code', function () {
     $this->artisan(
         'filament-google-maps:model-code',
         [
-            'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/Location',
-            '--lat' => 'lat',
-            '--lng' => 'lng',
+            'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/Location',
+            '--lat'      => 'lat',
+            '--lng'      => 'lng',
             '--location' => 'location',
         ]
     )
@@ -122,9 +122,9 @@ it('outputs the set attribute model-code', function () {
     $this->artisan(
         'filament-google-maps:model-code',
         [
-            'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
-            '--lat' => 'lat',
-            '--lng' => 'lng',
+            'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+            '--lat'      => 'lat',
+            '--lng'      => 'lng',
             '--location' => 'location',
             '--terse',
         ]
@@ -144,9 +144,9 @@ it('outputs the get lat lng model-code', function () {
     $this->artisan(
         'filament-google-maps:model-code',
         [
-            'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
-            '--lat' => 'lat',
-            '--lng' => 'lng',
+            'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+            '--lat'      => 'lat',
+            '--lng'      => 'lng',
             '--location' => 'location',
         ]
     )
@@ -164,9 +164,9 @@ it('outputs the get computed location model-code', function () {
     $this->artisan(
         'filament-google-maps:model-code',
         [
-            'model' => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
-            '--lat' => 'lat',
-            '--lng' => 'lng',
+            'model'      => 'Cheesegrits/FilamentGoogleMaps/Tests/Models/LocationFillable',
+            '--lat'      => 'lat',
+            '--lng'      => 'lng',
             '--location' => 'location',
         ]
     )

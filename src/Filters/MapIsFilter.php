@@ -8,17 +8,17 @@ use Illuminate\Database\Eloquent\Builder;
 
 class MapIsFilter extends BaseFilter
 {
-    protected string|Closure|null $latitude = null;
+    protected string|Closure|null $latitude     = null;
 
-    protected string|Closure|null $longitude = null;
+    protected string|Closure|null $longitude    = null;
 
-    protected bool|Closure|null $kilometers = false;
+    protected bool|Closure|null $kilometers     = false;
 
-    protected bool|Closure|null $selectUnit = false;
+    protected bool|Closure|null $selectUnit     = false;
 
     protected bool|string|Closure|null $section = null;
 
-    protected int|Closure|null $radius = null;
+    protected int|Closure|null $radius          = null;
 
     protected function setUp(): void
     {

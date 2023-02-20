@@ -14,7 +14,7 @@ class LocationGuarded extends Model
         'location',
     ];
 
-    protected $casts = [
+    protected $casts   = [
         'processed' => 'bool',
     ];
 }

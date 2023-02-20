@@ -36,10 +36,10 @@ class FilamentGoogleMapsServiceProvider extends PluginServiceProvider
             Commands\MakeWidgetCommand::class,
         ];
 
-        $aliases = [];
+        $aliases  = [];
 
         foreach ($commands as $command) {
-            $class = 'Cheesegrits\\FilamentGoogleMaps\\Commands\\Aliases\\'.class_basename($command);
+            $class     = 'Cheesegrits\\FilamentGoogleMaps\\Commands\\Aliases\\'.class_basename($command);
 
             if (! class_exists($class)) {
                 continue;

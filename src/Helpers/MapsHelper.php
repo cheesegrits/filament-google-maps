@@ -42,7 +42,7 @@ class MapsHelper
             )
         ));
 
-        $gmaps = (Request::getScheme() ?? 'https').'://maps.googleapis.com/maps/api/js'
+        $gmaps     = (Request::getScheme() ?? 'https').'://maps.googleapis.com/maps/api/js'
             .'?key='.self::mapsKey($server)
             .'&libraries='.$libraries
             .'&v=weekly';
@@ -77,7 +77,7 @@ class MapsHelper
     public static function getCountyFromAddress(string $address): string
     {
         $geocoder = new Geocoder();
-        $result = $geocoder->geocodeQuery($address)->first();
+        $result   = $geocoder->geocodeQuery($address)->first();
 
         if ($result) {
             return $geocoder->formatter->format($result, '%A2');
@@ -89,7 +89,7 @@ class MapsHelper
     public static function getCountyFromLatLng(array|string $lat, ?string $lng = null): string
     {
         $geocoder = new Geocoder();
-        $result = $geocoder->reverseQuery(self::getLatLng($lat, $lng))->first();
+        $result   = $geocoder->reverseQuery(self::getLatLng($lat, $lng))->first();
 
         if ($result) {
             return $geocoder->formatter->format($result, '%A2');

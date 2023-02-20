@@ -9,51 +9,51 @@ class MapWidget extends Widgets\Widget
 {
     use Widgets\Concerns\CanPoll;
 
-    protected ?array $cachedData = null;
+    protected ?array $cachedData        = null;
 
     public string $dataChecksum;
 
-    public ?string $filter = null;
+    public ?string $filter              = null;
 
-    protected static ?string $heading = null;
+    protected static ?string $heading   = null;
 
     protected static ?string $maxHeight = null;
 
-    protected static ?array $options = null;
+    protected static ?array $options    = null;
 
-    protected static ?int $precision = 8;
+    protected static ?int $precision    = 8;
 
-    protected static ?bool $clustering = true;
+    protected static ?bool $clustering  = true;
 
     protected static ?bool $fitToBounds = true;
 
-    protected static ?int $zoom = null;
+    protected static ?int $zoom         = null;
 
-    protected static array $layers = [];
+    protected static array $layers      = [];
 
-    protected static ?string $mapId = null;
+    protected static ?string $mapId     = null;
 
-    protected static string $view = 'filament-google-maps::widgets.filament-google-maps-widget';
+    protected static string $view       = 'filament-google-maps::widgets.filament-google-maps-widget';
 
-    public array $controls = [
-        'mapTypeControl' => true,
-        'scaleControl' => true,
+    public array $controls              = [
+        'mapTypeControl'    => true,
+        'scaleControl'      => true,
         'streetViewControl' => true,
-        'rotateControl' => true,
+        'rotateControl'     => true,
         'fullscreenControl' => true,
-        'searchBoxControl' => false,
-        'zoomControl' => true,
+        'searchBoxControl'  => false,
+        'zoomControl'       => true,
     ];
 
-    protected array $mapConfig = [
-        'draggable' => false,
-        'center' => [
+    protected array $mapConfig          = [
+        'draggable'  => false,
+        'center'     => [
             'lat' => 15.3419776,
             'lng' => 44.2171392,
         ],
-        'zoom' => 8,
-        'fit' => true,
-        'gmaps' => '',
+        'zoom'       => 8,
+        'fit'        => true,
+        'gmaps'      => '',
         'clustering' => true,
     ];
 
@@ -121,11 +121,11 @@ class MapWidget extends Widgets\Widget
     {
         return [
             'clustering' => self::getClustering(),
-            'layers' => $this->getLayers(),
-            'zoom' => $this->getZoom(),
-            'controls' => $this->controls,
-            'fit' => $this->getFitToBounds(),
-            'gmaps' => MapsHelper::mapsUrl(),
+            'layers'     => $this->getLayers(),
+            'zoom'       => $this->getZoom(),
+            'controls'   => $this->controls,
+            'fit'        => $this->getFitToBounds(),
+            'gmaps'      => MapsHelper::mapsUrl(),
         ];
     }
 

@@ -12,16 +12,16 @@ class ReverseGeocodeTable extends Command
 {
     use CanValidateInput;
 
-    protected $signature = 'filament-google-maps:reverse-geocode-table {model?} {--lat=} {--lng=} {--fields=*} {--processed=} {--rate-limit=} {--verbose?}}';
+    protected $signature   = 'filament-google-maps:reverse-geocode-table {model?} {--lat=} {--lng=} {--fields=*} {--processed=} {--rate-limit=} {--verbose?}}';
 
     protected $description = 'Reverse geocode a table';
 
     public function handle(): int
     {
-        $prompted = false;
-        $verbose = $this->option('verbose');
+        $prompted                        = false;
+        $verbose                         = $this->option('verbose');
 
-        $ogModelName = $modelName = (string) Str::of($this->argument('model')
+        $ogModelName                     = $modelName = (string) Str::of($this->argument('model')
             ?? $this->askRequired('Model (e.g. `Location` or `Maps/Dealership`)', 'model'))
             ->studly()
             ->trim('/')
@@ -36,7 +36,7 @@ class ReverseGeocodeTable extends Command
         } catch (Throwable $e) {
             try {
                 /** @noinspection PhpUnusedLocalVariableInspection */
-                $model = new ('\\App\\Models\\'.$modelName)();
+                $model     = new ('\\App\\Models\\'.$modelName)();
                 $modelName = '\\App\\Models\\'.$modelName;
             } catch (Throwable $e) {
                 echo "Can't find class $modelName or \\App\\Models\\$modelName\n";
@@ -45,10 +45,10 @@ class ReverseGeocodeTable extends Command
             }
         }
 
-        $rateLimit = (int) $this->option('rate-limit');
+        $rateLimit                       = (int) $this->option('rate-limit');
 
         while ($rateLimit > 300 || $rateLimit < 1) {
-            $prompted = true;
+            $prompted  = true;
 
             $rateLimit = (int) $this->askRequired(
                 'Rate limit as API calls per minute (max 300)',
@@ -57,34 +57,34 @@ class ReverseGeocodeTable extends Command
             );
         }
 
-        $geocoder = new Geocoder($rateLimit);
+        $geocoder                        = new Geocoder($rateLimit);
 
-        $lat = $this->option('lat');
+        $lat                             = $this->option('lat');
 
         if (empty($lat)) {
             $prompted = true;
 
-            $lat = $this->askRequired(
+            $lat      = $this->askRequired(
                 'Name of latitude element on table (e.g. `latitude`)',
                 'lat'
             );
         }
 
-        $lng = $this->option('lng');
+        $lng                             = $this->option('lng');
 
         if (empty($lng)) {
             $prompted = true;
 
-            $lng = $this->askRequired(
+            $lng      = $this->askRequired(
                 'Name of longitude element on table (e.g. `longitude`)',
                 'lng'
             );
         }
 
-        $processedField = $this->option('processed');
+        $processedField                  = $this->option('processed');
 
         if (empty($processedField)) {
-            $prompted = true;
+            $prompted       = true;
 
             $processedField = $this->ask(
                 'Optional name of field to set to 1 when record is processed (e.g. `processed`)',
@@ -95,7 +95,7 @@ class ReverseGeocodeTable extends Command
             $processedField = null;
         }
 
-        $fields = $this->option('fields');
+        $fields                          = $this->option('fields');
 
         if (empty($fields)) {
             $prompted = true;
@@ -134,7 +134,7 @@ class ReverseGeocodeTable extends Command
             $this->line('Yes.  This is complicated.  If you would like us to look up an example record from your table');
             $this->line('and show you what all those formats translate to, enter an ID here.  If not, just press enter.');
 
-            $id = $this->ask('ID (primary key on table)');
+            $id       = $this->ask('ID (primary key on table)');
 
             if (! empty($id)) {
                 $formats = $geocoder->testReverseModel($modelName, $id, $lat, $lng);

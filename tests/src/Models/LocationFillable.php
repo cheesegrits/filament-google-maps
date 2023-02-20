@@ -21,7 +21,7 @@ class LocationFillable extends Model
         'processed',
     ];
 
-    protected $casts = [
+    protected $casts    = [
         'processed' => 'bool',
     ];
 }

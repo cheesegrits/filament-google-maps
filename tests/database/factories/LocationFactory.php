@@ -14,33 +14,33 @@ class LocationFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'lat' => $this->faker->latitude(),
-            'lng' => $this->faker->longitude(),
-            'street' => $this->faker->streetName(),
-            'city' => $this->faker->city(),
-            'state' => $this->faker->word(),
-            'zip' => $this->faker->postcode(),
+            'name'              => $this->faker->name(),
+            'lat'               => $this->faker->latitude(),
+            'lng'               => $this->faker->longitude(),
+            'street'            => $this->faker->streetName(),
+            'city'              => $this->faker->city(),
+            'state'             => $this->faker->word(),
+            'zip'               => $this->faker->postcode(),
             'formatted_address' => $this->faker->address(),
-            'processed' => false,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'processed'         => false,
+            'created_at'        => Carbon::now(),
+            'updated_at'        => Carbon::now(),
         ];
     }
 
     public function withRealAddressAndLatLng(string $country = 'united-states-of-america', ?string $city = null): LocationFactory
     {
         //		$address = $this->faker->realAddress($country, $city);
-        $f = new RealAddressFactory();
+        $f       = new RealAddressFactory();
         $address = $f->make(1, $country, $city)->first();
 
         return $this->state([
-            'lat' => $address->getCoordinates()->getLatitude(),
-            'lng' => $address->getCoordinates()->getLongitude(),
-            'street' => $address->getStreetNumber().' '.$address->getStreetName(),
-            'city' => $address->getLocality(),
-            'state' => $address->getAdminLevels()->get(1)->getName(),
-            'zip' => $address->getPostalCode(),
+            'lat'               => $address->getCoordinates()->getLatitude(),
+            'lng'               => $address->getCoordinates()->getLongitude(),
+            'street'            => $address->getStreetNumber().' '.$address->getStreetName(),
+            'city'              => $address->getLocality(),
+            'state'             => $address->getAdminLevels()->get(1)->getName(),
+            'zip'               => $address->getPostalCode(),
             'formatted_address' => $address->getFormattedAddress(),
         ]);
     }
@@ -48,16 +48,16 @@ class LocationFactory extends Factory
     public function withRealLatLng(string $country = 'united-states-of-america', ?string $city = null): LocationFactory
     {
         //		$address = $this->faker->realAddress($country, $city);
-        $f = new RealAddressFactory();
+        $f       = new RealAddressFactory();
         $address = $f->make(1, $country, $city)->first();
 
         return $this->state([
-            'lat' => $address->getCoordinates()->getLatitude(),
-            'lng' => $address->getCoordinates()->getLongitude(),
-            'street' => null,
-            'city' => null,
-            'state' => null,
-            'zip' => null,
+            'lat'               => $address->getCoordinates()->getLatitude(),
+            'lng'               => $address->getCoordinates()->getLongitude(),
+            'street'            => null,
+            'city'              => null,
+            'state'             => null,
+            'zip'               => null,
             'formatted_address' => null,
         ]);
     }
@@ -65,16 +65,16 @@ class LocationFactory extends Factory
     public function withRealAddress(string $country = 'united-states-of-america', ?string $city = null): LocationFactory
     {
         //		$address = $this->faker->realAddress($country, $city);
-        $f = new RealAddressFactory();
+        $f       = new RealAddressFactory();
         $address = $f->make(1, $country, $city)->first();
 
         return $this->state([
-            'lat' => null,
-            'lng' => null,
-            'street' => $address->getStreetNumber().' '.$address->getStreetName(),
-            'city' => $address->getLocality(),
-            'state' => $address->getAdminLevels()->get(1)->getName(),
-            'zip' => $address->getPostalCode(),
+            'lat'               => null,
+            'lng'               => null,
+            'street'            => $address->getStreetNumber().' '.$address->getStreetName(),
+            'city'              => $address->getLocality(),
+            'state'             => $address->getAdminLevels()->get(1)->getName(),
+            'zip'               => $address->getPostalCode(),
             'formatted_address' => $address->getFormattedAddress(),
         ]);
     }

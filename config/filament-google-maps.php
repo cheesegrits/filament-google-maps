@@ -5,7 +5,7 @@ return [
      | Your Google Maps API key, usually set in .env (but see 'keys' section below).
      */
 
-    'key' => env('GOOGLE_MAPS_API_KEY'),
+    'key'        => env('GOOGLE_MAPS_API_KEY'),
 
     /*
      | If you need to use both a browser key (restricted by HTTP Referrer) for use in the Javascript API on the
@@ -14,9 +14,9 @@ return [
      | static map generation.
      */
 
-    'keys' => [
-        'web_key' => env('FILAMENT_GOOGLE_MAPS_WEB_API_KEY', env('GOOGLE_MAPS_API_KEY')),
-        'server_key' => env('FILAMENT_GOOGLE_MAPS_SERVER_API_KEY', env('GOOGLE_MAPS_API_KEY')),
+    'keys'       => [
+        'web_key'     => env('FILAMENT_GOOGLE_MAPS_WEB_API_KEY', env('GOOGLE_MAPS_API_KEY')),
+        'server_key'  => env('FILAMENT_GOOGLE_MAPS_SERVER_API_KEY', env('GOOGLE_MAPS_API_KEY')),
         'signing_key' => env('FILAMENT_GOOGLE_MAPS_SIGNING_KEY', null),
     ],
 
@@ -26,7 +26,7 @@ return [
      | appropriate env key)
      */
 
-    'libraries' => env('FILAMENT_GOOGLE_MAPS_ADDITIONAL_LIBRARIES', null),
+    'libraries'  => env('FILAMENT_GOOGLE_MAPS_ADDITIONAL_LIBRARIES', null),
 
     /*
      | Region and country codes.
@@ -41,8 +41,8 @@ return [
      |
      | https://developers.google.com/maps/faq#languagesupport
      */
-    'locale' => [
-        'region' => env('FILAMENT_GOOGLE_MAPS_REGION_CODE', null),
+    'locale'     => [
+        'region'   => env('FILAMENT_GOOGLE_MAPS_REGION_CODE', null),
         'language' => env('FILAMENT_GOOGLE_MAPS_LANGUAGE_CODE', null),
     ],
 
@@ -56,7 +56,7 @@ return [
      | Log channel to use, default is 'null' (no logging), set to your desired channel from logging.php if you want
      | logs.  Typically only useful for debugging, or if youw ant to keep track of a scheduled geocoding task.
      */
-    'log' => [
+    'log'        => [
         'channel' => env('FILAMENT_GOOGLE_MAPS_LOG_CHANNEL', 'null'),
     ],
 
@@ -67,8 +67,8 @@ return [
      | Google is 30 days.
      */
 
-    'cache' => [
+    'cache'      => [
         'duration' => env('FILAMENT_GOOGLE_MAPS_CACHE_DURATION_SECONDS', 60 * 60 * 24 * 30),
-        'store' => env('FILAMENT_GOOGLE_MAPS_CACHE_STORE', null),
+        'store'    => env('FILAMENT_GOOGLE_MAPS_CACHE_STORE', null),
     ],
 ];

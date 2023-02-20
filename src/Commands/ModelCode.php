@@ -10,22 +10,22 @@ class ModelCode extends Command
 {
     use CanValidateInput;
 
-    protected $signature = 'filament-google-maps:model-code {model?} {--lat=} {--lng=} {--location=} {--T|terse}';
+    protected $signature   = 'filament-google-maps:model-code {model?} {--lat=} {--lng=} {--location=} {--T|terse}';
 
     protected $description = 'Produce computed attribute code for a model to work with Filament Google Maps';
 
     public function handle()
     {
-        $asking = false;
+        $asking        = false;
 
-        $modelName = $this->argument('model');
+        $modelName     = $this->argument('model');
 
         if (! $modelName) {
-            $asking = true;
+            $asking    = true;
             $modelName = $this->askRequired('Model (e.g. `Location` or `Maps/Dealership`)', 'model');
         }
 
-        $modelName = (string) Str::of($modelName)
+        $modelName     = (string) Str::of($modelName)
             ->studly()
             ->trim('/')
             ->trim('\\')
@@ -45,10 +45,10 @@ class ModelCode extends Command
             }
         }
 
-        $latField = $this->option('lat')
+        $latField      = $this->option('lat')
             ?? $this->askRequired('Latitude table field name (e.g. `lat`)', 'lat');
 
-        $lngField = $this->option('lng')
+        $lngField      = $this->option('lng')
             ?? $this->askRequired('Longitude table field name (e.g. `lat`)', 'lng');
 
         $locationField = $this->option('location')
@@ -60,13 +60,13 @@ class ModelCode extends Command
             $comments = ! $this->option('terse');
         }
 
-        $guardedStr = '';
-        $guarded = $model->getGuarded();
+        $guardedStr    = '';
+        $guarded       = $model->getGuarded();
 
         if (in_array($locationField, $guarded)) {
             unset($guarded[array_search($locationField, $guarded)]);
             $guardedAttributes = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $guarded));
-            $guardedStr = <<<EOT
+            $guardedStr        = <<<EOT
 
     protected \$guarded = [
         {$guardedAttributes},
@@ -74,13 +74,13 @@ class ModelCode extends Command
 EOT;
         }
 
-        $fillableStr = '';
-        $fillable = $model->getFillable();
+        $fillableStr   = '';
+        $fillable      = $model->getFillable();
 
         if (count($fillable) > 0 && ! in_array($locationField, $fillable)) {
-            $fillable[] = $locationField;
+            $fillable[]         = $locationField;
             $fillableAttributes = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $fillable));
-            $fillableStr = <<<EOT
+            $fillableStr        = <<<EOT
 
     protected \$fillable = [
         {$fillableAttributes},
@@ -88,23 +88,23 @@ EOT;
 EOT;
         }
 
-        $appendsStr = '';
-        $appends = $model->getAppends();
+        $appendsStr    = '';
+        $appends       = $model->getAppends();
 
         if (! in_array($locationField, $appends)) {
-            $appends[] = $locationField;
+            $appends[]         = $locationField;
             $appendsAttributes = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $appends));
-            $appendsStr = <<<EOT
+            $appendsStr        = <<<EOT
     protected \$appends = [
         {$appendsAttributes},
     ];
 EOT;
         }
 
-        $locationStr = Str::studly($locationField);
-        $modelCode = '';
+        $locationStr   = Str::studly($locationField);
+        $modelCode     = '';
 
-        $cmd = sprintf(
+        $cmd           = sprintf(
             'php artisan fgm:model-code %s --lat=%s --lng=%s --location=%s',
             $modelName,
             $latField,

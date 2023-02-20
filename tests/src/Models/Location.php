@@ -23,15 +23,15 @@ class Location extends Model
         'location',
     ];
 
-    protected $guarded = [
+    protected $guarded  = [
         'location',
     ];
 
-    protected $casts = [
+    protected $casts    = [
         'processed' => 'bool',
     ];
 
-    protected $appends = [
+    protected $appends  = [
         'location',
     ];
 

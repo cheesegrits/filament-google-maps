@@ -12,21 +12,21 @@ use Mastani\GoogleStaticMap\GoogleStaticMap;
 
 class MapColumn extends Column
 {
-    protected string $view = 'filament-google-maps::columns.filament-google-maps-column';
+    protected string $view                      = 'filament-google-maps::columns.filament-google-maps-column';
 
-    protected string|Closure|null $icon = null;
+    protected string|Closure|null $icon         = null;
 
-    protected string|Closure|null $type = null;
+    protected string|Closure|null $type         = null;
 
-    protected int|Closure $height = 150;
+    protected int|Closure $height               = 150;
 
-    protected int|Closure $width = 200;
+    protected int|Closure $width                = 200;
 
-    protected int|string|Closure|null $zoom = 13;
+    protected int|string|Closure|null $zoom     = 13;
 
     protected array|Closure $extraImgAttributes = [];
 
-    protected int|Closure $ttl = 60 * 60 * 24 * 30;
+    protected int|Closure $ttl                  = 60 * 60 * 24 * 30;
 
     /**
      * Fully qualified URL to a PNG icon to use for the marker pin
@@ -161,7 +161,7 @@ class MapColumn extends Column
     {
         $marker = $location;
 
-        $icon = $this->getIcon();
+        $icon   = $this->getIcon();
 
         if ($icon) {
             $marker = 'icon:'.$icon.'|'.$marker;
@@ -201,9 +201,9 @@ class MapColumn extends Column
             return null;
         }
 
-        $map = new GoogleStaticMap(MapsHelper::mapsKey(true));
+        $map      = new GoogleStaticMap(MapsHelper::mapsKey(true));
 
-        $url = $map->setCenterLatLng($location['lat'], $location['lng'])
+        $url      = $map->setCenterLatLng($location['lat'], $location['lng'])
             ->setZoom($this->getZoom())
             ->setMapType($this->getType())
             ->setSize($this->getWidth(), $this->getHeight());
@@ -218,7 +218,7 @@ class MapColumn extends Column
             $url->setSecret(MapsHelper::mapsSigningKey());
         }
 
-        $src = $url->make();
+        $src      = $url->make();
 
         if ($language = MapsHelper::mapsLanguage(true)) {
             $src .= '&language='.$language;
@@ -232,9 +232,9 @@ class MapColumn extends Column
         $cacheKey = 'fgm-'.md5($url);
 
         if (! Cache::has($cacheKey)) {
-            $map = file_get_contents($url);
+            $map      = file_get_contents($url);
 
-            $store = config('filament-google-maps.cache.store', null);
+            $store    = config('filament-google-maps.cache.store', null);
             $duration = config('filament-google-maps.cache.duration', 0);
 
             if ($map) {
@@ -249,7 +249,7 @@ class MapColumn extends Column
 
     public function getImagePath(): ?string
     {
-        $url = $this->getStaticMapURL();
+        $url      = $this->getStaticMapURL();
 
         if (empty($url)) {
             return null;

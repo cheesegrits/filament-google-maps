@@ -25,7 +25,7 @@ class GeocodeJob implements ShouldQueue
 
     public function __construct(?int $limit, ?int $rateLimit)
     {
-        $this->limit = $limit ?? 1000;
+        $this->limit     = $limit     ?? 1000;
         $this->rateLimit = $rateLimit ?? 50;
     }
 
@@ -33,7 +33,7 @@ class GeocodeJob implements ShouldQueue
     {
         $geocoder = new Geocoder($this->rateLimit);
 
-        $results = $geocoder->geocodeBatch(
+        $results  = $geocoder->geocodeBatch(
             Location::class,
             'lat',
             'lng',

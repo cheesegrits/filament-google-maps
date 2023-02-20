@@ -18,25 +18,25 @@ class Geocomplete extends Field implements CanBeLengthConstrained
     use Concerns\HasInputMode;
     use Concerns\HasPlaceholder;
 
-    protected string $view = 'filament-google-maps::fields.filament-google-geocomplete';
+    protected string $view                    = 'filament-google-maps::fields.filament-google-geocomplete';
 
-    protected int $precision = 8;
+    protected int $precision                  = 8;
 
     protected Closure|string|null $filterName = null;
 
     protected Closure|string|null $placeField = null;
 
-    protected Closure|bool $isLocation = false;
+    protected Closure|bool $isLocation        = false;
 
-    protected Closure|bool $geocodeOnLoad = false;
+    protected Closure|bool $geocodeOnLoad     = false;
 
-    protected Closure|array $reverseGeocode = [];
+    protected Closure|array $reverseGeocode   = [];
 
-    protected Closure|bool $updateLatLng = false;
+    protected Closure|bool $updateLatLng      = false;
 
-    protected Closure|array $types = [];
+    protected Closure|array $types            = [];
 
-    protected Closure|bool $debug = false;
+    protected Closure|bool $debug             = false;
 
     /**
      * DO NOT USE!  Only used by the Radius Filter, to set the state path for the filter form data.
@@ -186,7 +186,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 
     public function getReverseGeocode(): array
     {
-        $fields = $this->evaluate($this->reverseGeocode);
+        $fields     = $this->evaluate($this->reverseGeocode);
         $statePaths = [];
 
         foreach ($fields as $field => $format) {
@@ -287,15 +287,15 @@ class Geocomplete extends Field implements CanBeLengthConstrained
     public function getGeocompleteConfig(): string
     {
         $config = json_encode([
-            'filterName' => $this->getFilterName(),
-            'statePath' => $this->getStatePath(),
-            'isLocation' => $this->getIsLocation(),
+            'filterName'           => $this->getFilterName(),
+            'statePath'            => $this->getStatePath(),
+            'isLocation'           => $this->getIsLocation(),
             'reverseGeocodeFields' => $this->getReverseGeocode(),
-            'latLngFields' => $this->getUpdateLatLngFields(),
-            'types' => $this->getTypes(),
-            'placeField' => $this->getPlaceField(),
-            'debug' => $this->getDebug(),
-            'gmaps' => MapsHelper::mapsUrl(),
+            'latLngFields'         => $this->getUpdateLatLngFields(),
+            'types'                => $this->getTypes(),
+            'placeField'           => $this->getPlaceField(),
+            'debug'                => $this->getDebug(),
+            'gmaps'                => MapsHelper::mapsUrl(),
         ]);
 
         //ray($config);

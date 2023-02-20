@@ -16,17 +16,17 @@ class MapTableWidget extends MapWidget implements Tables\Contracts\HasTable
         getTableRecords as traitGetTableRecords;
     }
 
-    protected static string $view = 'filament-google-maps::widgets.filament-google-maps-table-widget';
+    protected static string $view     = 'filament-google-maps::widgets.filament-google-maps-table-widget';
 
     protected static ?string $heading = null;
 
-    protected static ?bool $filtered = true;
+    protected static ?bool $filtered  = true;
 
-    public ?bool $mapIsFilter = false;
+    public ?bool $mapIsFilter         = false;
 
-    public array $mapFilterIds = [];
+    public array $mapFilterIds        = [];
 
-    public bool $mapFilterFirstTime = true;
+    public bool $mapFilterFirstTime   = true;
 
     public function mapIsFilter(): bool
     {

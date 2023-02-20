@@ -10,17 +10,17 @@ class Geocode extends Command
 {
     use CanValidateInput;
 
-    protected $signature = 'filament-google-maps:geocode {--address=} {--A|array} {--C|command} {--G|args}';
+    protected $signature   = 'filament-google-maps:geocode {--address=} {--A|array} {--C|command} {--G|args}';
 
     protected $description = 'Geocode a single address';
 
     public function handle()
     {
-        $array = $this->option('array');
-        $command = $this->option('command');
-        $args = $this->option('args');
+        $array    = $this->option('array');
+        $command  = $this->option('command');
+        $args     = $this->option('args');
 
-        $address = $this->option('address');
+        $address  = $this->option('address');
 
         if (empty($address)) {
             $address = $this->askRequired(

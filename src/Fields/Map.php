@@ -12,65 +12,65 @@ use JsonException;
 
 class Map extends Field
 {
-    protected string $view = 'filament-google-maps::fields.filament-google-maps';
+    protected string $view                        = 'filament-google-maps::fields.filament-google-maps';
 
-    protected int $precision = 8;
+    protected int $precision                      = 8;
 
     protected array|Closure|null $defaultLocation = [0, 0];
 
-    protected Closure|int $defaultZoom = 8;
+    protected Closure|int $defaultZoom            = 8;
 
-    protected Closure|bool $draggable = true;
+    protected Closure|bool $draggable             = true;
 
-    protected Closure|bool $clickable = false;
+    protected Closure|bool $clickable             = false;
 
-    protected Closure|array $mapControls = [];
+    protected Closure|array $mapControls          = [];
 
-    protected Closure|array $layers = [];
+    protected Closure|array $layers               = [];
 
-    protected Closure|string $height = '350px';
+    protected Closure|string $height              = '350px';
 
-    protected Closure|string|null $autocomplete = null;
+    protected Closure|string|null $autocomplete   = null;
 
-    protected Closure|bool $autocompleteReverse = false;
+    protected Closure|bool $autocompleteReverse   = false;
 
-    protected Closure|array $reverseGeocode = [];
+    protected Closure|array $reverseGeocode       = [];
 
-    protected Closure|bool $debug = false;
+    protected Closure|bool $debug                 = false;
 
     /**
      * Main field config variables
      */
-    private array $mapConfig = [
-        'autocomplete' => false,
-        'autocompleteReverse' => false,
-        'draggable' => true,
-        'clickable' => false,
-        'defaultLocation' => [
+    private array $mapConfig                      = [
+        'autocomplete'         => false,
+        'autocompleteReverse'  => false,
+        'draggable'            => true,
+        'clickable'            => false,
+        'defaultLocation'      => [
             'lat' => 15.3419776,
             'lng' => 44.2171392,
         ],
-        'controls' => [],
-        'statePath' => '',
-        'layers' => [],
-        'defaultZoom' => 8,
+        'controls'             => [],
+        'statePath'            => '',
+        'layers'               => [],
+        'defaultZoom'          => 8,
         'reverseGeocodeFields' => [],
-        'debug' => false,
-        'gmaps' => '',
+        'debug'                => false,
+        'gmaps'                => '',
     ];
 
     //	protected Closure|string|bool $geocodeFieldsReverse = false;
 
-    private array $componentTree = [];
+    private array $componentTree                  = [];
 
-    public array $controls = [
-        'mapTypeControl' => true,
-        'scaleControl' => true,
+    public array $controls                        = [
+        'mapTypeControl'    => true,
+        'scaleControl'      => true,
         'streetViewControl' => true,
-        'rotateControl' => true,
+        'rotateControl'     => true,
         'fullscreenControl' => true,
-        'searchBoxControl' => false,
-        'zoomControl' => false,
+        'searchBoxControl'  => false,
+        'zoomControl'       => false,
     ];
 
     public function height(Closure|string $height): static
@@ -153,7 +153,7 @@ class Map extends Field
 
     public function getReverseGeocode(): array
     {
-        $fields = $this->evaluate($this->reverseGeocode);
+        $fields     = $this->evaluate($this->reverseGeocode);
         $statePaths = [];
 
         foreach ($fields as $field => $format) {
@@ -360,18 +360,18 @@ class Map extends Field
     {
         $config = json_encode(
             array_merge($this->mapConfig, [
-                'autocomplete' => $this->getAutocompleteId(),
-                'autocompleteReverse' => $this->getAutocompleteReverse(),
-                'draggable' => $this->getDraggable(),
-                'clickable' => $this->getClickable(),
-                'defaultLocation' => $this->getDefaultLocation(),
-                'statePath' => $this->getStatePath(),
-                'controls' => $this->getMapControls(),
-                'layers' => $this->getLayers(),
+                'autocomplete'         => $this->getAutocompleteId(),
+                'autocompleteReverse'  => $this->getAutocompleteReverse(),
+                'draggable'            => $this->getDraggable(),
+                'clickable'            => $this->getClickable(),
+                'defaultLocation'      => $this->getDefaultLocation(),
+                'statePath'            => $this->getStatePath(),
+                'controls'             => $this->getMapControls(),
+                'layers'               => $this->getLayers(),
                 'reverseGeocodeFields' => $this->getReverseGeocode(),
-                'defaultZoom' => $this->getDefaultZoom(),
-                'debug' => $this->getDebug(),
-                'gmaps' => MapsHelper::mapsUrl(),
+                'defaultZoom'          => $this->getDefaultZoom(),
+                'debug'                => $this->getDebug(),
+                'gmaps'                => MapsHelper::mapsUrl(),
             ])
         );
 

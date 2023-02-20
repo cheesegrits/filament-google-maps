@@ -17,9 +17,9 @@ use Filament\Tables;
 
 class LocationResource extends Resource
 {
-    protected static ?string $model = Location::class;
+    protected static ?string $model                = Location::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon       = 'heroicon-o-collection';
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -119,10 +119,10 @@ class LocationResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLocations::route('/'),
+            'index'  => Pages\ListLocations::route('/'),
             'create' => Pages\CreateLocation::route('/create'),
-            'view' => Pages\ViewLocation::route('/{record}'),
-            'edit' => Pages\EditLocation::route('/{record}/edit'),
+            'view'   => Pages\ViewLocation::route('/{record}'),
+            'edit'   => Pages\EditLocation::route('/{record}/edit'),
         ];
     }
 }

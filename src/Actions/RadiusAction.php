@@ -39,7 +39,7 @@ class RadiusAction extends Action
 
         $this->action(function (): void {
             $this->process(function (HasTable $livewire, Model $record): void {
-                $latLngFields = $record::getLatLngAttributes();
+                $latLngFields                                                        = $record::getLatLngAttributes();
 
                 //				$livewire->tableFilters['radius']['latitude']  = $record->{$latLngFields['lat']};
                 //				$livewire->tableFilters['radius']['longitude'] = $record->{$latLngFields['lng']};
@@ -56,21 +56,21 @@ class RadiusAction extends Action
                 //					],
                 //				]);
 
-                $address = MapsHelper::reverseGeocode([
+                $address                                                             = MapsHelper::reverseGeocode([
                     'lat' => $record->{$latLngFields['lat']},
                     'lng' => $record->{$latLngFields['lng']},
                 ]);
 
-                $locationField = $record->getComputedLocation();
-                $lat = $record->{$latLngFields['lat']};
-                $lng = $record->{$latLngFields['lng']};
+                $locationField                                                       = $record->getComputedLocation();
+                $lat                                                                 = $record->{$latLngFields['lat']};
+                $lng                                                                 = $record->{$latLngFields['lng']};
 
-                $form = $livewire->getTableFiltersForm();
-                $state = $form->getState();
-                $state[$locationField]['geocomplete'] = $address;
+                $form                                                                = $livewire->getTableFiltersForm();
+                $state                                                               = $form->getState();
+                $state[$locationField]['geocomplete']                                = $address;
                 $form->fill($state);
 
-                $livewire->tableFilters[$record->getComputedLocation()]['latitude'] = $record->{$latLngFields['lat']};
+                $livewire->tableFilters[$record->getComputedLocation()]['latitude']  = $record->{$latLngFields['lat']};
                 $livewire->tableFilters[$record->getComputedLocation()]['longitude'] = $record->{$latLngFields['lng']};
             });
 

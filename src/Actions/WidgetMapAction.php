@@ -41,12 +41,12 @@ class WidgetMapAction extends BulkAction
         $this->size('lg');
 
         $this->mountUsing(function (Forms\ComponentContainer $form, $records) {
-            $markers = [];
-            $latLngFields = $this->getModel()::getLatLngAttributes();
+            $markers       = [];
+            $latLngFields  = $this->getModel()::getLatLngAttributes();
 
             $records->each(function (Model $record) use (&$markers, $latLngFields) {
-                $latField = $latLngFields['lat'];
-                $lngField = $latLngFields['lng'];
+                $latField  = $latLngFields['lat'];
+                $lngField  = $latLngFields['lng'];
 
                 $markers[] = [
                     'location' => [
