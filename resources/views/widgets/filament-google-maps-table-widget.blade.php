@@ -43,29 +43,29 @@
                 }"
                     x-init="
         (async () => {
-            @if($this->hasCss())
-                if(!document.getElementById('filament-google-maps-css')){
-                    const link  = document.createElement('link');
-                    link.id   = 'filament-google-maps-css';
-                    link.rel  = 'stylesheet';
-                    link.type = 'text/css';
-                    link.href = '{{ $this->cssUrl() }}';
-                    link.media = 'all';
-                    document.head.appendChild(link);
-                }
-            @endif
-            @if($this->hasJs())
-                if(!document.getElementById('filament-google-maps-js')){
-                    const script = document.createElement('script');
-                    script.id   = 'filament-google-maps-js';
-                    script.src = '{{ $this->jsUrl() }}';
-                    document.head.appendChild(script);
-                }
-             @endif
+{{--            @if($this->hasCss())--}}
+{{--                if(!document.getElementById('filament-google-maps-css')){--}}
+{{--                    const link  = document.createElement('link');--}}
+{{--                    link.id   = 'filament-google-maps-css';--}}
+{{--                    link.rel  = 'stylesheet';--}}
+{{--                    link.type = 'text/css';--}}
+{{--                    link.href = '{{ $this->cssUrl() }}';--}}
+{{--                    link.media = 'all';--}}
+{{--                    document.head.appendChild(link);--}}
+{{--                }--}}
+{{--            @endif--}}
+{{--            @if($this->hasJs())--}}
+{{--                if(!document.getElementById('filament-google-maps-js')){--}}
+{{--                    const script = document.createElement('script');--}}
+{{--                    script.id   = 'filament-google-maps-js';--}}
+{{--                    script.src = '{{ $this->jsUrl() }}';--}}
+{{--                    document.head.appendChild(script);--}}
+{{--                }--}}
+{{--             @endif--}}
 
-            do {
-                await (new Promise(resolve => setTimeout(resolve, 100)));
-            } while (window.filamentGoogleMapsWidget === undefined);
+{{--            do {--}}
+{{--                await (new Promise(resolve => setTimeout(resolve, 100)));--}}
+{{--            } while (window.filamentGoogleMapsWidget === undefined);--}}
 
             if (!window.fgm{{ $this->getMapId() }}) {
                 window.fgm{{ $this->getMapId() }} = filamentGoogleMapsWidget($wire, {{ $this->getMapConfig()}});

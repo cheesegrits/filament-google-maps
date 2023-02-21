@@ -41,29 +41,29 @@
 
              x-init="
             (async () => {
-                @if($geoHasCss())
-                    if(!document.getElementById('filament-google-geocomplete-css')){
-                        const link  = document.createElement('link');
-                        link.id   = 'filament-google-geocomplete-css';
-                        link.rel  = 'stylesheet';
-                        link.type = 'text/css';
-                        link.href = '{{ $geoCssUrl() }}';
-                        link.media = 'all';
-                        document.head.appendChild(link);
-                    }
-                @endif
-                @if($geoHasJs())
-                    if(!document.getElementById('filament-google-geocomplete-js')){
-                        const script = document.createElement('script');
-                        script.id   = 'filament-google-geocomplete-js';
-                        script.src = '{{ $geoJsUrl() }}';
-                        document.head.appendChild(script);
-                    }
-                 @endif
+{{--                @if($geoHasCss())--}}
+{{--                    if(!document.getElementById('filament-google-geocomplete-css')){--}}
+{{--                        const link  = document.createElement('link');--}}
+{{--                        link.id   = 'filament-google-geocomplete-css';--}}
+{{--                        link.rel  = 'stylesheet';--}}
+{{--                        link.type = 'text/css';--}}
+{{--                        link.href = '{{ $geoCssUrl() }}';--}}
+{{--                        link.media = 'all';--}}
+{{--                        document.head.appendChild(link);--}}
+{{--                    }--}}
+{{--                @endif--}}
+{{--                @if($geoHasJs())--}}
+{{--                    if(!document.getElementById('filament-google-geocomplete-js')){--}}
+{{--                        const script = document.createElement('script');--}}
+{{--                        script.id   = 'filament-google-geocomplete-js';--}}
+{{--                        script.src = '{{ $geoJsUrl() }}';--}}
+{{--                        document.head.appendChild(script);--}}
+{{--                    }--}}
+{{--                 @endif--}}
 
-                do {
-                    await (new Promise(resolve => setTimeout(resolve, 100)));
-                } while (window.filamentGoogleGeocomplete === undefined);
+{{--                do {--}}
+{{--                    await (new Promise(resolve => setTimeout(resolve, 100)));--}}
+{{--                } while (window.filamentGoogleGeocomplete === undefined);--}}
                 fgm = filamentGoogleGeocomplete($wire, {{ $getGeocompleteConfig()}});
                 fgm.init();
             })()

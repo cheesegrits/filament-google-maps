@@ -12,7 +12,7 @@
         "php-http/guzzle7-adapter": "^1.0",
         "spatie/guzzle-rate-limiter-middleware": "^2.0",
         "php-http/message": "^1.13",
-        "ryangjchandler/blade-capture-directive": "^0.2.2",
+        "ryangjchandler/blade-capture-directive": "^0.3",
         "mastani/laravel-google-static-map": "^2.1"
     },
     "autoload": {
@@ -46,7 +46,8 @@
     },
     "config": {
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     },
     "repositories": {
