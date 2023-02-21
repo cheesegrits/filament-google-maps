@@ -17,30 +17,30 @@ use Illuminate\Queue\SerializesModels;
  */
 class GeocodeJob implements ShouldQueue
 {
-	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-	protected int $limit;
+    protected int $limit;
 
-	protected int $rateLimit;
+    protected int $rateLimit;
 
-	public function __construct(?int $limit, ?int $rateLimit)
-	{
-		$this->limit = $limit ?? 1000;
-		$this->rateLimit = $rateLimit ?? 50;
-	}
+    public function __construct(?int $limit, ?int $rateLimit)
+    {
+        $this->limit     = $limit ?? 1000;
+        $this->rateLimit = $rateLimit ?? 50;
+    }
 
-	public function handle()
-	{
-		$geocoder = new Geocoder($this->rateLimit);
+    public function handle()
+    {
+        $geocoder = new Geocoder($this->rateLimit);
 
-		$results = $geocoder->geocodeBatch(
-			Location::class,
-			'lat',
-			'lng',
-			'street,city,state,zip',
-			'processed',
-			$this->limit,
-			true
-		);
-	}
+        $results = $geocoder->geocodeBatch(
+            Location::class,
+            'lat',
+            'lng',
+            'street,city,state,zip',
+            'processed',
+            $this->limit,
+            true
+        );
+    }
 }

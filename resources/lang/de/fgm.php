@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'radius_filter'     => [
+    'radius_filter' => [
         'address'    => 'Adresse',
         'miles'      => 'Meilen',
         'kilometers' => 'Kilometer',
@@ -11,7 +11,7 @@ return [
         'indicate'   => 'Innerhalb von :radius :units um :address',
     ],
     'map_is_filter' => [
-        'indicate'   => 'Zeige :count Pins in Ansicht',
+        'indicate' => 'Zeige :count Pins in Ansicht',
     ],
     'static_map_action' => [
         'modal' => [
@@ -21,7 +21,7 @@ return [
         ],
         'button' => [
             'label' => 'Erzeuge statische Karte',
-        ]
+        ],
     ],
     'widget_map_action' => [
         'modal' => [
@@ -31,7 +31,7 @@ return [
         ],
         'button' => [
             'label' => 'Tu etwas',
-        ]
+        ],
     ],
     'radius_action' => [
         'modal' => [
@@ -41,11 +41,11 @@ return [
         ],
         'button' => [
             'label' => 'Radius',
-        ]
+        ],
     ],
     'goto_action' => [
         'button' => [
             'label' => 'Gehe zu',
-        ]
+        ],
     ],
 ];

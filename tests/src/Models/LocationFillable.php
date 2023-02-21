@@ -2,7 +2,6 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Tests\Models;
 
-use Cheesegrits\FilamentGoogleMaps\Tests\Database\Factories\LocationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,7 +21,7 @@ class LocationFillable extends Model
         'processed',
     ];
 
-	protected $casts = [
+    protected $casts = [
         'processed' => 'bool',
     ];
 }

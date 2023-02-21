@@ -33,26 +33,26 @@ class FilamentGoogleMapsServiceProvider extends PluginServiceProvider
             Commands\Geocode::class,
             Commands\ReverseGeocodeTable::class,
             Commands\ReverseGeocode::class,
-	        Commands\MakeWidgetCommand::class
+            Commands\MakeWidgetCommand::class,
         ];
 
-	    $aliases = [];
+        $aliases = [];
 
-	    foreach ($commands as $command) {
-		    $class = 'Cheesegrits\\FilamentGoogleMaps\\Commands\\Aliases\\' . class_basename($command);
+        foreach ($commands as $command) {
+            $class = 'Cheesegrits\\FilamentGoogleMaps\\Commands\\Aliases\\'.class_basename($command);
 
-		    if (! class_exists($class)) {
-			    continue;
-		    }
+            if (! class_exists($class)) {
+                continue;
+            }
 
-		    $aliases[] = $class;
-	    }
+            $aliases[] = $class;
+        }
 
-	    return array_merge($commands, $aliases);
+        return array_merge($commands, $aliases);
     }
 
     public function packageRegistered(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/filament-google-maps.php', 'filament-google-maps');
+        $this->mergeConfigFrom(__DIR__.'/../config/filament-google-maps.php', 'filament-google-maps');
     }
 }

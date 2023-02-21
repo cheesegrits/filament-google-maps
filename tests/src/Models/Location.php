@@ -20,20 +20,20 @@ class Location extends Model
         'zip',
         'formatted_address',
         'processed',
-	    'location',
+        'location',
     ];
 
-	protected $guarded = [
-		'location',
-	];
+    protected $guarded = [
+        'location',
+    ];
 
     protected $casts = [
         'processed' => 'bool',
     ];
 
-	protected $appends = [
-		'location',
-	];
+    protected $appends = [
+        'location',
+    ];
 
     /**
      * Insert this code in your model, overwriting any existing $appends array (we already merged any existing
@@ -55,15 +55,13 @@ class Location extends Model
      * Used by the Filament Google Maps package.
      *
      * Requires the 'location' attribute be included in this model's $appends array.
-     *
-     * @return array
      */
-    function getLocationAttribute(): array
+    public function getLocationAttribute(): array
     {
-		return [
-		    "lat" => (float)$this->lat,
-		    "lng" => (float)$this->lng,
-	    ];
+        return [
+            'lat' => (float) $this->lat,
+            'lng' => (float) $this->lng,
+        ];
     }
 
     /**
@@ -74,29 +72,26 @@ class Location extends Model
      *
      * Requires the 'location' attribute be included in this model's $appends array.
      *
-     * @param ?array $location
-     * @return void
+     * @param  ?array  $location
      */
-    function setLocationAttribute(array|string $location): void
+    public function setLocationAttribute(array|string $location): void
     {
-		if (is_array($location))
-		{
-			$this->attributes['lat'] = $location['lat'];
-			$this->attributes['lng'] = $location['lng'];
-		}
+        if (is_array($location)) {
+            $this->attributes['lat'] = $location['lat'];
+            $this->attributes['lng'] = $location['lng'];
+        }
     }
 
-	public static function getLatLngAttributes(): array
-	{
-		return [
-			'lat' => 'lat',
-			'lng' => 'lng',
-		];
-	}
+    public static function getLatLngAttributes(): array
+    {
+        return [
+            'lat' => 'lat',
+            'lng' => 'lng',
+        ];
+    }
 
-	protected static function newFactory()
-	{
-		return LocationFactory::new();
-	}
-
+    protected static function newFactory()
+    {
+        return LocationFactory::new();
+    }
 }
