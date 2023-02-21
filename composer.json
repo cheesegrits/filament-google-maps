@@ -42,11 +42,13 @@
         "orchestra/testbench": "^7.11",
         "pestphp/pest-plugin-livewire": "^1.0",
         "nonsapiens/realaddressfactory": "^2.0",
-        "timacdonald/log-fake": "^2.0"
+        "timacdonald/log-fake": "^2.0",
+        "laravel/pint": "^1.6"
     },
     "config": {
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     }
 }

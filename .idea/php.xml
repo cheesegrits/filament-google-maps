@@ -69,7 +69,6 @@
       <path value="$PROJECT_DIR$/vendor/spatie/laravel-package-tools" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php81" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/vendor/egulias/email-validator" />
       <path value="$PROJECT_DIR$/vendor/laravel/framework" />
@@ -165,6 +164,10 @@
       <path value="$PROJECT_DIR$/vendor/igorw/get-in" />
       <path value="$PROJECT_DIR$/vendor/timacdonald/log-fake" />
       <path value="$PROJECT_DIR$/vendor/mastani/laravel-google-static-map" />
+      <path value="$PROJECT_DIR$/vendor/filament/actions" />
+      <path value="$PROJECT_DIR$/vendor/filament/widgets" />
+      <path value="$PROJECT_DIR$/vendor/laravel/pint" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/uri-template" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
