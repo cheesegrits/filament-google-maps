@@ -78,26 +78,24 @@ class MakeWidgetCommand extends Command
 			->studly()
 			->replace('/', '\\');
 
-		try
-		{
-			/** @noinspection PhpUnusedLocalVariableInspection */
-			$model = new $modelName();
-		}
-		catch (\Throwable $e)
-		{
-			try
-			{
-				/** @noinspection PhpUnusedLocalVariableInspection */
-				$model     = new ('\\App\\Models\\' . $modelName)();
-				$modelName = '\\App\\Models\\' . $modelName;
-			}
-			catch (\Throwable $e)
-			{
-				echo "Can't find class $modelName or \\App\\Models\\$modelName\n";
+        try
+        {
+            /** @noinspection PhpUnusedLocalVariableInspection */
+            $model     = new ('\\App\\Models\\' . $modelName)();
+            $modelName = '\\App\\Models\\' . $modelName;
+        }
+        catch (\Throwable)
+        {
+            try
+            {
+                $model = new $modelName;
+            }
+            catch (\Throwable) {
+                echo "Can't find class $modelName or \\App\\Models\\$modelName\n";
 
-				return static::INVALID;
-			}
-		}
+                return static::INVALID;
+            }
+        }
 
 		try
 		{

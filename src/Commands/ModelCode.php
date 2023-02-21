@@ -34,23 +34,22 @@ class ModelCode extends Command
 			->studly()
 			->replace('/', '\\');
 
-		try
-		{
-			$model = new $modelName();
-		}
-		catch (\Throwable $e)
-		{
-			try
-			{
-				$model = new ('\\App\\Models\\' . $modelName)();
-			}
-			catch (\Throwable $e)
-			{
-				echo "Can't find class {$modelName} or \\App\\Models\\{$modelName}\n";
+        try
+        {
+            $model = new ('\\App\\Models\\' . $modelName)();
+        }
+        catch (\Throwable)
+        {
+            try
+            {
+                $model = new $modelName;
+            }
+            catch (\Throwable) {
+                echo "Can't find class {$modelName} or \\App\\Models\\{$modelName}\n";
 
-				return static::INVALID;
-			}
-		}
+                return static::INVALID;
+            }
+        }
 
 		$latField = $this->option('lat')
 			?? $this->askRequired('Latitude table field name (e.g. `lat`)', 'lat');
@@ -88,7 +87,7 @@ EOT;
 		$fillableStr = '';
 		$fillable    = $model->getFillable();
 
-		if (count($fillable) > 0 && !in_array($locationField, $fillable))
+		if (!in_array($locationField, $fillable))
 		{
 			$fillable[]         = $locationField;
 			$fillableAttributes = implode(",\n        ", array_map(fn($item) => "'{$item}'", $fillable));
@@ -138,7 +137,7 @@ EOT;
      *
      * {$cmd}
      */
-     
+
 EOT;
 
 		}
@@ -154,7 +153,7 @@ EOT;
      * Replace your existing \$fillable and/or \$guarded and/or \$appends arrays with these - we already merged
      * any existing attributes from your model, and only included the one(s) that need changing.
      */
-     
+
 EOT;
 			}
 
@@ -182,15 +181,15 @@ EOT;
      *
      * You may of course strip all comments, if you don't feel verbose.
      */
-    
+
     /**
     * Returns the '{$latField}' and '{$lngField}' attributes as the computed '{$locationField}' attribute,
     * as a standard Google Maps style Point array with 'lat' and 'lng' attributes.
-    * 
+    *
     * Used by the Filament Google Maps package.
-    * 
+    *
     * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
-    * 
+    *
     * @return array
     */
 
@@ -199,7 +198,7 @@ EOT;
 
 		$modelCode .= <<<EOT
 
-    function get{$locationStr}Attribute(): array
+    public function get{$locationStr}Attribute(): array
     {
         return [
             "lat" => (float)\$this->{$latField},
@@ -215,11 +214,11 @@ EOT;
     /**
     * Takes a Google style Point array of 'lat' and 'lng' values and assigns them to the
     * '{$latField}' and '{$lngField}' attributes on this model.
-    * 
+    *
     * Used by the Filament Google Maps package.
     *
     * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
-    * 
+    *
     * @param ?array \$location
     * @return void
     */
@@ -228,7 +227,7 @@ EOT;
 
 		$modelCode .= <<<EOT
 
-    function set{$locationStr}Attribute(?array \$location): void
+    public function set{$locationStr}Attribute(?array \$location): void
     {
         if (is_array(\$location))
         {
@@ -237,7 +236,7 @@ EOT;
             unset(\$this->attributes['{$locationField}']);
         }
     }
-    
+
 EOT;
 
 		if ($comments)
@@ -263,17 +262,17 @@ EOT;
             'lng' => '{$lngField}',
         ];
     }
-    
+
 EOT;
 		if ($comments)
 		{
 			$modelCode .= <<<EOT
- 
+
     /**
      * Get the name of the computed location attribute
      *
      * Used by the Filament Google Maps package.
-     * 
+     *
      * @return string
      */
  EOT;
