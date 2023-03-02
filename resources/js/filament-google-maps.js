@@ -11,6 +11,8 @@ window.filamentGoogleMaps = ($wire, config) => {
             debug: false,
             autocomplete: '',
             autocompleteReverse: false,
+            geolocate: true,
+            geolocateLabel: 'Set Current Location',
             draggable: true,
             clickable: false,
             defaultLocation: {
@@ -188,6 +190,26 @@ window.filamentGoogleMaps = ($wire, config) => {
                 })
             }
 
+            if (this.config.geolocate && "geolocation" in navigator) {
+                const locationButton = document.createElement("button");
+
+                locationButton.textContent = this.config.geolocateLabel;
+                locationButton.classList.add("custom-map-control-button");
+                this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+
+                locationButton.addEventListener("click", () => {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        this.markerLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        this.setCoordinates(this.markerLocation);
+                        this.updateAutocomplete(this.markerLocation);
+                        this.updateGeocode(this.markerLocation);
+                        this.map.panTo(this.markerLocation);
+                    });
+                });
+            }
         },
         updateMapFromAlpine: function () {
             const location = this.getCoordinates();

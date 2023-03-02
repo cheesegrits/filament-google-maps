@@ -6,6 +6,7 @@ use Cheesegrits\FilamentGoogleMaps\Helpers\FieldHelper;
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Exception;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Concerns;
 use Filament\Forms\Components\Contracts\CanBeLengthConstrained;
 use Filament\Forms\Components\Field;
@@ -29,6 +30,10 @@ class Geocomplete extends Field implements CanBeLengthConstrained
     protected Closure|bool $isLocation = false;
 
     protected Closure|bool $geocodeOnLoad = false;
+	
+    protected Closure|bool $geolocate = false;
+	
+	protected Closure|string $geolocateIcon = 'heroicon-s-map';
 
     protected Closure|array $reverseGeocode = [];
 
@@ -158,6 +163,41 @@ class Geocomplete extends Field implements CanBeLengthConstrained
         return $this->evaluate($this->geocodeOnLoad);
     }
 
+	/**
+	 * Adds a configurable suffix button to the field which requests the user's location, and if granted will reverse
+	 * geocode the resulting coordinates and fill the field with the formatted_address.
+	 *
+	 * @return $this
+	 */
+	public function geolocate(Closure|bool $geolocate = true): static
+	{
+		$this->geolocate = $geolocate;
+
+		return $this;
+	}
+
+	public function getGeolocate(): bool|null
+	{
+		return $this->evaluate($this->geolocate);
+	}
+
+	/**
+	 * Override the icon to use for the geolocate feature, defaults to heroicon-s-map
+	 *
+	 * @return $this
+	 */
+	public function geolocateIcon(Closure|string $geolocateIcon): static
+	{
+		$this->geolocateIcon = $geolocateIcon;
+
+		return $this;
+	}
+
+	public function getGeolocateIcon(): string
+	{
+		return $this->evaluate($this->geolocateIcon);
+	}
+
     /**
      * Optionally provide an array of field names and format strings as key and value, if you would like the map to reverse geocode
      * address components to individual fields on your form.  See documentation for full explanation of format strings.
@@ -243,7 +283,19 @@ class Geocomplete extends Field implements CanBeLengthConstrained
         return $this->evaluate($this->placeField) ?? 'formatted_address';
     }
 
-    protected function setUp(): void
+	public function getSuffixAction(): ?Action
+	{
+		if ($this->getGeolocate()) {
+			return Action::make('geolocate')
+	            ->iconButton()
+	            ->icon($this->getGeolocateIcon())
+	            ->extraAttributes(['id' => $this->getId() . '-geolocate']);
+		}
+		
+		return null;
+	}
+
+	protected function setUp(): void
     {
         parent::setUp();
 
