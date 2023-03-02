@@ -341,6 +341,8 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Map
     ->defaultLocation([39.526610, -107.727261]) // default for new forms
     ->draggable() // allow dragging to move marker
     ->clickable(false) // allow clicking to move marker
+    ->geolocate() // adds a button to request device location and set map marker accordingly
+    ->geolocateLabel('Get Location') // overrides the default label for geolocate button
 ```
 The mapControls without comments are standard Google Maps controls, refer to
 the [API documentation](https://developers.google.com/maps/documentation/javascript/controls).
@@ -478,7 +480,9 @@ to, using the same method as the Map component, documented above.
         ->updateLatLng() // update the lat/lng fields on your form when a Place is selected
         ->maxLength(1024)
         ->prefix('Choose:')
-        ->placeholder('Start typing an address ...'),
+        ->placeholder('Start typing an address ...')
+        ->geolocate() // add a suffix button which requests and reverse geocodes the device location
+        ->geolocateIcon('heroicon-o-map'), // override the default icon for the geolocate button
 ```
 
 The Geocomplete field also offers many of the samer features as Filament's TextInput,
