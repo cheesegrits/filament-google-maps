@@ -30,10 +30,10 @@ class Geocomplete extends Field implements CanBeLengthConstrained
     protected Closure|bool $isLocation = false;
 
     protected Closure|bool $geocodeOnLoad = false;
-	
+
     protected Closure|bool $geolocate = false;
-	
-	protected Closure|string $geolocateIcon = 'heroicon-s-map';
+
+    protected Closure|string $geolocateIcon = 'heroicon-s-map';
 
     protected Closure|array $reverseGeocode = [];
 
@@ -163,40 +163,40 @@ class Geocomplete extends Field implements CanBeLengthConstrained
         return $this->evaluate($this->geocodeOnLoad);
     }
 
-	/**
-	 * Adds a configurable suffix button to the field which requests the user's location, and if granted will reverse
-	 * geocode the resulting coordinates and fill the field with the formatted_address.
-	 *
-	 * @return $this
-	 */
-	public function geolocate(Closure|bool $geolocate = true): static
-	{
-		$this->geolocate = $geolocate;
+    /**
+     * Adds a configurable suffix button to the field which requests the user's location, and if granted will reverse
+     * geocode the resulting coordinates and fill the field with the formatted_address.
+     *
+     * @return $this
+     */
+    public function geolocate(Closure|bool $geolocate = true): static
+    {
+        $this->geolocate = $geolocate;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getGeolocate(): bool|null
-	{
-		return $this->evaluate($this->geolocate);
-	}
+    public function getGeolocate(): bool|null
+    {
+        return $this->evaluate($this->geolocate);
+    }
 
-	/**
-	 * Override the icon to use for the geolocate feature, defaults to heroicon-s-map
-	 *
-	 * @return $this
-	 */
-	public function geolocateIcon(Closure|string $geolocateIcon): static
-	{
-		$this->geolocateIcon = $geolocateIcon;
+    /**
+     * Override the icon to use for the geolocate feature, defaults to heroicon-s-map
+     *
+     * @return $this
+     */
+    public function geolocateIcon(Closure|string $geolocateIcon): static
+    {
+        $this->geolocateIcon = $geolocateIcon;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getGeolocateIcon(): string
-	{
-		return $this->evaluate($this->geolocateIcon);
-	}
+    public function getGeolocateIcon(): string
+    {
+        return $this->evaluate($this->geolocateIcon);
+    }
 
     /**
      * Optionally provide an array of field names and format strings as key and value, if you would like the map to reverse geocode
@@ -283,19 +283,19 @@ class Geocomplete extends Field implements CanBeLengthConstrained
         return $this->evaluate($this->placeField) ?? 'formatted_address';
     }
 
-	public function getSuffixAction(): ?Action
-	{
-		if ($this->getGeolocate()) {
-			return Action::make('geolocate')
-	            ->iconButton()
-	            ->icon($this->getGeolocateIcon())
-	            ->extraAttributes(['id' => $this->getId() . '-geolocate']);
-		}
-		
-		return null;
-	}
+    public function getSuffixAction(): ?Action
+    {
+        if ($this->getGeolocate()) {
+            return Action::make('geolocate')
+                ->iconButton()
+                ->icon($this->getGeolocateIcon())
+                ->extraAttributes(['id' => $this->getId().'-geolocate']);
+        }
 
-	protected function setUp(): void
+        return null;
+    }
+
+    protected function setUp(): void
     {
         parent::setUp();
 
