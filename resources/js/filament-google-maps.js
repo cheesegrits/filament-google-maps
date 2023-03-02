@@ -177,6 +177,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                         this.marker.setPosition(place.geometry.location);
                         this.markerLocation = place.geometry.location;
                         this.setCoordinates(place.geometry.location);
+                        this.updateGeocode(this.markerLocation);
                     });
                 }
             }
