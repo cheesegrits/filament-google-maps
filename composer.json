@@ -13,7 +13,7 @@
         "spatie/guzzle-rate-limiter-middleware": "^2.0",
         "php-http/message": "^1.13",
         "ryangjchandler/blade-capture-directive": "^0.3",
-        "mastani/laravel-google-static-map": "^2.1"
+        "mastani/laravel-google-static-map": "^2.2"
     },
     "autoload": {
         "psr-4": {
@@ -42,7 +42,8 @@
         "orchestra/testbench": "^7.11",
         "pestphp/pest-plugin-livewire": "^1.0",
         "nonsapiens/realaddressfactory": "^2.0",
-        "timacdonald/log-fake": "^2.0"
+        "timacdonald/log-fake": "^2.0",
+        "laravel/pint": "^1.6"
     },
     "config": {
         "allow-plugins": {

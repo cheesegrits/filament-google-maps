@@ -13,30 +13,30 @@ use Mastani\GoogleStaticMap\GoogleStaticMap;
 
 class StaticMapAction extends BulkAction
 {
-	use CanCustomizeProcess;
+    use CanCustomizeProcess;
 
-	public static function getDefaultName(): ?string
-	{
-		return 'static_map';
-	}
+    public static function getDefaultName(): ?string
+    {
+        return 'static_map';
+    }
 
-	protected function setUp(): void
-	{
-		parent::setUp();
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-		$this->label(__('filament-google-maps::fgm.static_map_action.button.label'));
+        $this->label(__('filament-google-maps::fgm.static_map_action.button.label'));
 
-		$this->modalHeading(fn(): string => __('filament-google-maps::fgm.static_map_action.modal.heading', ['label' => $this->getPluralModelLabel()]));
+        $this->modalHeading(fn (): string => __('filament-google-maps::fgm.static_map_action.modal.heading', ['label' => $this->getPluralModelLabel()]));
 
-		$this->modalButton(__('filament-google-maps::fgm.static_map_action.modal.label'));
+        $this->modalButton(__('filament-google-maps::fgm.static_map_action.modal.label'));
 
-		$this->successNotificationTitle(__('filament-google-maps::fgm.static_map_action.modal.success'));
+        $this->successNotificationTitle(__('filament-google-maps::fgm.static_map_action.modal.success'));
 
-		$this->color('danger');
+        $this->color('danger');
 
-		$this->icon('heroicon-s-trash');
+        $this->icon('heroicon-s-trash');
 
-		$this->requiresConfirmation();
+        $this->requiresConfirmation();
 
 		$this->form([
 			Forms\Components\Card::make()->schema([
@@ -67,63 +67,60 @@ class StaticMapAction extends BulkAction
 			])
 			->columns(2),
 
-		]);
+        ]);
 
-		$this->action(function (): void {
-			$this->process(function (array $data, Collection $records) {
-				$markers = [];
-				$map     = new GoogleStaticMap(MapsHelper::mapsKey(true));
+        $this->action(function (): void {
+            $this->process(function (array $data, Collection $records) {
+                $markers = [];
+                $map     = new GoogleStaticMap(MapsHelper::mapsKey(true));
 
-				$url = $map
-					->setZoom(0)
-					->setMapType($data['type'])
-					->setScale($data['scale'])
-					->setSize($data['width'], $data['height']);
+                $url = $map
+                    ->setZoom(0)
+                    ->setMapType($data['type'])
+                    ->setScale($data['scale'])
+                    ->setSize($data['width'], $data['height']);
 
-				$latLngFields = $this->getModel()::getLatLngAttributes();
+                $latLngFields = $this->getModel()::getLatLngAttributes();
 
-				$records->each(function (Model $record) use ($map, $latLngFields) {
-					$latField = $latLngFields['lat'];
-					$lngField = $latLngFields['lng'];
+                $records->each(function (Model $record) use ($map, $latLngFields) {
+                    $latField = $latLngFields['lat'];
+                    $lngField = $latLngFields['lng'];
 
-					$map->addMarkerLatLng(
-						$record->{$latField},
-						$record->{$lngField},
-						'1',
-						'red',
-					);
-				});
+                    $map->addMarkerLatLng(
+                        $record->{$latField},
+                        $record->{$lngField},
+                        '1',
+                        'red',
+                    );
+                });
 
-				if (MapsHelper::hasSigningKey())
-				{
-					$url->setSecret(MapsHelper::mapsSigningKey());
-				}
+                if (MapsHelper::hasSigningKey()) {
+                    $url->setSecret(MapsHelper::mapsSigningKey());
+                }
 
-				$src = $url->make();
+                $src = $url->make();
 
-				if ($language = MapsHelper::mapsLanguage(true))
-				{
-					$src .= '&language=' . $language;
-				}
+                if ($language = MapsHelper::mapsLanguage(true)) {
+                    $src .= '&language='.$language;
+                }
 
-				$cacheKey = MapColumn::cacheImage($src);
+                $cacheKey = MapColumn::cacheImage($src);
 
-//				return Response::streamDownload(
-//					function () use ($cacheKey) {
-//						echo Cache::store(config('filament-google-maps.cache.store', null))
-//							->get($cacheKey);
-//					},
-//					'foobar',
-//					[
-//						'Content-Type' => 'image/png'
-//					]
-//				);
+                //				return Response::streamDownload(
+                //					function () use ($cacheKey) {
+                //						echo Cache::store(config('filament-google-maps.cache.store', null))
+                //							->get($cacheKey);
+                //					},
+                //					'foobar',
+                //					[
+                //						'Content-Type' => 'image/png'
+                //					]
+                //				);
 
-				return redirect()->to('/cheesegrits/filament-google-maps/' . $cacheKey . '.png');
+                return redirect()->to('/cheesegrits/filament-google-maps/'.$cacheKey.'.png');
+            });
 
-			});
-
-			$this->success();
-		});
-	}
+            $this->success();
+        });
+    }
 }

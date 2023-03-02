@@ -105,6 +105,33 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
                     this.updateReverseGeocode(place);
                     this.updateLatLng(place);
                 });
+
+                const geoLocate = document.getElementById(this.config.statePath + '-geolocate');
+
+                if (geoLocate)  {
+                    this.geocoder = new google.maps.Geocoder();
+
+                    geoLocate.addEventListener('click',  (event) => {
+                        if ("geolocation" in navigator){
+                            navigator.geolocation.getCurrentPosition((position) => {
+                                var currentLatitude = position.coords.latitude;
+                                var currentLongitude = position.coords.longitude;
+                                var currentLocation = { lat: currentLatitude, lng: currentLongitude };
+
+                                this.geocoder
+                                    .geocode({location: currentLocation})
+                                    .then((response) => {
+                                        if (response.results[0]) {
+                                            geoComplete.setAttribute('value', response.results[0].formatted_address)
+                                            this.setLocation(response.results[0]);
+                                            this.updateReverseGeocode(response.results[0]);
+                                            this.updateLatLng(response.results[0]);
+                                        }
+                                    });
+                            });
+                        }
+                    })
+                }
             }
         },
         setLocation: function (place) {

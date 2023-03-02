@@ -8,168 +8,149 @@ use Illuminate\Support\Str;
 
 class ModelCode extends Command
 {
-	use CanValidateInput;
+    use CanValidateInput;
 
-	protected $signature = 'filament-google-maps:model-code {model?} {--lat=} {--lng=} {--location=} {--T|terse}';
+    protected $signature = 'filament-google-maps:model-code {model?} {--lat=} {--lng=} {--location=} {--T|terse}';
 
-	protected $description = 'Produce computed attribute code for a model to work with Filament Google Maps';
+    protected $description = 'Produce computed attribute code for a model to work with Filament Google Maps';
 
-	public function handle()
-	{
-		$asking = false;
+    public function handle()
+    {
+        $asking = false;
 
-		$modelName = $this->argument('model');
+        $modelName = $this->argument('model');
 
-		if (!$modelName)
-		{
-			$asking = true;
-			$modelName = $this->askRequired('Model (e.g. `Location` or `Maps/Dealership`)', 'model');
-		}
+        if (! $modelName) {
+            $asking    = true;
+            $modelName = $this->askRequired('Model (e.g. `Location` or `Maps/Dealership`)', 'model');
+        }
 
-		$modelName = (string) Str::of($modelName)
-			->studly()
-			->trim('/')
-			->trim('\\')
-			->trim(' ')
-			->studly()
-			->replace('/', '\\');
+        $modelName = (string) Str::of($modelName)
+            ->studly()
+            ->trim('/')
+            ->trim('\\')
+            ->trim(' ')
+            ->studly()
+            ->replace('/', '\\');
 
-		try
-		{
-			$model = new $modelName();
-		}
-		catch (\Throwable $e)
-		{
-			try
-			{
-				$model = new ('\\App\\Models\\' . $modelName)();
-			}
-			catch (\Throwable $e)
-			{
-				echo "Can't find class {$modelName} or \\App\\Models\\{$modelName}\n";
+        try {
+            $model = new ('\\App\\Models\\'.$modelName)();
+        } catch (\Throwable) {
+            try {
+                $model = new $modelName;
+            } catch (\Throwable) {
+                echo "Can't find class {$modelName} or \\App\\Models\\{$modelName}\n";
 
-				return static::INVALID;
-			}
-		}
+                return static::INVALID;
+            }
+        }
 
-		$latField = $this->option('lat')
-			?? $this->askRequired('Latitude table field name (e.g. `lat`)', 'lat');
+        $latField = $this->option('lat')
+            ?? $this->askRequired('Latitude table field name (e.g. `lat`)', 'lat');
 
-		$lngField = $this->option('lng')
-			?? $this->askRequired('Longitude table field name (e.g. `lat`)', 'lng');
+        $lngField = $this->option('lng')
+            ?? $this->askRequired('Longitude table field name (e.g. `lat`)', 'lng');
 
-		$locationField = $this->option('location')
-			?? $this->askRequired('Computed location attribute name (e.g. `location`)', 'location');
+        $locationField = $this->option('location')
+            ?? $this->askRequired('Computed location attribute name (e.g. `location`)', 'location');
 
-		if ($asking)
-		{
-			$comments = $this->confirm('Include comments in the code?', true);
-		}
-		else
-		{
-			$comments = !$this->option('terse');
-		}
+        if ($asking) {
+            $comments = $this->confirm('Include comments in the code?', true);
+        } else {
+            $comments = ! $this->option('terse');
+        }
 
-		$guardedStr = '';
-		$guarded    = $model->getGuarded();
+        $guardedStr = '';
+        $guarded    = $model->getGuarded();
 
-		if (in_array($locationField, $guarded))
-		{
-			unset($guarded[array_search($locationField, $guarded)]);
-			$guardedAttributes = implode(",\n        ", array_map(fn($item) => "'{$item}'", $guarded));
-			$guardedStr        = <<<EOT
+        if (in_array($locationField, $guarded)) {
+            unset($guarded[array_search($locationField, $guarded)]);
+            $guardedAttributes = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $guarded));
+            $guardedStr        = <<<EOT
 
     protected \$guarded = [
         {$guardedAttributes},
     ];
 EOT;
-		}
+        }
 
-		$fillableStr = '';
-		$fillable    = $model->getFillable();
+        $fillableStr = '';
+        $fillable    = $model->getFillable();
 
-		if (count($fillable) > 0 && !in_array($locationField, $fillable))
-		{
-			$fillable[]         = $locationField;
-			$fillableAttributes = implode(",\n        ", array_map(fn($item) => "'{$item}'", $fillable));
-			$fillableStr        = <<<EOT
+        if (! in_array($locationField, $fillable)) {
+            $fillable[]         = $locationField;
+            $fillableAttributes = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $fillable));
+            $fillableStr        = <<<EOT
 
     protected \$fillable = [
         {$fillableAttributes},
     ];
 EOT;
-		}
+        }
 
-		$appendsStr = '';
-		$appends    = $model->getAppends();
+        $appendsStr = '';
+        $appends    = $model->getAppends();
 
-		if (!in_array($locationField, $appends))
-		{
-			$appends[]         = $locationField;
-			$appendsAttributes = implode(",\n        ", array_map(fn($item) => "'{$item}'", $appends));
-			$appendsStr        = <<<EOT
+        if (! in_array($locationField, $appends)) {
+            $appends[]         = $locationField;
+            $appendsAttributes = implode(",\n        ", array_map(fn ($item) => "'{$item}'", $appends));
+            $appendsStr        = <<<EOT
     protected \$appends = [
         {$appendsAttributes},
     ];
 EOT;
-		}
+        }
 
-		$locationStr = Str::studly($locationField);
-		$modelCode   = '';
+        $locationStr = Str::studly($locationField);
+        $modelCode   = '';
 
-		$cmd = sprintf(
-			'php artisan fgm:model-code %s --lat=%s --lng=%s --location=%s',
-			$modelName,
-			$latField,
-			$lngField,
-			$locationField
-		);
+        $cmd = sprintf(
+            'php artisan fgm:model-code %s --lat=%s --lng=%s --location=%s',
+            $modelName,
+            $latField,
+            $lngField,
+            $locationField
+        );
 
-		if (!$comments)
-		{
-			$cmd .= ' --terse';
-		}
+        if (! $comments) {
+            $cmd .= ' --terse';
+        }
 
-		if (!$comments)
-		{
-			$modelCode .= <<<EOT
+        if (! $comments) {
+            $modelCode .= <<<EOT
     /**
      * The following code was generated for use with Filament Google Maps
      *
      * {$cmd}
      */
-     
+
 EOT;
+        }
 
-		}
-
-		if (!empty($guardedStr) || !empty($fillableStr) || !empty($appendsStr))
-		{
-			if ($comments)
-			{
-				$modelCode .= <<<EOT
+        if (! empty($guardedStr) || ! empty($fillableStr) || ! empty($appendsStr)) {
+            if ($comments) {
+                $modelCode .= <<<EOT
     /**
      * REPLACE THE FOLLOWING ARRAYS IN YOUR {$modelName} MODEL
      *
      * Replace your existing \$fillable and/or \$guarded and/or \$appends arrays with these - we already merged
      * any existing attributes from your model, and only included the one(s) that need changing.
      */
-     
-EOT;
-			}
 
-			$modelCode .= <<<EOT
+EOT;
+            }
+
+            $modelCode .= <<<EOT
 
 {$fillableStr}
 {$guardedStr}
 {$appendsStr}
 
 EOT;
-		}
+        }
 
-		if ($comments)
-		{
-			$modelCode .= <<<EOT
+        if ($comments) {
+            $modelCode .= <<<EOT
 
     /**
      * ADD THE FOLLOWING METHODS TO YOUR {$modelName} MODEL
@@ -182,24 +163,24 @@ EOT;
      *
      * You may of course strip all comments, if you don't feel verbose.
      */
-    
+
     /**
     * Returns the '{$latField}' and '{$lngField}' attributes as the computed '{$locationField}' attribute,
     * as a standard Google Maps style Point array with 'lat' and 'lng' attributes.
-    * 
+    *
     * Used by the Filament Google Maps package.
-    * 
+    *
     * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
-    * 
+    *
     * @return array
     */
 
 EOT;
-		}
+        }
 
-		$modelCode .= <<<EOT
+        $modelCode .= <<<EOT
 
-    function get{$locationStr}Attribute(): array
+    public function get{$locationStr}Attribute(): array
     {
         return [
             "lat" => (float)\$this->{$latField},
@@ -208,27 +189,26 @@ EOT;
     }
 
 EOT;
-		if ($comments)
-		{
-			$modelCode .= <<<EOT
+        if ($comments) {
+            $modelCode .= <<<EOT
 
     /**
     * Takes a Google style Point array of 'lat' and 'lng' values and assigns them to the
     * '{$latField}' and '{$lngField}' attributes on this model.
-    * 
+    *
     * Used by the Filament Google Maps package.
     *
     * Requires the '{$locationField}' attribute be included in this model's \$fillable array.
-    * 
+    *
     * @param ?array \$location
     * @return void
     */
 EOT;
-		}
+        }
 
-		$modelCode .= <<<EOT
+        $modelCode .= <<<EOT
 
-    function set{$locationStr}Attribute(?array \$location): void
+    public function set{$locationStr}Attribute(?array \$location): void
     {
         if (is_array(\$location))
         {
@@ -237,12 +217,11 @@ EOT;
             unset(\$this->attributes['{$locationField}']);
         }
     }
-    
+
 EOT;
 
-		if ($comments)
-		{
-			$modelCode .= <<<EOT
+        if ($comments) {
+            $modelCode .= <<<'EOT'
 
     /**
      * Get the lat and lng attribute/field names used on this table
@@ -252,9 +231,9 @@ EOT;
      * @return string[]
      */
 EOT;
-		}
+        }
 
-		$modelCode .= <<<EOT
+        $modelCode .= <<<EOT
 
     public static function getLatLngAttributes(): array
     {
@@ -263,22 +242,21 @@ EOT;
             'lng' => '{$lngField}',
         ];
     }
-    
+
 EOT;
-		if ($comments)
-		{
-			$modelCode .= <<<EOT
- 
+        if ($comments) {
+            $modelCode .= <<<'EOT'
+
     /**
      * Get the name of the computed location attribute
      *
      * Used by the Filament Google Maps package.
-     * 
+     *
      * @return string
      */
  EOT;
-		}
-		$modelCode .= <<<EOT
+        }
+        $modelCode .= <<<EOT
 
     public static function getComputedLocation(): string
     {
@@ -287,8 +265,8 @@ EOT;
 
 EOT;
 
-		$this->line($modelCode);
+        $this->line($modelCode);
 
-		return static::SUCCESS;
-	}
+        return static::SUCCESS;
+    }
 }

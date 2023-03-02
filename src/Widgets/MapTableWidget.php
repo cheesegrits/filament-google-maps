@@ -3,8 +3,6 @@
 namespace Cheesegrits\FilamentGoogleMaps\Widgets;
 
 use Closure;
-use Filament\Support\Concerns\EvaluatesClosures;
-use Filament\Widgets;
 use Filament\Tables;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Contracts\Support\Htmlable;
@@ -22,20 +20,20 @@ class MapTableWidget extends MapWidget implements Tables\Contracts\HasTable
 
     protected static ?string $heading = null;
 
-	protected static ?bool $filtered = true;
+    protected static ?bool $filtered = true;
 
-	public ?bool $mapIsFilter = false;
+    public ?bool $mapIsFilter = false;
 
-	public array $mapFilterIds = [];
-	
-	public bool $mapFilterFirstTime = true;
+    public array $mapFilterIds = [];
 
-	public function mapIsFilter(): bool
-	{
-		return $this->mapIsFilter;
-	}
+    public bool $mapFilterFirstTime = true;
 
-    protected function getTableHeading(): string | Htmlable | Closure | null
+    public function mapIsFilter(): bool
+    {
+        return $this->mapIsFilter;
+    }
+
+    protected function getTableHeading(): string|Htmlable|Closure|null
     {
         return static::$heading ?? (string) Str::of(class_basename(static::class))
             ->beforeLast('Widget')
@@ -51,29 +49,27 @@ class MapTableWidget extends MapWidget implements Tables\Contracts\HasTable
 
     protected function getRecords()
     {
-		if (static::$filtered)
-		{
-			return $this->traitGetTableRecords();
-		}
-		else
-	    {
-		    return $this->getTableModel()::all();
-	    }
+        if (static::$filtered) {
+            return $this->traitGetTableRecords();
+        } else {
+            return $this->getTableModel()::all();
+        }
     }
 
     public function getTableRecords(): Collection|Paginator
     {
 		return $this->traitGetTableRecords();
+        return $this->traitGetTableRecords();
     }
 
-	public function getConfig(): array
-	{
-		$config = parent::getConfig();
-		
-		$config = array_merge($config, [
-			'mapIsFilter' => $this->mapIsFilter,
-		]);
+    public function getConfig(): array
+    {
+        $config = parent::getConfig();
 
-		return $config;
-	}
+        $config = array_merge($config, [
+            'mapIsFilter' => $this->mapIsFilter,
+        ]);
+
+        return $config;
+    }
 }
