@@ -2,19 +2,12 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Actions;
 
-use Cheesegrits\FilamentGoogleMaps\Columns\MapColumn;
 use Cheesegrits\FilamentGoogleMaps\Fields\WidgetMap;
-use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Forms;
 use Filament\Tables\Actions\BulkAction;
-use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Filters\TrashedFilter;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Response;
-use Mastani\GoogleStaticMap\GoogleStaticMap;
 
 class WidgetMapAction extends BulkAction
 {

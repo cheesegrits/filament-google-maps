@@ -38,34 +38,34 @@ class StaticMapAction extends BulkAction
 
         $this->requiresConfirmation();
 
-		$this->form([
-			Forms\Components\Card::make()->schema([
-				Forms\Components\TextInput::make('width')
-					->integer()
-					->minValue(100)
-					->maxValue(640)
-					->default(600),
-				Forms\Components\TextInput::make('height')
-					->integer()
-					->minValue(100)
-					->maxValue(640)
-					->default(450),
-				Forms\Components\Select::make('scale')
-					->options([
-						1 => '1',
-						2 => '2',
-					])
-					->default(1),
-				Forms\Components\Select::make('type')
-					->options([
-						'satellite' => 'Satellite',
-						'hybrid' => 'Hybrid',
-						'roadmap' => 'Roadmap',
-						'terrain' => 'Terrain',
-					])
-					->default('roadmap'),
-			])
-			->columns(2),
+        $this->form([
+            Forms\Components\Card::make()->schema([
+                Forms\Components\TextInput::make('width')
+                    ->integer()
+                    ->minValue(100)
+                    ->maxValue(640)
+                    ->default(600),
+                Forms\Components\TextInput::make('height')
+                    ->integer()
+                    ->minValue(100)
+                    ->maxValue(640)
+                    ->default(450),
+                Forms\Components\Select::make('scale')
+                    ->options([
+                        1 => '1',
+                        2 => '2',
+                    ])
+                    ->default(1),
+                Forms\Components\Select::make('type')
+                    ->options([
+                        'satellite' => 'Satellite',
+                        'hybrid'    => 'Hybrid',
+                        'roadmap'   => 'Roadmap',
+                        'terrain'   => 'Terrain',
+                    ])
+                    ->default('roadmap'),
+            ])
+            ->columns(2),
 
         ]);
 

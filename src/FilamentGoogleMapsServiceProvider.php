@@ -4,8 +4,6 @@ namespace Cheesegrits\FilamentGoogleMaps;
 
 use Cheesegrits\FilamentGoogleMaps\Widgets\MapTableWidget;
 use Cheesegrits\FilamentGoogleMaps\Widgets\MapWidget;
-use Filament\FilamentServiceProvider;
-use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\AssetManager;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
@@ -38,33 +36,33 @@ class FilamentGoogleMapsServiceProvider extends PackageServiceProvider
             Commands\Geocode::class,
             Commands\ReverseGeocodeTable::class,
             Commands\ReverseGeocode::class,
-	        Commands\MakeWidgetCommand::class
+            Commands\MakeWidgetCommand::class,
         ];
 
-	    $aliases = [];
+        $aliases = [];
 
-	    foreach ($commands as $command) {
-		    $class = 'Cheesegrits\\FilamentGoogleMaps\\Commands\\Aliases\\' . class_basename($command);
+        foreach ($commands as $command) {
+            $class = 'Cheesegrits\\FilamentGoogleMaps\\Commands\\Aliases\\'.class_basename($command);
 
-		    if (! class_exists($class)) {
-			    continue;
-		    }
+            if (! class_exists($class)) {
+                continue;
+            }
 
-		    $aliases[] = $class;
-	    }
+            $aliases[] = $class;
+        }
 
-	    return array_merge($commands, $aliases);
+        return array_merge($commands, $aliases);
     }
 
     public function packageRegistered(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/filament-google-maps.php', 'filament-google-maps');
-		$this->app->resolving(AssetManager::class, function () {
-			FilamentAsset::register([
-				Js::make('filament-google-maps-field', __DIR__ . '/../dist/cheesegrits/filament-google-maps/filament-google-maps.js'),
-				Js::make('filament-google-maps-geocomplete', __DIR__ . '/../dist/cheesegrits/filament-google-maps/filament-google-geocomplete.js'),
-				Js::make('filament-google-maps-widget', __DIR__ . '/../dist/cheesegrits/filament-google-maps/filament-google-maps-widget.js'),
-			], 'cheesegrits/filament-google-maps');
-		});
+        $this->mergeConfigFrom(__DIR__.'/../config/filament-google-maps.php', 'filament-google-maps');
+        $this->app->resolving(AssetManager::class, function () {
+            FilamentAsset::register([
+                Js::make('filament-google-maps-field', __DIR__.'/../dist/cheesegrits/filament-google-maps/filament-google-maps.js'),
+                Js::make('filament-google-maps-geocomplete', __DIR__.'/../dist/cheesegrits/filament-google-maps/filament-google-geocomplete.js'),
+                Js::make('filament-google-maps-widget', __DIR__.'/../dist/cheesegrits/filament-google-maps/filament-google-maps-widget.js'),
+            ], 'cheesegrits/filament-google-maps');
+        });
     }
 }
