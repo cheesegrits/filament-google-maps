@@ -20,9 +20,9 @@
         :state-path="$getStatePath()"
 >
     <div {{ $attributes->merge($getExtraAttributes())->class(['filament-forms-text-input-component flex items-center space-x-2 rtl:space-x-reverse group']) }}>
-        @if (($prefixAction = $getPrefixAction()) && (! $prefixAction->isHidden()))
-            {{ $prefixAction }}
-        @endif
+{{--        @if (($prefixAction = $getPrefixAction()) && (! $prefixAction->isHidden()))--}}
+{{--            {{ $prefixAction }}--}}
+{{--        @endif--}}
 
         @if ($icon = $getPrefixIcon())
             <x-dynamic-component :component="$icon" class="w-5 h-5"/>
