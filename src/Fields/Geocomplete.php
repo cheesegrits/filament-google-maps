@@ -7,17 +7,20 @@ use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Exception;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Contracts;
 use Filament\Forms\Components\Concerns;
-use Filament\Forms\Components\Contracts\CanBeLengthConstrained;
 use Filament\Forms\Components\Field;
 
-class Geocomplete extends Field implements CanBeLengthConstrained
+class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\CanBeLengthConstrained
 {
-    use Concerns\CanBeLengthConstrained;
-    use Concerns\HasAffixes;
-    use Concerns\HasExtraInputAttributes;
-    use Concerns\HasInputMode;
-    use Concerns\HasPlaceholder;
+	use Concerns\CanBeAutocapitalized;
+	use Concerns\CanBeAutocompleted;
+	use Concerns\CanBeLengthConstrained;
+	use Concerns\CanBeReadOnly;
+	use Concerns\HasAffixes;
+	use Concerns\HasExtraInputAttributes;
+	use Concerns\HasInputMode;
+	use Concerns\HasPlaceholder;
 
     protected string $view = 'filament-google-maps::fields.filament-google-geocomplete';
 
@@ -283,7 +286,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained
         return $this->evaluate($this->placeField) ?? 'formatted_address';
     }
 
-    public function getSuffixAction(): ?Action
+    public function getGeolocateAction(): ?Action
     {
         if ($this->getGeolocate()) {
             return Action::make('geolocate')
@@ -331,6 +334,10 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 
             return $state;
         });
+
+	    $this->suffixActions([
+		    Closure::fromCallable([$this, 'getGeolocateAction']),
+	    ]);
     }
 
     /**
