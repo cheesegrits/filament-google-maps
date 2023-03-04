@@ -320,21 +320,6 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
             }
         });
 
-        $this->dehydrateStateUsing(static function (string|array|null $state, $record, $model, Geocomplete $component) {
-            //			if (!blank($state))
-            //			{
-            //				if ($component->getIsLocation())
-            //				{
-            //					if ($latLang = MapsHelper::geocode($state))
-            //					{
-            //						return $latLang;
-            //					}
-            //				}
-            //			}
-
-            return $state;
-        });
-
 	    $this->suffixActions([
 		    Closure::fromCallable([$this, 'getGeolocateAction']),
 	    ]);
