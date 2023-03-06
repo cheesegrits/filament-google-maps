@@ -263,8 +263,8 @@ class MapColumn extends Column
 
         return url('/cheesegrits/filament-google-maps/'.$cacheKey.'.png');
     }
-
-    public function getState()
+	
+    public function getState(): mixed
     {
         $state = parent::getState();
 

@@ -286,28 +286,4 @@ class WidgetMap extends Field
             }
         }
     }
-
-    public function hasJs(): bool
-    {
-        return true;
-    }
-
-    public function jsUrl(): string
-    {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
-
-        return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps-widget.js']);
-    }
-
-    public function hasCss(): bool
-    {
-        return false;
-    }
-
-    public function cssUrl(): string
-    {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
-
-        return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps-widget.css']);
-    }
 }

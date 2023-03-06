@@ -373,28 +373,4 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
 			}
 		}
 	}
-
-	public function geoHasJs(): bool
-	{
-		return true;
-	}
-
-	public function geoJsUrl(): string
-	{
-		$manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
-
-		return url($manifest['/cheesegrits/filament-google-maps/filament-google-geocomplete.js']);
-	}
-
-	public function geoHasCss(): bool
-	{
-		return false;
-	}
-
-	public function geoCssUrl(): string
-	{
-		$manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
-
-		return url($manifest['/cheesegrits/filament-google-maps/filament-google-geocomplete.css']);
-	}
 }
