@@ -394,10 +394,10 @@ class Map extends Field
         return null;
     }
 
-	public function getMapsUrl(): string
-	{
-		return MapsHelper::mapsUrl();
-	}
+    public function getMapsUrl(): string
+    {
+        return MapsHelper::mapsUrl();
+    }
 
     /**
      * Create json configuration string
