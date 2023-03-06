@@ -1,39 +1,33 @@
-window.filamentGoogleMaps = ($wire, config) => {
+export default function filamentGoogleMapsField(
+    {
+        state,
+        setStateUsing,
+        getStateUsing,
+        autocomplete,
+        autocompleteReverse,
+        geolocate,
+        geolocateLabel,
+        draggable,
+        clickable,
+        defaultLocation,
+        statePath,
+        controls,
+        layers,
+        reverseGeocodeFields,
+        defaultZoom,
+        debug,
+        gmaps,
+        mapEl,
+        pacEl,
+    }
+) {
     return {
+        state,
         map: null,
         geocoder: null,
         marker: null,
         markerLocation: null,
         layers: null,
-        mapEl: null,
-        pacEl: null,
-        config: {
-            debug: false,
-            autocomplete: '',
-            autocompleteReverse: false,
-            geolocate: true,
-            geolocateLabel: 'Set Current Location',
-            draggable: true,
-            clickable: false,
-            defaultLocation: {
-                lat: 0,
-                lng: 0
-            },
-            statePath: '',
-            controls: {
-                mapTypeControl: true,
-                scaleControl: true,
-                streetViewControl: true,
-                rotateControl: true,
-                fullscreenControl: true,
-                searchBoxControl: false,
-                zoomControl: false,
-            },
-            layers: [],
-            reverseGeocodeFields: {},
-            defaultZoom: 8,
-            gmaps: '',
-        },
         symbols: {
             '%n': ["street_number"],
             '%z': ["postal_code"],
@@ -59,7 +53,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                 const script = document.createElement('script');
                 script.id = 'filament-google-maps-google-maps-js';
                 window.filamentGoogleMapsAsyncLoad = this.createMap.bind(this);
-                script.src = this.config.gmaps + '&callback=filamentGoogleMapsAsyncLoad';
+                script.src = gmaps + '&callback=filamentGoogleMapsAsyncLoad';
                 document.head.appendChild(script);
             } else {
                 const waitForGlobal = function (key, callback) {
@@ -78,35 +72,33 @@ window.filamentGoogleMaps = ($wire, config) => {
             }
         },
 
-        init: function (mapEl, pacEl) {
-            this.mapEl = mapEl;
-            this.pacEl = pacEl;
-            this.config = {...this.config, ...config};
+        init: function () {
+            console.log('filament google map field init')
             this.loadGMaps();
         },
 
         createMap: function () {
             window.filamentGoogleMapsAPILoaded = true;
 
-            if (this.config.autocompleteReverse || Object.keys(this.config.reverseGeocodeFields).length > 0) {
+            if (autocompleteReverse || Object.keys(reverseGeocodeFields).length > 0) {
                 this.geocoder = new google.maps.Geocoder();
             }
 
-            this.map = new google.maps.Map(this.mapEl, {
+            this.map = new google.maps.Map(mapEl, {
                 center: this.getCoordinates(),
-                zoom: this.config.defaultZoom,
-                ...this.config.controls
+                zoom: defaultZoom,
+                ...controls
             });
 
 
             this.marker = new google.maps.Marker({
-                draggable: this.config.draggable,
+                draggable: draggable,
                 map: this.map
             });
 
             this.marker.setPosition(this.getCoordinates());
 
-            if (this.config.clickable) {
+            if (clickable) {
                 this.map.addListener('click', (event) => {
                     this.markerLocation = event.latLng.toJSON();
                     this.setCoordinates(this.markerLocation);
@@ -117,7 +109,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                 });
             }
 
-            if (this.config.draggable) {
+            if (draggable) {
                 google.maps.event.addListener(this.marker, 'dragend', (event) => {
                     this.markerLocation = event.latLng.toJSON();
                     this.setCoordinates(this.markerLocation);
@@ -128,8 +120,8 @@ window.filamentGoogleMaps = ($wire, config) => {
                 });
             }
 
-            if (this.config.controls.searchBoxControl) {
-                const input = this.pacEl;
+            if (controls.searchBoxControl) {
+                const input = pacEl;
                 const searchBox = new google.maps.places.SearchBox(input);
                 this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
                 searchBox.addListener("places_changed", () => {
@@ -145,8 +137,8 @@ window.filamentGoogleMaps = ($wire, config) => {
             };
 
 
-            if (this.config.autocomplete) {
-                const geoComplete = document.getElementById(this.config.autocomplete);
+            if (autocomplete) {
+                const geoComplete = document.getElementById(autocomplete);
 
                 if (geoComplete) {
                     window.addEventListener('keydown', function (e) {
@@ -181,8 +173,8 @@ window.filamentGoogleMaps = ($wire, config) => {
                 }
             }
 
-            if (this.config.layers) {
-                this.layers = this.config.layers.map((layerUrl) => {
+            if (layers) {
+                this.layers = layers.map((layerUrl) => {
                     return new google.maps.KmlLayer({
                         url: layerUrl,
                         map: this.map,
@@ -190,10 +182,10 @@ window.filamentGoogleMaps = ($wire, config) => {
                 })
             }
 
-            if (this.config.geolocate && "geolocation" in navigator) {
+            if (geolocate && "geolocation" in navigator) {
                 const locationButton = document.createElement("button");
 
-                locationButton.textContent = this.config.geolocateLabel;
+                locationButton.textContent = geolocateLabel;
                 locationButton.classList.add("custom-map-control-button");
                 this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
 
@@ -210,31 +202,35 @@ window.filamentGoogleMaps = ($wire, config) => {
                     });
                 });
             }
-        },
-        updateMapFromAlpine: function () {
-            const location = this.getCoordinates();
-            const markerLocation = this.marker.getPosition();
 
-            if (!(location.lat === markerLocation.lat() && location.lng === markerLocation.lng())) {
-                this.updateAutocomplete(location)
-                this.updateMap(location);
-            }
+            this.$watch('state', () => {
+                if (this.state === undefined) {
+                    return
+                }
+                
+                const location = this.getCoordinates();
+                const markerLocation = this.marker.getPosition();
+
+                if (!(location.lat === markerLocation.lat() && location.lng === markerLocation.lng())) {
+                    this.updateAutocomplete(location)
+                    this.updateMap(location);
+                }
+            })
         },
         updateMap: function (position) {
             this.marker.setPosition(position);
             this.map.panTo(position);
         },
         updateGeocode: function (position) {
-            if (Object.keys(this.config.reverseGeocodeFields).length > 0) {
+            if (Object.keys(reverseGeocodeFields).length > 0) {
                 this.geocoder
                     .geocode({location: position})
                     .then((response) => {
                         if (response.results[0]) {
-                            //$wire.set(config.autocomplete, response.results[0].formatted_address);
                             const replacements = this.getReplacements(response.results[0].address_components);
 
-                            for (const field in this.config.reverseGeocodeFields) {
-                                let replaced = this.config.reverseGeocodeFields[field];
+                            for (const field in reverseGeocodeFields) {
+                                let replaced = reverseGeocodeFields[field];
 
                                 for (const replacement in replacements) {
                                     replaced = replaced.split(replacement).join(replacements[replacement]);
@@ -245,7 +241,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                                 }
 
                                 replaced = replaced.trim();
-                                $wire.set(field, replaced)
+                                setStateUsing(field, replaced)
                             }
 
                         }
@@ -256,12 +252,12 @@ window.filamentGoogleMaps = ($wire, config) => {
             }
         },
         updateAutocomplete: function (position) {
-            if (this.config.autocomplete && this.config.autocompleteReverse) {
+            if (autocomplete && autocompleteReverse) {
                 this.geocoder
                     .geocode({location: position})
                     .then((response) => {
                         if (response.results[0]) {
-                            $wire.set(this.config.autocomplete, response.results[0].formatted_address);
+                            setStateUsing(autocomplete, response.results[0].formatted_address);
                         }
                     })
                     .catch((error) => {
@@ -270,14 +266,13 @@ window.filamentGoogleMaps = ($wire, config) => {
             }
         },
         setCoordinates: function (position) {
-            $wire.set(this.config.statePath, position);
+            this.state = position;
         },
         getCoordinates: function () {
-            let location = $wire.get(this.config.statePath)
-            if (location === null || !location.hasOwnProperty('lat')) {
-                location = {lat: this.config.defaultLocation.lat, lng: this.config.defaultLocation.lng}
+            if (this.state === null || !this.state.hasOwnProperty('lat')) {
+                this.state = {lat: defaultLocation.lat, lng: defaultLocation.lng}
             }
-            return location;
+            return this.state;
         },
 
         getReplacements: function (address_components) {
@@ -295,11 +290,12 @@ window.filamentGoogleMaps = ($wire, config) => {
                 }
             });
 
-            if (this.config.debug) {
+            if (debug) {
                 console.log(replacements);
             }
 
             return replacements;
         }
+
     }
 }

@@ -1,7 +1,9 @@
 import {MarkerClusterer} from "@googlemaps/markerclusterer";
 import debounce from 'underscore/modules/debounce.js'
 
-window.filamentGoogleMapsWidget = ($wire, config) => {
+export default function filamentGoogleMapsWidget(
+    {cachedData, config, mapEl, mapFilterIds}
+) {
     return {
         wire: null,
         map: null,
@@ -63,10 +65,9 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             }
         },
 
-        init: function (data, mapEl) {
+        init: function () {
             this.mapEl = document.getElementById(mapEl) || mapEl;
-            this.data = data;
-            this.wire = $wire;
+            this.data = cachedData;
             this.config = {...this.config, ...config};
             this.loadGMaps();
         },
@@ -96,6 +97,10 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             this.createLayers();
 
             this.idle();
+            
+            window.addEventListener('filament-google-maps::widget/setMapCenter', (event) => {
+                this.recenter(event.detail);
+            })
 
             this.show(true);
         },
@@ -274,7 +279,7 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             if (!areEqual(this.modelIds, ids)) {
                 this.modelIds = ids;
                 console.log(ids)
-                $wire.set('mapFilterIds', ids)
+                this.$wire.set('mapFilterIds', ids)
             }
         },
         idle: function () {

@@ -383,7 +383,7 @@ class Map extends Field
 //		return $flatFields;
 //	}
 
-    private function getAutocompleteId(): string|null
+    public function getAutocompleteId(): string|null
     {
         $autoCompleteField = $this->getAutocomplete();
 
@@ -393,6 +393,11 @@ class Map extends Field
 
         return null;
     }
+
+	public function getMapsUrl(): string
+	{
+		return MapsHelper::mapsUrl();
+	}
 
     /**
      * Create json configuration string
