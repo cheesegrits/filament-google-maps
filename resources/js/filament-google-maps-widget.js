@@ -2,10 +2,9 @@ import {MarkerClusterer} from "@googlemaps/markerclusterer";
 import debounce from 'underscore/modules/debounce.js'
 
 export default function filamentGoogleMapsWidget(
-    {cachedData, config, mapEl, mapFilterIds}
+    {cachedData, config, mapEl}
 ) {
     return {
-        wire: null,
         map: null,
         bounds: null,
         infoWindow: null,
