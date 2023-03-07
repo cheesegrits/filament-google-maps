@@ -198,7 +198,8 @@ window.filamentGoogleMaps = ($wire, config) => {
                 locationButton.classList.add("custom-map-control-button");
                 this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
 
-                locationButton.addEventListener("click", () => {
+                locationButton.addEventListener("click", (e) => {
+                    e.preventDefault()
                     navigator.geolocation.getCurrentPosition((position) => {
                         this.markerLocation = {
                             lat: position.coords.latitude,
