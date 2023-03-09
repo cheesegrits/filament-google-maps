@@ -352,21 +352,19 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
         return $config;
     }
 
-	public static function getLocationState($state)
-	{
-		if (is_array($state)) {
-			return $state;
-		}
-		else {
-			try {
-				return @json_decode($state, true, 512, JSON_THROW_ON_ERROR);
-			}
-			catch (Exception $e) {
-				return [
-					'lat' => 0,
-					'lng' => 0,
-				];
-			}
-		}
-	}
+    public static function getLocationState($state)
+    {
+        if (is_array($state)) {
+            return $state;
+        } else {
+            try {
+                return @json_decode($state, true, 512, JSON_THROW_ON_ERROR);
+            } catch (Exception $e) {
+                return [
+                    'lat' => 0,
+                    'lng' => 0,
+                ];
+            }
+        }
+    }
 }

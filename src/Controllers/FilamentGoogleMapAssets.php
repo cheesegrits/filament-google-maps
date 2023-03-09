@@ -26,7 +26,7 @@ class FilamentGoogleMapAssets
                     ]
                 );
             }
-        } 
+        }
 
         abort(404);
     }
