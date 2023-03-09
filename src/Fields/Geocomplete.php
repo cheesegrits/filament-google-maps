@@ -41,6 +41,8 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 
     protected Closure|array $types = [];
 
+    protected Closure|array $countries = [];
+
     protected Closure|bool $debug = false;
 
     /**
@@ -271,6 +273,29 @@ class Geocomplete extends Field implements CanBeLengthConstrained
         return $types;
     }
 
+    /**
+     * And array of countries that will show up in autocomplete, see "Place Autocomplete Restricted to Multiple Countries" section of Google Places API doc:
+     *
+     * https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
+     *
+     *
+     * Defaults is empty array
+     *
+     *
+     * @return $this
+     */
+    public function countries(Closure|array $countries = []): static
+    {
+        $this->countries = $countries;
+
+        return $this;
+    }
+
+    public function getCountries(): array
+    {
+        return $this->evaluate($this->countries);
+    }
+
     public function placeField(Closure|string $placeField): static
     {
         $this->placeField = $placeField;
@@ -345,6 +370,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained
             'reverseGeocodeFields' => $this->getReverseGeocode(),
             'latLngFields'         => $this->getUpdateLatLngFields(),
             'types'                => $this->getTypes(),
+            'countries'            => $this->getCountries(),
             'placeField'           => $this->getPlaceField(),
             'debug'                => $this->getDebug(),
             'gmaps'                => MapsHelper::mapsUrl(),
