@@ -476,6 +476,7 @@ to, using the same method as the Map component, documented above.
             'state'  => '%A1',
             'street' => '%n %S',
         ])
+        ->countries(['us']) // restrict autocomplete results to these countries
         ->debug() // output the results of reverse geocoding in the browser console, useful for figuring out symbol formats
         ->updateLatLng() // update the lat/lng fields on your form when a Place is selected
         ->maxLength(1024)
@@ -485,7 +486,7 @@ to, using the same method as the Map component, documented above.
         ->geolocateIcon('heroicon-o-map'), // override the default icon for the geolocate button
 ```
 
-The Geocomplete field also offers many of the samer features as Filament's TextInput,
+The Geocomplete field also offers many of the same features as Filament's TextInput,
 like prefixes, suffixes, placeholders, etc.
 
 ### Table Column

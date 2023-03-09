@@ -274,7 +274,8 @@ class Geocomplete extends Field implements CanBeLengthConstrained
     }
 
     /**
-     * And array of countries that will show up in autocomplete, see "Place Autocomplete Restricted to Multiple Countries" section of Google Places API doc:
+     * And array of countries that will show up in autocomplete, see "Place Autocomplete Restricted to Multiple
+     * Countries" section of Google Places API doc:
      *
      * https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
      *
