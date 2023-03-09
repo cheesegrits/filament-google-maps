@@ -10,6 +10,7 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
             reverseGeocodeFields: {},
             latLngFields: {},
             types: [],
+            countries: [],
             isLocation: false,
             placeField: 'formatted_address',
         },
@@ -92,6 +93,10 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
                 }, true);
 
                 const autocomplete = new google.maps.places.Autocomplete(geoComplete, geocompleteOptions);
+
+                autocomplete.setComponentRestrictions({
+                    country: this.config.countries,
+                })
 
                 autocomplete.addListener("place_changed", () => {
                     const place = autocomplete.getPlace();
