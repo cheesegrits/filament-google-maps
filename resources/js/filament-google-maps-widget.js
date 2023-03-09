@@ -159,7 +159,7 @@ export default function filamentGoogleMapsWidget(
 
                 if (this.config.markerAction) {
                     google.maps.event.addListener(marker, 'click', (event) => {
-                        this.$wire.mountAction(this.config.markerAction, { location: marker.model_id })
+                        this.$wire.mountAction(this.config.markerAction, { model_id: marker.model_id })
                     })
                 } 
                 
