@@ -2,11 +2,21 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Widgets;
 
+use App\Models\Location;
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
+use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Infolists\Components\Card;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Widgets;
 
-class MapWidget extends Widgets\Widget
+class MapWidget extends Widgets\Widget implements HasActions
 {
+    use InteractsWithActions;
     use Widgets\Concerns\CanPoll;
 
     protected ?array $cachedData = null;
@@ -61,7 +71,7 @@ class MapWidget extends Widgets\Widget
     {
         $this->dataChecksum = md5('{}');
     }
-
+	
     protected function generateDataChecksum(): string
     {
         return md5(json_encode($this->getCachedData()));

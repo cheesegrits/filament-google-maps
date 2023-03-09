@@ -96,7 +96,7 @@ export default function filamentGoogleMapsWidget(
             this.createLayers();
 
             this.idle();
-            
+
             window.addEventListener('filament-google-maps::widget/setMapCenter', (event) => {
                 this.recenter(event.detail);
             })
@@ -157,13 +157,11 @@ export default function filamentGoogleMapsWidget(
             this.markers = this.data.map((location) => {
                 const marker = this.createMarker(location);
                 marker.setMap(this.map)
-                let that = self;
+                let self = this
 
-                google.maps.event.addListener(marker, 'click', (event) => {
-                    self.wire.mountTableAction('edit', marker.model_id)
-                    // this.infoWindow.setContent(location.label);
-                    // this.infoWindow.open(this.map, marker);
-                })
+google.maps.event.addListener(marker, 'click', (event) => {
+    this.$wire.mountAction('markerAction', { location: marker.model_id })
+})
 
                 // marker.addListener("click", () => {
                 //     // this.infoWindow.setContent(location.label);

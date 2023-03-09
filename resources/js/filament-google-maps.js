@@ -49,6 +49,7 @@ export default function filamentGoogleMapsField(
         },
 
         loadGMaps: function () {
+            
             if (!document.getElementById('filament-google-maps-google-maps-js')) {
                 const script = document.createElement('script');
                 script.id = 'filament-google-maps-google-maps-js';
@@ -73,6 +74,7 @@ export default function filamentGoogleMapsField(
         },
 
         init: function () {
+            this.bar = foo
             console.log('filament google map field init')
             this.loadGMaps();
         },

@@ -35,13 +35,13 @@
         @endif
 
         <div {!! ($pollingInterval = $this->getPollingInterval()) ? "wire:poll.{$pollingInterval}=\"updateMapData\"" : '' !!}>
-            <div 
+            <div
                 x-ignore
                 ax-load
                 ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-widget', 'cheesegrits/filament-google-maps') }}"
                 x-data="filamentGoogleMapsWidget({
                     cachedData: {{  json_encode($this->getCachedData()) }},
-                    config: {{ $getMapConfig()}},
+                    config: {{ $this->getMapConfig()}},
                     mapEl: $refs.map
                 })"
                 wire:ignore
@@ -54,4 +54,6 @@
 
         </div>
     </x-filament::card>
+
+    <x-filament-actions::modals  />
 </x-filament-widgets::widget>
