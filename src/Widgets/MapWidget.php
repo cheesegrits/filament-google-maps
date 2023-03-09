@@ -16,193 +16,201 @@ use Filament\Widgets;
 
 class MapWidget extends Widgets\Widget implements HasActions
 {
-    use InteractsWithActions;
-    use Widgets\Concerns\CanPoll;
+	use InteractsWithActions;
+	use Widgets\Concerns\CanPoll;
 
-    protected ?array $cachedData = null;
+	protected ?array $cachedData = null;
 
-    public string $dataChecksum;
+	public string $dataChecksum;
 
-    public ?string $filter = null;
+	public ?string $filter = null;
 
-    protected static ?string $heading = null;
+	protected static ?string $heading = null;
 
-    protected static ?string $maxHeight = null;
+	protected static ?string $maxHeight = null;
 
-    protected static ?array $options = null;
+	protected static ?array $options = null;
 
-    protected static ?int $precision = 8;
+	protected static ?int $precision = 8;
 
-    protected static ?bool $clustering = true;
+	protected static ?bool $clustering = true;
 
-    protected static ?bool $fitToBounds = true;
+	protected static ?bool $fitToBounds = true;
 
-    protected static ?int $zoom = null;
+	protected static ?int $zoom = null;
 
-    protected static array $layers = [];
+	protected static array $layers = [];
 
-    protected static ?string $mapId = null;
+	protected static ?string $mapId = null;
 
-    protected static string $view = 'filament-google-maps::widgets.filament-google-maps-widget';
+	protected static ?string $markerAction = null;
 
-    public array $controls = [
-        'mapTypeControl'    => true,
-        'scaleControl'      => true,
-        'streetViewControl' => true,
-        'rotateControl'     => true,
-        'fullscreenControl' => true,
-        'searchBoxControl'  => false,
-        'zoomControl'       => true,
-    ];
+	protected static string $view = 'filament-google-maps::widgets.filament-google-maps-widget';
 
-    protected array $mapConfig = [
-        'draggable' => false,
-        'center'    => [
-            'lat' => 15.3419776,
-            'lng' => 44.2171392,
-        ],
-        'zoom'       => 8,
-        'fit'        => true,
-        'gmaps'      => '',
-        'clustering' => true,
-    ];
+	public array $controls = [
+		'mapTypeControl'    => true,
+		'scaleControl'      => true,
+		'streetViewControl' => true,
+		'rotateControl'     => true,
+		'fullscreenControl' => true,
+		'searchBoxControl'  => false,
+		'zoomControl'       => true,
+	];
 
-    public function mount()
-    {
-        $this->dataChecksum = md5('{}');
-    }
-	
-    protected function generateDataChecksum(): string
-    {
-        return md5(json_encode($this->getCachedData()));
-    }
+	protected array $mapConfig = [
+		'draggable'  => false,
+		'center'     => [
+			'lat' => 15.3419776,
+			'lng' => 44.2171392,
+		],
+		'zoom'       => 8,
+		'fit'        => true,
+		'gmaps'      => '',
+		'clustering' => true,
+	];
 
-    protected function getCachedData(): array
-    {
-        return $this->cachedData ??= $this->getData();
-    }
+	public function mount()
+	{
+		$this->dataChecksum = md5('{}');
+	}
 
-    protected function getData(): array
-    {
-        return [];
-    }
+	protected function generateDataChecksum(): string
+	{
+		return md5(json_encode($this->getCachedData()));
+	}
 
-    protected function getFilters(): ?array
-    {
-        return null;
-    }
+	protected function getCachedData(): array
+	{
+		return $this->cachedData ??= $this->getData();
+	}
 
-    protected function getZoom(): ?int
-    {
-        return static::$zoom ?? 8;
-    }
+	protected function getData(): array
+	{
+		return [];
+	}
 
-    protected function getHeading(): ?string
-    {
-        return static::$heading;
-    }
+	protected function getFilters(): ?array
+	{
+		return null;
+	}
 
-    protected function getMaxHeight(): ?string
-    {
-        return static::$maxHeight;
-    }
+	protected function getZoom(): ?int
+	{
+		return static::$zoom ?? 8;
+	}
 
-    protected function getOptions(): ?array
-    {
-        return static::$options;
-    }
+	protected function getHeading(): ?string
+	{
+		return static::$heading;
+	}
 
-    protected function getClustering(): ?bool
-    {
-        return static::$clustering;
-    }
+	protected function getMaxHeight(): ?string
+	{
+		return static::$maxHeight;
+	}
 
-    protected function getFitToBounds(): ?bool
-    {
-        return static::$fitToBounds;
-    }
+	protected function getOptions(): ?array
+	{
+		return static::$options;
+	}
 
-    protected function getLayers(): array
-    {
-        return static::$layers;
-    }
+	protected function getClustering(): ?bool
+	{
+		return static::$clustering;
+	}
 
-    public function getConfig(): array
-    {
-        return [
-            'clustering' => self::getClustering(),
-            'layers'     => $this->getLayers(),
-            'zoom'       => $this->getZoom(),
-            'controls'   => $this->controls,
-            'fit'        => $this->getFitToBounds(),
-            'gmaps'      => MapsHelper::mapsUrl(),
-        ];
-    }
+	protected function getFitToBounds(): ?bool
+	{
+		return static::$fitToBounds;
+	}
 
-    public function getMapConfig(): string
-    {
-        $config = $this->getConfig();
+	protected function getLayers(): array
+	{
+		return static::$layers;
+	}
 
-        return json_encode(
-            array_merge(
-                $this->mapConfig,
-                $config,
-            )
-        );
-    }
+	protected function getMarkerAction(): ?string
+	{
+		return static::$markerAction;
+	}
 
-    public function getMapId(): string|null
-    {
-        return static::$mapId ?? str(get_called_class())->afterLast('\\')->studly()->toString();
-    }
+	public function getConfig(): array
+	{
+		return [
+			'clustering'   => self::getClustering(),
+			'layers'       => $this->getLayers(),
+			'zoom'         => $this->getZoom(),
+			'controls'     => $this->controls,
+			'fit'          => $this->getFitToBounds(),
+			'markerAction' => $this->getMarkerAction(),
+			'gmaps'        => MapsHelper::mapsUrl(),
+		];
+	}
 
-    public function updateMapData()
-    {
-        $newDataChecksum = $this->generateDataChecksum();
+	public function getMapConfig(): string
+	{
+		$config = $this->getConfig();
 
-        if ($newDataChecksum !== $this->dataChecksum) {
-            $this->dataChecksum = $newDataChecksum;
+		return json_encode(
+			array_merge(
+				$this->mapConfig,
+				$config,
+			)
+		);
+	}
 
-            $this->emitSelf('updateMapData', [
-                'data' => $this->getCachedData(),
-            ]);
-        }
-    }
+	public function getMapId(): string|null
+	{
+		return static::$mapId ?? str(get_called_class())->afterLast('\\')->studly()->toString();
+	}
 
-    public function updatedFilter(): void
-    {
-        $newDataChecksum = $this->generateDataChecksum();
+	public function updateMapData()
+	{
+		$newDataChecksum = $this->generateDataChecksum();
 
-        if ($newDataChecksum !== $this->dataChecksum) {
-            $this->dataChecksum = $newDataChecksum;
+		if ($newDataChecksum !== $this->dataChecksum) {
+			$this->dataChecksum = $newDataChecksum;
 
-            $this->emitSelf('filterChartData', [
-                'data' => $this->getCachedData(),
-            ]);
-        }
-    }
+			$this->emitSelf('updateMapData', [
+				'data' => $this->getCachedData(),
+			]);
+		}
+	}
 
-    public function hasJs(): bool
-    {
-        return true;
-    }
+	public function updatedFilter(): void
+	{
+		$newDataChecksum = $this->generateDataChecksum();
 
-    public function jsUrl(): string
-    {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+		if ($newDataChecksum !== $this->dataChecksum) {
+			$this->dataChecksum = $newDataChecksum;
 
-        return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps-widget.js']);
-    }
+			$this->emitSelf('filterChartData', [
+				'data' => $this->getCachedData(),
+			]);
+		}
+	}
 
-    public function hasCss(): bool
-    {
-        return false;
-    }
+	public function hasJs(): bool
+	{
+		return true;
+	}
 
-    public function cssUrl(): string
-    {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+	public function jsUrl(): string
+	{
+		$manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
-        return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps-widget.css']);
-    }
+		return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps-widget.js']);
+	}
+
+	public function hasCss(): bool
+	{
+		return false;
+	}
+
+	public function cssUrl(): string
+	{
+		$manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
+
+		return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps-widget.css']);
+	}
 }

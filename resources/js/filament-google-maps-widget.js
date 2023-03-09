@@ -38,6 +38,7 @@ export default function filamentGoogleMapsWidget(
             gmaps: '',
             layers: [],
             zoom: 12,
+            markerAction: null, 
         },
 
         loadGMaps: function () {
@@ -152,23 +153,16 @@ export default function filamentGoogleMapsWidget(
             return marker;
         },
         createMarkers: function () {
-            let self = this
-
             this.markers = this.data.map((location) => {
                 const marker = this.createMarker(location);
                 marker.setMap(this.map)
-                let self = this
 
-google.maps.event.addListener(marker, 'click', (event) => {
-    this.$wire.mountAction('markerAction', { location: marker.model_id })
-})
-
-                // marker.addListener("click", () => {
-                //     // this.infoWindow.setContent(location.label);
-                //     // this.infoWindow.open(this.map, marker);
-                //     this.$wire("mountTableAction('edit', " + marker.model_id + ")")
-                // });
-
+                if (this.config.markerAction) {
+                    google.maps.event.addListener(marker, 'click', (event) => {
+                        this.$wire.mountAction(this.config.markerAction, { location: marker.model_id })
+                    })
+                } 
+                
                 return marker;
             });
         },
