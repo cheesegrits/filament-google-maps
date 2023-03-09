@@ -383,7 +383,7 @@ class Map extends Field
 //		return $flatFields;
 //	}
 
-    private function getAutocompleteId(): string|null
+    public function getAutocompleteId(): string|null
     {
         $autoCompleteField = $this->getAutocomplete();
 
@@ -392,6 +392,11 @@ class Map extends Field
         }
 
         return null;
+    }
+
+    public function getMapsUrl(): string
+    {
+        return MapsHelper::mapsUrl();
     }
 
     /**
@@ -439,29 +444,5 @@ class Map extends Field
                 ];
             }
         }
-    }
-
-    public function mapsHasJs(): bool
-    {
-        return true;
-    }
-
-    public function mapsJsUrl(): string
-    {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
-
-        return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.js']);
-    }
-
-    public function mapsHasCss(): bool
-    {
-        return true;
-    }
-
-    public function mapsCssUrl(): string
-    {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
-
-        return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.css']);
     }
 }

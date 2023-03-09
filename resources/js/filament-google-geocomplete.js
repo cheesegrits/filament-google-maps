@@ -1,18 +1,20 @@
-window.filamentGoogleGeocomplete = ($wire, config) => {
+export default function filamentGoogleGeocomplete(
+    {
+        setStateUsing,
+        debug,
+        statePath,
+        gmaps,
+        filterName,
+        reverseGeocodeFields,
+        latLngFields,
+        types,
+        isLocation,
+        placeField,
+    }
+) {
     return {
         geocoder: null,
         mapEl: null,
-        config: {
-            debug: false,
-            statePath: '',
-            gmaps: '',
-            filterName: null,
-            reverseGeocodeFields: {},
-            latLngFields: {},
-            types: [],
-            isLocation: false,
-            placeField: 'formatted_address',
-        },
         symbols: {
             '%n': ["street_number"],
             '%z': ["postal_code"],
@@ -38,7 +40,7 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
                 const script = document.createElement('script');
                 script.id = 'filament-google-maps-google-maps-js';
                 window.filamentGoogleMapsAsyncLoad = this.createAutocomplete.bind(this);
-                script.src = this.config.gmaps + '&callback=filamentGoogleMapsAsyncLoad';
+                script.src = gmaps + '&callback=filamentGoogleMapsAsyncLoad';
                 document.head.appendChild(script);
             } else {
                 const waitForGlobal = function (key, callback) {
@@ -58,8 +60,8 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
         },
 
         init: function (mapEl) {
+            console.log('geocomplete init')
             this.mapEl = mapEl;
-            this.config = {...this.config, ...config};
             this.loadGMaps();
         },
 
@@ -68,17 +70,17 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
 
             let fields = ["address_components", "formatted_address", "geometry", "name"];
 
-            if (!fields.includes(this.config.placeField)) {
-                fields.push(this.config.placeField);
+            if (!fields.includes(placeField)) {
+                fields.push(placeField);
             }
 
             const geocompleteOptions = {
                 fields: fields,
                 strictBounds: false,
-                types: this.config.types,
+                types: types,
             };
 
-            const geocompleteEl = this.config.isLocation ? this.config.statePath + '-fgm-address' : this.config.statePath;
+            const geocompleteEl = isLocation ? statePath + '-fgm-address' : statePath;
             const geoComplete = document.getElementById(geocompleteEl);
 
             if (geoComplete) {
@@ -106,17 +108,17 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
                     this.updateLatLng(place);
                 });
 
-                const geoLocate = document.getElementById(this.config.statePath + '-geolocate');
+                const geoLocate = document.getElementById(statePath + '-geolocate');
 
-                if (geoLocate)  {
+                if (geoLocate) {
                     this.geocoder = new google.maps.Geocoder();
 
-                    geoLocate.addEventListener('click',  (event) => {
-                        if ("geolocation" in navigator){
+                    geoLocate.addEventListener('click', (event) => {
+                        if ("geolocation" in navigator) {
                             navigator.geolocation.getCurrentPosition((position) => {
                                 var currentLatitude = position.coords.latitude;
                                 var currentLongitude = position.coords.longitude;
-                                var currentLocation = { lat: currentLatitude, lng: currentLongitude };
+                                var currentLocation = {lat: currentLatitude, lng: currentLongitude};
 
                                 this.geocoder
                                     .geocode({location: currentLocation})
@@ -134,36 +136,36 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
                 }
             }
         },
-        setLocation: function (place) {
-            if (this.config.isLocation) {
-                $wire.set(this.config.statePath, place.geometry.location);
+        setLocation: async function (place) {
+            if (isLocation) {
+                await setStateUsing(statePath, place.geometry.location);
             } else {
-                $wire.set(this.config.statePath, place[this.config.placeField]);
+                await setStateUsing(statePath, place[placeField]);
             }
 
-            if (this.config.filterName) {
-                const latPath = this.config.filterName + '.latitude';
-                const lngPath = this.config.filterName + '.longitude';
+            if (filterName) {
+                const latPath = filterName + '.latitude';
+                const lngPath = filterName + '.longitude';
                 const lat = document.getElementById(latPath);
                 const lng = document.getElementById(lngPath);
 
                 if (lat && lng) {
                     lat.setAttribute('value', place.geometry.location.lat().toString());
                     lng.setAttribute('value', place.geometry.location.lng().toString());
-                    $wire.set(latPath, place.geometry.location.lat().toString());
-                    $wire.set(lngPath, place.geometry.location.lng().toString());
+                    await setStateUsing(latPath, place.geometry.location.lat().toString());
+                    await setStateUsing(lngPath, place.geometry.location.lng().toString());
 
                 }
             }
         },
-        updateReverseGeocode: function (place) {
-            if (Object.keys(this.config.reverseGeocodeFields).length > 0) {
+        updateReverseGeocode: async function (place) {
+            if (Object.keys(reverseGeocodeFields).length > 0) {
                 if (place.address_components) {
-                    //$wire.set(config.autocomplete, response.results[0].formatted_address);
+                    //await setStateUsing(config.autocomplete, response.results[0].formatted_address);
                     const replacements = this.getReplacements(place.address_components);
 
-                    for (const field in this.config.reverseGeocodeFields) {
-                        let replaced = this.config.reverseGeocodeFields[field];
+                    for (const field in reverseGeocodeFields) {
+                        let replaced = reverseGeocodeFields[field];
 
                         for (const replacement in replacements) {
                             replaced = replaced.split(replacement).join(replacements[replacement]);
@@ -174,17 +176,17 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
                         }
 
                         replaced = replaced.trim();
-                        $wire.set(field, replaced)
+                        await setStateUsing(field, replaced)
                     }
 
                 }
             }
         },
-        updateLatLng: function(place) {
-            if (Object.keys(this.config.latLngFields).length > 0) {
+        updateLatLng: async function (place) {
+            if (Object.keys(latLngFields).length > 0) {
                 if (place.geometry) {
-                    $wire.set(this.config.latLngFields.lat, place.geometry.location.lat().toString())
-                    $wire.set(this.config.latLngFields.lng, place.geometry.location.lng().toString())
+                    await setStateUsing(latLngFields.lat, place.geometry.location.lat().toString())
+                    await setStateUsing(latLngFields.lng, place.geometry.location.lng().toString())
                 }
             }
         },
@@ -203,7 +205,7 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
                 }
             });
 
-            if (this.config.debug) {
+            if (debug) {
                 console.log(replacements);
             }
 

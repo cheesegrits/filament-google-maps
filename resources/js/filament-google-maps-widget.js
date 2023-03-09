@@ -1,9 +1,10 @@
 import {MarkerClusterer} from "@googlemaps/markerclusterer";
 import debounce from 'underscore/modules/debounce.js'
 
-window.filamentGoogleMapsWidget = ($wire, config) => {
+export default function filamentGoogleMapsWidget(
+    {cachedData, config, mapEl}
+) {
     return {
-        wire: null,
         map: null,
         bounds: null,
         infoWindow: null,
@@ -37,6 +38,7 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             gmaps: '',
             layers: [],
             zoom: 12,
+            markerAction: null, 
         },
 
         loadGMaps: function () {
@@ -63,10 +65,9 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             }
         },
 
-        init: function (data, mapEl) {
+        init: function () {
             this.mapEl = document.getElementById(mapEl) || mapEl;
-            this.data = data;
-            this.wire = $wire;
+            this.data = cachedData;
             this.config = {...this.config, ...config};
             this.loadGMaps();
         },
@@ -96,6 +97,10 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             this.createLayers();
 
             this.idle();
+
+            window.addEventListener('filament-google-maps::widget/setMapCenter', (event) => {
+                this.recenter(event.detail);
+            })
 
             this.show(true);
         },
@@ -148,25 +153,16 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             return marker;
         },
         createMarkers: function () {
-            let self = this
-
             this.markers = this.data.map((location) => {
                 const marker = this.createMarker(location);
                 marker.setMap(this.map)
-                let that = self;
 
-                google.maps.event.addListener(marker, 'click', (event) => {
-                    self.wire.mountTableAction('edit', marker.model_id)
-                    // this.infoWindow.setContent(location.label);
-                    // this.infoWindow.open(this.map, marker);
-                })
-
-                // marker.addListener("click", () => {
-                //     // this.infoWindow.setContent(location.label);
-                //     // this.infoWindow.open(this.map, marker);
-                //     this.$wire("mountTableAction('edit', " + marker.model_id + ")")
-                // });
-
+                if (this.config.markerAction) {
+                    google.maps.event.addListener(marker, 'click', (event) => {
+                        this.$wire.mountAction(this.config.markerAction, { location: marker.model_id })
+                    })
+                } 
+                
                 return marker;
             });
         },
@@ -274,7 +270,7 @@ window.filamentGoogleMapsWidget = ($wire, config) => {
             if (!areEqual(this.modelIds, ids)) {
                 this.modelIds = ids;
                 console.log(ids)
-                $wire.set('mapFilterIds', ids)
+                this.$wire.set('mapFilterIds', ids)
             }
         },
         idle: function () {

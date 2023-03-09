@@ -59,8 +59,6 @@ class MapTableWidget extends MapWidget implements Tables\Contracts\HasTable
     public function getTableRecords(): Collection|Paginator
     {
         return $this->traitGetTableRecords();
-
-        return $this->traitGetTableRecords();
     }
 
     public function getConfig(): array

@@ -25,21 +25,26 @@
             :attributes="$getExtraAttributeBag()"
     >
         <div class="w-full"
-             x-data="{
-            fgm: {},
-        }"
-
-             x-init="
-            (async () => {
-                fgm = filamentGoogleGeocomplete($wire, {{ $getGeocompleteConfig()}});
-                fgm.init();
-            })()
-
-        "
+             x-ignore
+             ax-load
+             ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-geocomplete', 'cheesegrits/filament-google-maps') }}"
+             x-data="filamentGoogleGeocomplete({
+                setStateUsing: async (path, state) => {
+                    return await $wire.set(path, state)
+                },
+                filterName: @js($getFilterName()),
+                statePath: @js($getStatePath()),
+                isLocation: @js($getIsLocation()),
+                reverseGeocodeFields: @js($getReverseGeocode()),
+                latLngFields: @js($getUpdateLatLngFields()),
+                types: @js($getTypes()),
+                placeField: @js($getPlaceField()),
+                debug: @js($getDebug()),
+                gmaps: @js($getMapsUrl()),
+             })"
              wire:ignore
         >
             <input
-                x-data="{}"
                 x-bind:class="{
                     'border-gray-300 dark:border-gray-600': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
                     'border-danger-600 ring-danger-600': (@js($statePath) in $wire.__instance.serverMemo.errors),

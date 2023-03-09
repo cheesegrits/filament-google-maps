@@ -36,55 +36,24 @@
 
         <div {!! ($pollingInterval = $this->getPollingInterval()) ? "wire:poll.{$pollingInterval}=\"updateMapData\"" : '' !!}>
             <div
-                    x-data="{
-                    fgm: {},
-                }"
-                    x-init="
-        (async () => {
-{{--            @if($this->hasCss())--}}
-{{--                if(!document.getElementById('filament-google-maps-css')){--}}
-{{--                    const link  = document.createElement('link');--}}
-{{--                    link.id   = 'filament-google-maps-css';--}}
-{{--                    link.rel  = 'stylesheet';--}}
-{{--                    link.type = 'text/css';--}}
-{{--                    link.href = '{{ $this->cssUrl() }}';--}}
-{{--                    link.media = 'all';--}}
-{{--                    document.head.appendChild(link);--}}
-{{--                }--}}
-{{--            @endif--}}
-{{--            @if($this->hasJs())--}}
-{{--                if(!document.getElementById('filament-google-maps-js')){--}}
-{{--                    const script = document.createElement('script');--}}
-{{--                    script.id   = 'filament-google-maps-js';--}}
-{{--                    script.src = '{{ $this->jsUrl() }}';--}}
-{{--                    document.head.appendChild(script);--}}
-{{--                }--}}
-{{--             @endif--}}
-
-{{--            do {--}}
-{{--                await (new Promise(resolve => setTimeout(resolve, 100)));--}}
-{{--            } while (window.filamentGoogleMapsWidget === undefined);--}}
-            fgm = filamentGoogleMapsWidget($wire, {{ $this->getMapConfig()}});
-            fgm.init({{ json_encode($this->getCachedData()) }}, $refs.map);
-
-            if (!window.fgm{{ $this->getMapId() }}) {
-                window.fgm{{ $this->getMapId() }} = filamentGoogleMapsWidget($wire, {{ $this->getMapConfig()}});
-                window.fgm{{ $this->getMapId() }}.init({{ json_encode($this->getCachedData()) }}, $refs.map);
-            }
-            else {
-                window.fgm{{ $this->getMapId() }}.update({{ json_encode($this->getCachedData()) }});
-            }
-
-        })()"
-
-                    wire:ignore
-                    @if ($maxHeight = $this->getMaxHeight())
-                        style=" max-height: {{ $maxHeight }}"
-                    @endif
+                x-ignore
+                ax-load
+                ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-widget', 'cheesegrits/filament-google-maps') }}"
+                x-data="filamentGoogleMapsWidget({
+                    cachedData: {{  json_encode($this->getCachedData()) }},
+                    config: {{ $this->getMapConfig()}},
+                    mapEl: $refs.map
+                })"
+                wire:ignore
+                @if ($maxHeight = $this->getMaxHeight())
+                    style=" max-height: {{ $maxHeight }}"
+                @endif
             >
                 <div x-ref="map" class="w-full" style="min-height: 50vh; z-index: 1 !important;"></div>
             </div>
 
         </div>
     </x-filament::card>
+
+    <x-filament-actions::modals  />
 </x-filament-widgets::widget>
