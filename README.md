@@ -549,6 +549,16 @@ use Cheesegrits\FilamentGoogleMaps\Actions\RadiusAction;
     }
 ```
 
+If your locations are in a related table, for example if you want to put a RadiusFilter on an 'events' table, and your
+locations are in a 'places' table, and you have a 'place' relationship on your Event model ...
+
+```php
+RadiusFilter::make('radius')
+    ->attribute('places.location') // the relationship, with the computed location attribute
+    ->latitude('lat')  // lat and lng fields on the related table (not optional)
+    ->longitude('lng')
+
+```
 ### Map Is Filter
 
 See the Map Table Widget section below for details on how to use a map as a filter for a table.
