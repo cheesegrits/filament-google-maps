@@ -29,8 +29,7 @@ class RadiusFilter extends BaseFilter
 
     protected int|Closure|null $radius = null;
 
-    protected string | Closure | null $attribute = null;
-
+    protected string|Closure|null $attribute = null;
 
     public function getColumns(): array|int|null
     {
@@ -83,8 +82,8 @@ class RadiusFilter extends BaseFilter
             //			$sql = "((ACOS(SIN(? * PI() / 180) * SIN(" . $latName . " * PI() / 180) + COS(? * PI() / 180) * COS(" .
             //				$latName . " * PI() / 180) * COS((? - " . $lngName . ") * PI() / 180)) * 180 / PI()) * 60 * ?) as distance";
 
-            $sql = "((ACOS(SIN($latitude * PI() / 180) * SIN(" . $latName . " * PI() / 180) + COS($latitude * PI() / 180) * COS(" .
-                $latName . " * PI() / 180) * COS(($longitude - " . $lngName . ") * PI() / 180)) * 180 / PI()) * 60 * %f) < $distance";
+            $sql = "((ACOS(SIN($latitude * PI() / 180) * SIN(".$latName." * PI() / 180) + COS($latitude * PI() / 180) * COS(".
+                $latName." * PI() / 180) * COS(($longitude - ".$lngName.") * PI() / 180)) * 180 / PI()) * 60 * %f) < $distance";
 
             $sql = sprintf($sql, $kilometers ? (1.1515 * 1.609344) : 1.1515);
 
@@ -257,7 +256,7 @@ class RadiusFilter extends BaseFilter
         return ! empty($this->getRelationship());
     }
 
-    public function attribute(string | Closure | null $name): static
+    public function attribute(string|Closure|null $name): static
     {
         $this->attribute = $name;
 
