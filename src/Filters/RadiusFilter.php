@@ -82,8 +82,8 @@ class RadiusFilter extends BaseFilter
             //			$sql = "((ACOS(SIN(? * PI() / 180) * SIN(" . $latName . " * PI() / 180) + COS(? * PI() / 180) * COS(" .
             //				$latName . " * PI() / 180) * COS((? - " . $lngName . ") * PI() / 180)) * 180 / PI()) * 60 * ?) as distance";
 
-            $sql = "((ACOS(SIN($latitude * PI() / 180) * SIN(".$latName." * PI() / 180) + COS($latitude * PI() / 180) * COS(".
-                $latName." * PI() / 180) * COS(($longitude - ".$lngName.") * PI() / 180)) * 180 / PI()) * 60 * %f) < $distance";
+            $sql = "((ACOS(SIN($latitude * PI() / 180) * SIN(" . $latName . " * PI() / 180) + COS($latitude * PI() / 180) * COS(" .
+                $latName . " * PI() / 180) * COS(($longitude - " . $lngName . ") * PI() / 180)) * 180 / PI()) * 60 * %f) < $distance";
 
             $sql = sprintf($sql, $kilometers ? (1.1515 * 1.609344) : 1.1515);
 
@@ -200,7 +200,8 @@ class RadiusFilter extends BaseFilter
     public function getLatitude(): string
     {
         return $this->evaluate($this->latitude) ??
-            $this->getTable()->getModel()::getLatLngAttributes()['lat'];
+            ! $this->queriesRelationships() ? $this->getTable()->getModel()::getLatLngAttributes()['lat']
+            : $this->getRelationship()->getModel()->getLatLngAttributes()['lat'];
     }
 
     public function longitude(string|Closure|null $name): static
@@ -213,7 +214,8 @@ class RadiusFilter extends BaseFilter
     public function getLongitude(): string
     {
         return $this->evaluate($this->longitude) ??
-            $this->getTable()->getModel()::getLatLngAttributes()['lng'];
+            ! $this->queriesRelationships() ? $this->getTable()->getModel()::getLatLngAttributes()['lng']
+            : $this->getRelationship()->getModel()->getLatLngAttributes()['lng'];
     }
 
     public function section(bool|string|Closure|null $section = true): static
