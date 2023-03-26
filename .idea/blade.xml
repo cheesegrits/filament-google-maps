@@ -110,6 +110,7 @@
       <data directive="@slot" injection="true" prefix="&lt;?php $__env-&gt;slot(" suffix="); ?&gt;" />
       <data directive="@stack" injection="true" prefix="&lt;?php echo $__env-&gt;yieldPushContent(" suffix="); ?&gt;" />
       <data directive="@stop" />
+      <data directive="@style" injection="true" prefix="class=&quot;&lt;?php echo \Illuminate\Support\Arr::toCssStyles(" suffix=")?&gt;&quot;" />
       <data directive="@svg" injection="true" prefix="&lt;?php echo e(svg(" suffix=")); ?&gt;" />
       <data directive="@switch" injection="true" prefix="&lt;?php switch(" suffix="): ?&gt;" />
       <data directive="@this" />

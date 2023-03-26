@@ -63,15 +63,19 @@ window.filamentGoogleMaps = ($wire, config) => {
             '%C': ["country"],
             '%c': ["country"],
         },
+        drawingManager: null,
         overlays: [],
         dataLayer: null,
         polyOptions: {
             strokeWeight: 0,
             fillOpacity: 0.45,
-            draggable: false,
-            editable: false,
+            draggable: true,
+            editable: true,
+            clickable: true,
+            clickable: true,
             zIndex: 1,
         },
+        selectedShape: null,
 
         loadGMaps: function () {
             if (!document.getElementById('filament-google-maps-google-maps-js')) {
@@ -233,8 +237,8 @@ window.filamentGoogleMaps = ($wire, config) => {
             }
 
             if (this.config.drawingControl) {
-                const drawingManager = new google.maps.drawing.DrawingManager({
-                    drawingMode: google.maps.drawing.OverlayType.MARKER,
+                this.drawingManager = new google.maps.drawing.DrawingManager({
+                    drawingMode: null,
                     drawingControl: true,
                     drawingControlOptions: {
                         position: google.maps.ControlPosition.TOP_CENTER,
@@ -246,24 +250,44 @@ window.filamentGoogleMaps = ($wire, config) => {
                             ...(this.config.drawingModes.rectangle ? [google.maps.drawing.OverlayType.RECTANGLE] : []),
                         ],
                     },
+                    markerOptions: {
+                        draggable: true
+                    },
+                    polylineOptions: {
+                        draggable: true,
+                        editable: true
+                    },
+                    rectangleOptions: this.polyOptions,
+                    circleOptions: this.polyOptions,
+                    polygonOptions: this.polyOptions,
                 });
 
-                drawingManager.setMap(this.map);
+                this.drawingManager.setMap(this.map);
+                google.maps.event.addListener(this.drawingManager, 'drawingmode_changed', () => {
+                    this.clearSelection()
+                });
+                google.maps.event.addListener(this.map, 'click', () => {
+                    this.clearSelection()
+                });
 
                 if (this.config.drawingField) {
-                    this.dataLayer = new google.maps.Data();
+                    // this.dataLayer = new google.maps.Data();
 
                     let geoJSON = $wire.get(this.config.drawingField);
                     geoJSON && this.loadFeaturesCollection(JSON.parse(geoJSON));
 
-                    google.maps.event.addListener(drawingManager, 'overlaycomplete', (event) => {
+                    google.maps.event.addListener(this.drawingManager, 'overlaycomplete', (event) => {
                         event.overlay.type = event.type;
                         event.overlay.feature = this.instanceFeature(event.overlay);
                         this.overlays.push(event.overlay);
 
-                        this.dataLayer.toGeoJson((obj) => {
-                            $wire.set(this.config.drawingField, JSON.stringify(obj));
-                        });
+                        if (event.type != google.maps.drawing.OverlayType.MARKER) {
+                            // Switch back to non-drawing mode after drawing a shape.
+                            this.drawingManager.setDrawingMode(null);
+                            this.setSelection(event.overlay);
+                        }
+
+                        this.drawingModified();
                     });
                 }
             }
@@ -411,7 +435,7 @@ window.filamentGoogleMaps = ($wire, config) => {
 
         instanceFeature: function (overlay) {
             var calculatedOverlay = this.calculateGeometry(overlay);
-            return this.dataLayer.add(new google.maps.Data.Feature({
+            return this.map.data.add(new google.maps.Data.Feature({
                 id: this.guid(),
                 geometry: calculatedOverlay.geometry,
                 properties: Object.assign({
@@ -427,7 +451,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                         geometry: new google.maps.Data.Point(overlay.getPosition())
                     };
                 case google.maps.drawing.OverlayType.RECTANGLE:
-                    var b = overlay.getBounds(),
+                    let b = overlay.getBounds(),
                         p = [b.getSouthWest(), {
                             lat: b.getSouthWest().lat(),
                             lng: b.getNorthEast().lng()
@@ -457,12 +481,12 @@ window.filamentGoogleMaps = ($wire, config) => {
         },
 
         transformToMVCArray: function (a) {
-            var clone = new google.maps.MVCArray();
+            let clone = new google.maps.MVCArray();
 
             function transform($a, parent) {
                 if ($a.length == 2 && (!Array.isArray($a[0]) && !Array.isArray($a[1])))
                     parent.push(new google.maps.LatLng($a[1], $a[0]));
-                for (var a = 0; a < $a.length; a++) {
+                for (let a = 0; a < $a.length; a++) {
                     if (!Array.isArray($a[a])) continue;
                     transform($a[a], (parent) ? ($a[a].length == 2 && (!Array.isArray($a[a][0]) && !Array.isArray($a[a][1]))) ? parent : parent.getAt(parent.push(new google.maps.MVCArray()) - 1) : clone.getAt(clone.push(new google.maps.MVCArray()) - 1));
                 }
@@ -479,11 +503,13 @@ window.filamentGoogleMaps = ($wire, config) => {
 
         loadFeaturesCollection: function (geoJSON) {
             if (Array.isArray(geoJSON.features) && geoJSON.features.length > 0) {
-                var bounds = new google.maps.LatLngBounds();
-                var overlay = null;
-                for (var f = 0; f < geoJSON.features.length; f++) {
+                let bounds = new google.maps.LatLngBounds();
+                let overlay = null;
+                for (let f = 0; f < geoJSON.features.length; f++) {
                     overlay = this.instanceOverlay(geoJSON.features[f]);
                     overlay.feature = this.instanceFeature(overlay);
+                    this.addOverlayEvents(overlay);
+
                     // overlay.feature.getGeometry().forEachLatLng(function (latlng) {
                     //     bounds.extend(latlng);
                     // });
@@ -491,6 +517,85 @@ window.filamentGoogleMaps = ($wire, config) => {
                     overlay.setMap(this.map);
                     this.overlays.push(overlay);
                 }
+            }
+        },
+
+        addOverlayEvents: function (overlay) {
+            switch (overlay.type) {
+                case google.maps.drawing.OverlayType.POLYLINE:
+                    google.maps.event.addListener(overlay.getPath(), 'set_at', () => {
+                        if (!overlay.drag) {
+                            overlay.feature.setGeometry(this.calculateGeometry(overlay, true));
+                            this.drawingModified();
+                        }
+                    });
+                    google.maps.event.addListener(overlay.getPath(), 'insert_at', () => {
+                        overlay.feature.setGeometry(this.calculateGeometry(overlay, true));
+                        this.drawingModified();
+                    });
+                    google.maps.event.addListener(overlay.getPath(), 'remove_at', () => {
+                        overlay.feature.setGeometry(this.calculateGeometry(overlay, true));
+                        this.drawingModified();
+                    });
+                    break;
+                case google.maps.drawing.OverlayType.POLYGON:
+                    const paths = overlay.getPaths();
+                    for (let p = 0; p < paths.getLength(); p++)
+                        for (let sp = 0; sp < paths.getAt(p).getLength(); sp++) {
+                            google.maps.event.addListener(paths.getAt(p), 'set_at', () => {
+                                if (!overlay.drag) {
+                                    overlay.feature.setGeometry(this.calculateGeometry(overlay, true));
+                                    this.drawingModified();
+                                }
+                            });
+                            google.maps.event.addListener(paths.getAt(p), 'insert_at', () => {
+                                overlay.feature.setGeometry(this.calculateGeometry(overlay, true));
+                                this.drawingModified();
+                            });
+                            google.maps.event.addListener(paths.getAt(p), 'remove_at', () => {
+                                overlay.feature.setGeometry(this.calculateGeometry(overlay, true));
+                                this.drawingModified();
+                            });
+                        }
+                    break;
+                case google.maps.drawing.OverlayType.RECTANGLE:
+                    google.maps.event.addListener(overlay, 'bounds_changed', () => {
+                        if (!overlay.drag) {
+                            overlay.feature.setGeometry(this.calculateGeometry(overlay, true));
+                            this.drawingModified();
+                        }
+                    });
+                    break;
+                case google.maps.drawing.OverlayType.CIRCLE:
+                    google.maps.event.addListener(overlay, 'radius_changed', () => {
+                        overlay.feature.setProperty('radius', this.calculateGeometry(overlay).properties.radius);
+                        this.drawingModified();
+                    });
+                    break;
+            }
+            if (overlay.type !== google.maps.drawing.OverlayType.MARKER) {
+                let self = this;
+                google.maps.event.addListener(overlay, 'click', function (event) {
+                    self.setSelection(this);
+                });
+            }
+            google.maps.event.addListener(overlay, 'dragstart', () => {
+                overlay.drag = true;
+            });
+            google.maps.event.addListener(overlay, 'mouseup', () => {
+                if (overlay.drag) {
+                    overlay.drag = false;
+                    overlay.feature.setGeometry(this.calculateGeometry(overlay, true));
+                    this.drawingModified();
+                }
+            });
+        },
+
+        drawingModified: function () {
+            if (this.config.drawingField) {
+                this.map.data.toGeoJson((obj) => {
+                    $wire.set(this.config.drawingField, JSON.stringify(obj));
+                });
             }
         },
 
@@ -503,6 +608,20 @@ window.filamentGoogleMaps = ($wire, config) => {
 
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
                 s4() + '-' + s4() + s4() + s4();
-        }
+        },
+
+        setSelection: function (shape) {
+            this.clearSelection();
+            this.selectedShape = shape;
+            shape.setEditable(true);
+            // selectColor(shape.get('fillColor') || shape.get('strokeColor'));
+        },
+
+        clearSelection: function () {
+            if (this.selectedShape) {
+                this.selectedShape.setEditable(false);
+                this.selectedShape = null;
+            }
+        },
     }
 }

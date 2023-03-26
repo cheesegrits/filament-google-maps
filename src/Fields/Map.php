@@ -422,8 +422,6 @@ class Map extends Field
         $controls = $this->evaluate($this->mapControls);
 
         return json_encode(array_merge($this->controls, $controls), JSON_THROW_ON_ERROR);
-
-        return json_encode(array_merge($this->controls, $controls), JSON_THROW_ON_ERROR);
     }
 
     public function layers(Closure|array $layers): static
