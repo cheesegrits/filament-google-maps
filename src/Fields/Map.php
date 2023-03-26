@@ -6,7 +6,6 @@ use Cheesegrits\FilamentGoogleMaps\Helpers\FieldHelper;
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Exception;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use JsonException;
 
@@ -42,21 +41,42 @@ class Map extends Field
 
     protected Closure|bool $debug = false;
 
+    protected Closure|bool $drawingControl = false;
+
+    protected Closure|array $drawingModes = [
+        'marker'    => true,
+        'circle'    => true,
+        'polygon'   => true,
+        'polyline'  => true,
+        'rectangle' => true,
+    ];
+
+    protected Closure|string|null $drawingField = null;
+
     /**
      * Main field config variables
      */
     private array $mapConfig = [
-        'autocomplete'        => false,
-        'autocompleteReverse' => false,
-        'geolocate'           => false,
-        'geolocateLabel'      => '',
-        'draggable'           => true,
-        'clickable'           => false,
-        'defaultLocation'     => [
+        'autocomplete'         => false,
+        'autocompleteReverse'  => false,
+        'geolocate'            => false,
+        'geolocateLabel'       => '',
+        'draggable'            => true,
+        'clickable'            => false,
+        'defaultLocation'      => [
             'lat' => 15.3419776,
             'lng' => 44.2171392,
         ],
         'controls'             => [],
+        'drawingControl'       => false,
+        'drawingModes'         => [
+            'marker'    => true,
+            'circle'    => true,
+            'rectangle' => true,
+            'polygon'   => true,
+            'polyline'  => true,
+        ],
+        'drawingField'         => null,
         'statePath'            => '',
         'layers'               => [],
         'defaultZoom'          => 8,
@@ -209,6 +229,73 @@ class Map extends Field
     }
 
     /**
+     * Add drawing controls to the map
+     *
+     * @param  Closure|bool  $drawingControl
+     * @return $this
+     */
+    public function drawingControl(Closure|bool $drawingControl = true): static
+    {
+        $this->drawingControl = $drawingControl;
+
+        return $this;
+    }
+
+    public function getDrawingControl(): bool
+    {
+        return $this->evaluate($this->drawingControl);
+    }
+
+    /**
+     * Form field to update with GeoJSON (ish) representing drawing coordinates
+     *
+     * @param  Closure|string|null  $drawingField
+     * @return $this
+     */
+    public function drawingField(Closure|string|null $drawingField = null): static
+    {
+        $this->drawingField = $drawingField;
+
+        return $this;
+    }
+
+    public function getDrawingField(): ?string
+    {
+        $drawingField = $this->evaluate($this->drawingField);
+
+        if ($drawingField) {
+            return FieldHelper::getFieldId($drawingField, $this);
+        }
+
+        return null;
+    }
+
+    /**
+     * Drawing modes, as an array of properties ...
+     * [
+     *    'circle' => true,
+     *    'marker' => true,
+     *    'polygon' => true,
+     *    'polyline' => true,
+     *    'rectangle' => true,
+     * ]
+     *
+     * @param  Closure|array  $drawingModes
+     * @return $this
+     */
+    public function drawingModes(Closure|array $drawingModes): static
+    {
+        $this->drawingModes = $drawingModes;
+
+        return $this;
+    }
+
+    public function getDrawingModes(): array
+    {
+        return $this->evaluate($this->drawingModes);
+    }
+
+    /**
      * Set the default location for new maps, accepts an array of either [$lat, $lng] or ['lat' => $lat, 'lng' => $lng],
      * or a closure which returns this
      *
@@ -337,6 +424,7 @@ class Map extends Field
         $controls = $this->evaluate($this->mapControls);
 
         return json_encode(array_merge($this->controls, $controls), JSON_THROW_ON_ERROR);
+        return json_encode(array_merge($this->controls, $controls), JSON_THROW_ON_ERROR);
     }
 
     public function layers(Closure|array $layers): static
@@ -410,6 +498,9 @@ class Map extends Field
                 'defaultLocation'      => $this->getDefaultLocation(),
                 'statePath'            => $this->getStatePath(),
                 'controls'             => $this->getMapControls(),
+                'drawingControl'       => $this->getDrawingControl(),
+                'drawingModes'         => $this->getDrawingModes(),
+                'drawingField'         => $this->getDrawingField(),
                 'layers'               => $this->getLayers(),
                 'reverseGeocodeFields' => $this->getReverseGeocode(),
                 'defaultZoom'          => $this->getDefaultZoom(),
@@ -448,7 +539,7 @@ class Map extends Field
 
     public function mapsJsUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.js']);
     }
@@ -460,7 +551,7 @@ class Map extends Field
 
     public function mapsCssUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.css']);
     }
