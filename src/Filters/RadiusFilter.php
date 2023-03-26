@@ -82,8 +82,8 @@ class RadiusFilter extends BaseFilter
             //			$sql = "((ACOS(SIN(? * PI() / 180) * SIN(" . $latName . " * PI() / 180) + COS(? * PI() / 180) * COS(" .
             //				$latName . " * PI() / 180) * COS((? - " . $lngName . ") * PI() / 180)) * 180 / PI()) * 60 * ?) as distance";
 
-            $sql = "((ACOS(SIN($latitude * PI() / 180) * SIN(" . $latName . " * PI() / 180) + COS($latitude * PI() / 180) * COS(" .
-                $latName . " * PI() / 180) * COS(($longitude - " . $lngName . ") * PI() / 180)) * 180 / PI()) * 60 * %f) < $distance";
+            $sql = "((ACOS(SIN($latitude * PI() / 180) * SIN(".$latName." * PI() / 180) + COS($latitude * PI() / 180) * COS(".
+                $latName." * PI() / 180) * COS(($longitude - ".$lngName.") * PI() / 180)) * 180 / PI()) * 60 * %f) < $distance";
 
             $sql = sprintf($sql, $kilometers ? (1.1515 * 1.609344) : 1.1515);
 
