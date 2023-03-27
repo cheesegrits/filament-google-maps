@@ -6,6 +6,18 @@ use Illuminate\Support\Facades\Request;
 
 class MapsHelper
 {
+    const POSITION_BOTTOM_CENTER = 11;
+    const POSITION_BOTTOM_LEFT = 10;
+    const POSITION_BOTTOM_RIGHT = 12;
+    const POSITION_LEFT_CENTER = 4;
+    const POSITION_LEFT_TOP = 5;
+    const POSITION_RIGHT_BOTTOM = 9;
+    const POSITION_RIGHT_CENTER = 8;
+    const POSITION_RIGHT_TOP = 7;
+    const POSITION_TOP_CENTER = 2;
+    const POSITION_TOP_LEFT = 1;
+    const POSITION_TOP_RIGHT = 3;
+    
     public static function mapsKey($server = false): string
     {
         return $server ? config('filament-google-maps.keys.server_key') : config('filament-google-maps.keys.web_key');
