@@ -31,13 +31,14 @@ class MapsHelper
         return config('filament-google-maps.locale.region');
     }
 
-    public static function mapsUrl($server = false): string
+    public static function mapsUrl($server = false, array $libraries = []): string
     {
         $libraries = implode(',', array_unique(
             array_filter(
                 array_merge(
                     ['places'],
-                    explode(',', config('filament-google-maps.libraries'))
+                    explode(',', config('filament-google-maps.libraries')),
+                    $libraries
                 )
             )
         ));

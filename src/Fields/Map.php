@@ -502,7 +502,7 @@ class Map extends Field
                 'reverseGeocodeFields' => $this->getReverseGeocode(),
                 'defaultZoom'          => $this->getDefaultZoom(),
                 'debug'                => $this->getDebug(),
-                'gmaps'                => MapsHelper::mapsUrl(),
+                'gmaps'                => MapsHelper::mapsUrl($this->getDrawingControl() ? ['drawing'] : []),
             ])
         );
 
