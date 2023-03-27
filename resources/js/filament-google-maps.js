@@ -68,7 +68,10 @@ window.filamentGoogleMaps = ($wire, config) => {
         overlays: [],
         dataLayer: null,
         polyOptions: {
-            strokeWeight: 0,
+            // strokeColor: '#f06eaa',
+            strokeColor: '#00ff00',
+            strokeOpacity: '0.5',
+            strokeWeight: 3,
             fillOpacity: 0.45,
             draggable: true,
             editable: false,
@@ -277,9 +280,9 @@ window.filamentGoogleMaps = ($wire, config) => {
                 google.maps.event.addListener(this.drawingManager, 'drawingmode_changed', () => {
                     this.clearSelection()
                 });
-                google.maps.event.addListener(this.map, 'click', () => {
-                    this.clearSelection()
-                });
+                // google.maps.event.addListener(this.map, 'click', () => {
+                //     this.clearSelection()
+                // });
 
                 if (this.config.drawingField) {
                     this.dataLayer = new google.maps.Data();
@@ -635,6 +638,17 @@ window.filamentGoogleMaps = ($wire, config) => {
             // selectColor(shape.get('fillColor') || shape.get('strokeColor'));
             this.overlays.forEach(function (item) {
                 if (shape && item.id == shape.id) {
+                    if (item.getEditable()) {
+                        shape.setOptions({
+                            strokeColor: '#00ff00',
+                            strokeOpacity: '0.5'
+                        });
+                    } else {
+                        shape.setOptions({
+                            strokeColor: '#ff0000',
+                            strokeOpacity: '0.8'
+                        });                       
+                    }
                     item.setEditable(!item.getEditable());
                 } else {
                     item.setEditable(false);
@@ -647,6 +661,11 @@ window.filamentGoogleMaps = ($wire, config) => {
 
             this.overlays.forEach(function (item) {
                 item.setEditable(false);
+                item.setOptions({
+                    // strokeColor: '#f06eaa'
+                    strokeColor: '#00ff00',
+                    strokeOpacity: '0.5'
+                });
             });
         },
     }
