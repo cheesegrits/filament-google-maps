@@ -74,8 +74,6 @@ export default function filamentGoogleMapsField(
         },
 
         init: function () {
-            this.bar = foo
-            console.log('filament google map field init')
             this.loadGMaps();
         },
 
