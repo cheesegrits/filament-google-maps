@@ -59,7 +59,7 @@ class MapsHelper
             array_filter(
                 array_merge(
                     ['places'],
-                    explode(',', config('filament-google-maps.libraries')),
+                    explode(',', (string)config('filament-google-maps.libraries')),
                     $libraries
                 )
             )
