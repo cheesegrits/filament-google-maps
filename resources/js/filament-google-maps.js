@@ -59,7 +59,7 @@ window.filamentGoogleMaps = ($wire, config) => {
             '%a3': ["administrative_area_level_3"],
             '%a4': ["administrative_area_level_4"],
             '%a5': ["administrative_area_level_5"],
-            '%L': ["locality"],
+            '%L': ["locality", "postal_town"],
             '%D': ["sublocality"],
             '%C': ["country"],
             '%c': ["country"],
