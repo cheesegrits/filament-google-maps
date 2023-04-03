@@ -43,7 +43,7 @@ return [
      |
      | https://developers.google.com/maps/faq#languagesupport
      */
-    'locale'    => [
+    'locale' => [
         'region'   => env('FILAMENT_GOOGLE_MAPS_REGION_CODE', null),
         'language' => env('FILAMENT_GOOGLE_MAPS_LANGUAGE_CODE', null),
         'api'      => env('FILAMENT_GOOGLE_MAPS_API_LANGUAGE_CODE', null),
@@ -59,7 +59,7 @@ return [
      | Log channel to use, default is 'null' (no logging), set to your desired channel from logging.php if you want
      | logs.  Typically only useful for debugging, or if youw ant to keep track of a scheduled geocoding task.
      */
-    'log'        => [
+    'log' => [
         'channel' => env('FILAMENT_GOOGLE_MAPS_LOG_CHANNEL', 'null'),
     ],
 
