@@ -26,7 +26,7 @@ return [
      | appropriate env key)
      */
 
-    'libraries' => env('FILAMENT_GOOGLE_MAPS_ADDITIONAL_LIBRARIES', null),
+    'libraries' => env('FILAMENT_GOOGLE_MAPS_ADDITIONAL_LIBRARIES', ''),
 
     /*
      | Region and country codes.
