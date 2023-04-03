@@ -343,6 +343,12 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Map
     ->clickable(false) // allow clicking to move marker
     ->geolocate() // adds a button to request device location and set map marker accordingly
     ->geolocateLabel('Get Location') // overrides the default label for geolocate button
+    ->layers([
+        'https://googlearchive.github.io/js-v2-samples/ggeoxml/cta.kml',
+    ]) // array of KML layer URLs to add to the map
+    ->geoJson('https://fgm.test/storage/AGEBS01.geojson') // GeoJSON file, URL or JSON
+    ->geoJsonContainsField('geojson') // field to capture GeoJSON polygon(s) which contain the map marker
+
 ```
 The mapControls without comments are standard Google Maps controls, refer to
 the [API documentation](https://developers.google.com/maps/documentation/javascript/controls).
@@ -377,6 +383,73 @@ field, which will console.log() the response from each reverse geocode event (e.
 you move the marker).
 
 ![Reverse Geocode format string debug](images/debug.png)
+
+#### Layers / GeoJSON
+
+There are two ways to add layers to the map.  The layers() method accepts an array of KML or GeoRSS file URLs, which
+will be added to the map using the Maps API KmlLayer() method.  Note that these URLs must be publicly accessible, as the
+KmlLayer() method requires Google servers to read and process the files, see the [KML & GeoRSS Layers](https://developers.google.com/maps/documentation/javascript/kmllayer#overview)
+documentation for details and limitations.
+
+The second method allows for a single GeoJSON file to be specified using the geoJson() method, which accepts a closure or
+string that can be a local file path, raw GeoJSON, or a URL to a GeoJSON file.  If specifying a local path, the optional
+second argument can be the name of the Storage disk to use.  The GeoJSON is rendered on the map using the Maps API
+[Data Layer](https://developers.google.com/maps/documentation/javascript/datalayer).
+
+```php
+    Map::make('location')
+    //
+        ->geoJson('jsons/MyGeoJson.geojson', 'json-disk')
+    // ... or ...
+        ->geoJson('https://my.site/jsons/MyGeoJson.geojson')
+    // ... or ...
+        ->geoJson(function () { 
+            // code that builds and returns raw GeoJSON
+            return $json;
+        })
+```
+
+When using GeoJSON, we provide a convenience method for storing a reference to any polygon features which contain the
+map marker coordinates, using the geoJsonContainsField() method.  The first argument to this method is the field name
+on your form (which can be a Hidden field type) in which to store the data.  The second is an optional argument
+specifying a property name from your GeoJSON features to store.  If not specified, the entire GeoJSON feature will
+be stored.
+
+```php
+    Map::make('location')
+        ->geoJson(function () { 
+            return <<<EOT
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [100.0, 0.0],
+                    [101.0, 0.0],
+                    [101.0, 1.0],
+                    [100.0, 1.0],
+                    [100.0, 0.0]
+                ]
+            },
+            "properties": {
+                "prop0": "value0",
+                "prop1": 0.0
+            }
+        },
+    ]
+}
+EOT;
+        })
+        ->geoJsonContainsField('geojson_contains', 'prop0')
+```
+
+With the above example, if the user dropped the map pin inside the rectangle, the 'geojson_contains' field would be
+updated as ["value0"].  If the second argument was omitted, the field would be updated with a GeoJSON FeatureCollection
+containing the JSON for the rectangle.  If you have overlapping features, and multiple polygons contain the marker,
+all features containing the marker will be included in the array / FeatureCollection.
 
 #### Reactive Form Fields
 

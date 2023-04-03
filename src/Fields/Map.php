@@ -7,6 +7,8 @@ use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Exception;
 use Filament\Forms\Components\Field;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use JsonException;
 
 class Map extends Field
@@ -45,6 +47,14 @@ class Map extends Field
 
     protected Closure|int $drawingControlPosition = MapsHelper::POSITION_TOP_CENTER;
 
+    protected Closure|string|null $geoJsonFile = null;
+    
+    protected Closure|string|null $geoJsonDisk = null;
+    
+    protected Closure|string|null $geoJsonField = null;
+
+    protected Closure|string|null $geoJsonProperty = null;
+
     protected Closure|array $drawingModes = [
         'marker'    => true,
         'circle'    => true,
@@ -59,19 +69,19 @@ class Map extends Field
      * Main field config variables
      */
     private array $mapConfig = [
-        'autocomplete'        => false,
-        'autocompleteReverse' => false,
-        'geolocate'           => false,
-        'geolocateLabel'      => '',
-        'draggable'           => true,
-        'clickable'           => false,
-        'defaultLocation'     => [
+        'autocomplete'         => false,
+        'autocompleteReverse'  => false,
+        'geolocate'            => false,
+        'geolocateLabel'       => '',
+        'draggable'            => true,
+        'clickable'            => false,
+        'defaultLocation'      => [
             'lat' => 15.3419776,
             'lng' => 44.2171392,
         ],
-        'controls'       => [],
-        'drawingControl' => false,
-        'drawingModes'   => [
+        'controls'             => [],
+        'drawingControl'       => false,
+        'drawingModes'         => [
             'marker'    => true,
             'circle'    => true,
             'rectangle' => true,
@@ -315,6 +325,80 @@ class Map extends Field
     }
 
     /**
+     *
+     *
+     * @return $this
+     */
+    public function geoJson(Closure|string $file, Closure|string $disk = 'public'): static
+    {
+        $this->geoJsonFile = $file;
+
+        $this->geoJsonDisk = $disk;
+
+        return $this;
+    }
+
+    public function getGeoJsonFile(): string|null
+    {
+        $file = $this->evaluate($this->geoJsonFile);
+
+        if ($this->filled($file)) {
+            if (Str::startsWith($file, ['{', '['])) {
+                return $file;
+            }
+
+            $url = parse_url($file, PHP_URL_SCHEME);
+            
+            if ($url) {
+                return $file;
+            } else if (Storage::disk($this->geoJsonDisk)->exists($file)) {
+                return Storage::disk($this->geoJsonDisk)->get($file);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     *
+     * @return $this
+     */
+    public function geoJsonContainsField(Closure|string|null $geoJsonField = null, Closure|string|null $geoJsonProperty = null): static
+    {
+        $this->geoJsonField = $geoJsonField;
+
+        $this->geoJsonProperty = $geoJsonProperty;
+
+        return $this;
+    }
+
+    public function getGeoJsonField(): string|null
+    {
+        $jsonField = $this->evaluate($this->geoJsonField);
+
+        if ($jsonField) {
+            return FieldHelper::getFieldId($jsonField, $this);
+        }
+
+        return null;
+    }
+
+    public function getGeoJsonProperty(): string|null
+    {
+        return $this->evaluate($this->geoJsonProperty);
+    }
+
+    //public function handleGeoJson(array $features): void
+    //{
+    //    $geoJsonHandler = $this->getGeoJsonHandler();
+    //
+    //    $this->evaluate($geoJsonHandler, [
+    //        'features' => $features,
+    //    ]);
+    //}
+
+    /**
      * Set the default location for new maps, accepts an array of either [$lat, $lng] or ['lat' => $lat, 'lng' => $lng],
      * or a closure which returns this
      *
@@ -505,7 +589,7 @@ class Map extends Field
      */
     public function getMapConfig(): string
     {
-        $config = json_encode(
+        $config =
             array_merge($this->mapConfig, [
                 'autocomplete'           => $this->getAutocompleteId(),
                 'autocompleteReverse'    => $this->getAutocompleteReverse(),
@@ -523,14 +607,16 @@ class Map extends Field
                 'layers'                 => $this->getLayers(),
                 'reverseGeocodeFields'   => $this->getReverseGeocode(),
                 'defaultZoom'            => $this->getDefaultZoom(),
+                'geoJson'                => $this->getGeoJsonFile(),
+                'geoJsonField'           => $this->getGeoJsonField(),
+                'geoJsonProperty'        => $this->getGeoJsonProperty(),
                 'debug'                  => $this->getDebug(),
                 'gmaps'                  => MapsHelper::mapsUrl($this->getDrawingControl() ? ['drawing'] : []),
-            ])
-        );
+            ]);
 
         //ray($config);
 
-        return $config;
+        return json_encode($config);
     }
 
     public function getState(): mixed
@@ -558,7 +644,7 @@ class Map extends Field
 
     public function mapsJsUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.js']);
     }
@@ -570,7 +656,7 @@ class Map extends Field
 
     public function mapsCssUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.css']);
     }

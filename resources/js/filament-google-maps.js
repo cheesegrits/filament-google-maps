@@ -41,6 +41,9 @@ window.filamentGoogleMaps = ($wire, config) => {
             },
             drawingField: null,
             layers: [],
+            geoJson: null,
+            geoJsonField: null,
+            geoJsonProperty: null,
             reverseGeocodeFields: {},
             defaultZoom: 8,
             gmaps: '',
@@ -134,24 +137,13 @@ window.filamentGoogleMaps = ($wire, config) => {
 
             if (this.config.clickable) {
                 this.map.addListener('click', (event) => {
-                    this.clearSelection()
-                    this.markerLocation = event.latLng.toJSON();
-                    this.setCoordinates(this.markerLocation);
-                    this.updateAutocomplete(this.markerLocation);
-                    this.updateGeocode(this.markerLocation);
-                    //this.updateMap(this.markerLocation);
-                    this.map.panTo(this.markerLocation);
+                    this.markerMoved(event)
                 });
             }
 
             if (this.config.draggable) {
                 google.maps.event.addListener(this.marker, 'dragend', (event) => {
-                    this.markerLocation = event.latLng.toJSON();
-                    this.setCoordinates(this.markerLocation);
-                    this.updateAutocomplete(this.markerLocation);
-                    this.updateGeocode(this.markerLocation);
-                    // this.updateMap(this.markerLocation);
-                    this.map.panTo(this.markerLocation);
+                    this.markerMoved(event)
                 });
             }
 
@@ -211,11 +203,23 @@ window.filamentGoogleMaps = ($wire, config) => {
 
             if (this.config.layers) {
                 this.layers = this.config.layers.map((layerUrl) => {
-                    return new google.maps.KmlLayer({
+                    const kmlLayer = new google.maps.KmlLayer({
                         url: layerUrl,
                         map: this.map,
                     });
+
+                    kmlLayer.addListener("click", (kmlEvent) => {
+                        const text = kmlEvent.featureData.description;
+                    });
                 })
+            }
+
+            if (this.config.geoJson) {
+                if (/^http/.test(this.config.geoJson)) {
+                    this.map.data.loadGeoJson(this.config.geoJson);
+                } else {
+                    this.map.data.addGeoJson(JSON.parse(this.config.geoJson));
+                }
             }
 
             if (this.config.geolocate && "geolocation" in navigator) {
@@ -250,7 +254,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                     visible: false,
                     // zIndex: 0
                 });
-                
+
                 this.drawingManager = new google.maps.drawing.DrawingManager({
                     drawingMode: null,
                     drawingControl: true,
@@ -307,6 +311,15 @@ window.filamentGoogleMaps = ($wire, config) => {
                     });
                 }
             }
+        },
+        markerMoved: function (event) {
+            this.geoJsonContains(event.latLng);
+            this.markerLocation = event.latLng.toJSON();
+            this.setCoordinates(this.markerLocation);
+            this.updateAutocomplete(this.markerLocation);
+            this.updateGeocode(this.markerLocation);
+            // this.updateMap(this.markerLocation);
+            this.map.panTo(this.markerLocation);
         },
         updateMapFromAlpine: function () {
             const location = this.getCoordinates();
@@ -647,7 +660,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                         shape.setOptions({
                             strokeColor: '#ff0000',
                             strokeOpacity: '0.8'
-                        });                       
+                        });
                     }
                     item.setEditable(!item.getEditable());
                 } else {
@@ -668,5 +681,37 @@ window.filamentGoogleMaps = ($wire, config) => {
                 });
             });
         },
+        
+        geoJsonContains: function (latLng) {
+            if (this.config.geoJson && this.config.geoJsonField) {
+                let features = [];
+                let dataLayer = new google.maps.Data()
+                this.map.data.forEach((feature) => {
+                    if (feature.getGeometry().getType() === 'Polygon') {
+                        var poly = new google.maps.Polygon({
+                            path: feature.getGeometry().getAt(0).getArray()
+                        });
+                        if (google.maps.geometry.poly.containsLocation(latLng, poly)) {
+                            if (this.config.geoJsonProperty) {
+                                features.push(feature.getProperty(this.config.geoJsonProperty))
+                            } else {
+                                dataLayer.add(feature);
+                            }
+                        }
+                    }
+                });
+
+                let fieldContent;
+                if (this.config.geoJsonProperty) {
+                    fieldContent = JSON.stringify(features)
+                    $wire.set(this.config.geoJsonField, fieldContent);
+                } else {
+                    dataLayer.toGeoJson((gj) => {
+                        fieldContent = JSON.stringify(gj);
+                        $wire.set(this.config.geoJsonField, fieldContent);
+                    });
+                }
+            }
+        }
     }
 }
