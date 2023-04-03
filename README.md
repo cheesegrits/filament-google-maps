@@ -444,12 +444,16 @@ be stored.
 EOT;
         })
         ->geoJsonContainsField('geojson_contains', 'prop0')
+        ->geoJsonVisible(false)
 ```
 
 With the above example, if the user dropped the map pin inside the rectangle, the 'geojson_contains' field would be
 updated as ["value0"].  If the second argument was omitted, the field would be updated with a GeoJSON FeatureCollection
 containing the JSON for the rectangle.  If you have overlapping features, and multiple polygons contain the marker,
 all features containing the marker will be included in the array / FeatureCollection.
+
+Also note the optional use of the geoJsonVisible(false) method, which hides the layer (creates a separate Data layer
+and does not attach it to the map), so you can track which polygons contain the marker without showing the polygons.
 
 #### Reactive Form Fields
 

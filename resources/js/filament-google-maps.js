@@ -44,6 +44,7 @@ window.filamentGoogleMaps = ($wire, config) => {
             geoJson: null,
             geoJsonField: null,
             geoJsonProperty: null,
+            geoJsonVisible: true,
             reverseGeocodeFields: {},
             defaultZoom: 8,
             gmaps: '',
@@ -70,6 +71,7 @@ window.filamentGoogleMaps = ($wire, config) => {
         drawingManager: null,
         overlays: [],
         dataLayer: null,
+        geoJsonDataLayer: null,
         polyOptions: {
             // strokeColor: '#f06eaa',
             strokeColor: '#00ff00',
@@ -215,10 +217,16 @@ window.filamentGoogleMaps = ($wire, config) => {
             }
 
             if (this.config.geoJson) {
-                if (/^http/.test(this.config.geoJson)) {
-                    this.map.data.loadGeoJson(this.config.geoJson);
+                if (this.config.geoJsonVisible) {
+                    this.geoJsonDataLayer = this.map.data;
                 } else {
-                    this.map.data.addGeoJson(JSON.parse(this.config.geoJson));
+                    this.geoJsonDataLayer = new google.maps.Data();
+                }
+                
+                if (/^http/.test(this.config.geoJson)) {
+                    this.geoJsonDataLayer.loadGeoJson(this.config.geoJson);
+                } else {
+                    this.geoJsonDataLayer.addGeoJson(JSON.parse(this.config.geoJson));
                 }
             }
 
@@ -686,7 +694,7 @@ window.filamentGoogleMaps = ($wire, config) => {
             if (this.config.geoJson && this.config.geoJsonField) {
                 let features = [];
                 let dataLayer = new google.maps.Data()
-                this.map.data.forEach((feature) => {
+                this.geoJsonDataLayer.forEach((feature) => {
                     if (feature.getGeometry().getType() === 'Polygon') {
                         var poly = new google.maps.Polygon({
                             path: feature.getGeometry().getAt(0).getArray()

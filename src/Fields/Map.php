@@ -55,6 +55,8 @@ class Map extends Field
 
     protected Closure|string|null $geoJsonProperty = null;
 
+    protected Closure|bool $geoJsonVisible = true;
+
     protected Closure|array $drawingModes = [
         'marker'    => true,
         'circle'    => true,
@@ -69,19 +71,19 @@ class Map extends Field
      * Main field config variables
      */
     private array $mapConfig = [
-        'autocomplete'        => false,
-        'autocompleteReverse' => false,
-        'geolocate'           => false,
-        'geolocateLabel'      => '',
-        'draggable'           => true,
-        'clickable'           => false,
-        'defaultLocation'     => [
+        'autocomplete'         => false,
+        'autocompleteReverse'  => false,
+        'geolocate'            => false,
+        'geolocateLabel'       => '',
+        'draggable'            => true,
+        'clickable'            => false,
+        'defaultLocation'      => [
             'lat' => 15.3419776,
             'lng' => 44.2171392,
         ],
-        'controls'       => [],
-        'drawingControl' => false,
-        'drawingModes'   => [
+        'controls'             => [],
+        'drawingControl'       => false,
+        'drawingModes'         => [
             'marker'    => true,
             'circle'    => true,
             'rectangle' => true,
@@ -325,6 +327,9 @@ class Map extends Field
     }
 
     /**
+     * Add a GeoJSON layer to the map.  $file can be a local file on the server (optional second argument specifies the
+     * storage disk, defaults to 'public'), a URL, or rawdog GeoJSON.
+     *
      * @return $this
      */
     public function geoJson(Closure|string $file, Closure|string $disk = 'public'): static
@@ -358,13 +363,38 @@ class Map extends Field
     }
 
     /**
+     * This method controls whether the GeoJSON layer is visible or not.  Only useful if you just wish to track containing polygons
+     * without displaying them.
+     *
      * @return $this
      */
-    public function geoJsonContainsField(Closure|string|null $geoJsonField = null, Closure|string|null $geoJsonProperty = null): static
+    public function geoJsonVisible(Closure|bool $visiblw = true): static
     {
-        $this->geoJsonField = $geoJsonField;
+        $this->geoJsonVisible = $visiblw;
 
-        $this->geoJsonProperty = $geoJsonProperty;
+        return $this;
+    }
+
+    public function getGeoJsonVisible(): string|null
+    {
+        return $this->evaluate($this->geoJsonVisible);
+    }
+
+    /**
+     * This method allows you to record which polygon(s) from the GeoJSON layer the map marker is contained by.  The
+     * $field arg is a field name on your form (which can be a Hidden field type).  Whenever the marker is moved, this field is
+     * updated to show which polygons now contain the marker.  If no $property is given as the second argument, the data saved
+     * in the field will be a GeoJSON FeatureCollection of the containing features.  If a $property is given, the data saved
+     * will be a simple JSON array of that property's value from each of the containing polygons.  In both cases this will save
+     * an empty collection/array if the marker is not within any polygon.
+     *
+     * @return $this
+     */
+    public function geoJsonContainsField(Closure|string|null $field = null, Closure|string|null $property = null): static
+    {
+        $this->geoJsonField = $field;
+
+        $this->geoJsonProperty = $property;
 
         return $this;
     }
@@ -586,28 +616,29 @@ class Map extends Field
     public function getMapConfig(): string
     {
         $config = array_merge($this->mapConfig, [
-                'autocomplete'           => $this->getAutocompleteId(),
-                'autocompleteReverse'    => $this->getAutocompleteReverse(),
-                'geolocate'              => $this->getGeolocate(),
-                'geolocateLabel'         => $this->getGeolocateLabel(),
-                'draggable'              => $this->getDraggable(),
-                'clickable'              => $this->getClickable(),
-                'defaultLocation'        => $this->getDefaultLocation(),
-                'statePath'              => $this->getStatePath(),
-                'controls'               => $this->getMapControls(),
-                'drawingControl'         => $this->getDrawingControl(),
-                'drawingControlPosition' => $this->getDrawingControlPosition(),
-                'drawingModes'           => $this->getDrawingModes(),
-                'drawingField'           => $this->getDrawingField(),
-                'layers'                 => $this->getLayers(),
-                'reverseGeocodeFields'   => $this->getReverseGeocode(),
-                'defaultZoom'            => $this->getDefaultZoom(),
-                'geoJson'                => $this->getGeoJsonFile(),
-                'geoJsonField'           => $this->getGeoJsonField(),
-                'geoJsonProperty'        => $this->getGeoJsonProperty(),
-                'debug'                  => $this->getDebug(),
-                'gmaps'                  => MapsHelper::mapsUrl($this->getDrawingControl() ? ['drawing'] : []),
-            ]);
+            'autocomplete'           => $this->getAutocompleteId(),
+            'autocompleteReverse'    => $this->getAutocompleteReverse(),
+            'geolocate'              => $this->getGeolocate(),
+            'geolocateLabel'         => $this->getGeolocateLabel(),
+            'draggable'              => $this->getDraggable(),
+            'clickable'              => $this->getClickable(),
+            'defaultLocation'        => $this->getDefaultLocation(),
+            'statePath'              => $this->getStatePath(),
+            'controls'               => $this->getMapControls(),
+            'drawingControl'         => $this->getDrawingControl(),
+            'drawingControlPosition' => $this->getDrawingControlPosition(),
+            'drawingModes'           => $this->getDrawingModes(),
+            'drawingField'           => $this->getDrawingField(),
+            'layers'                 => $this->getLayers(),
+            'reverseGeocodeFields'   => $this->getReverseGeocode(),
+            'defaultZoom'            => $this->getDefaultZoom(),
+            'geoJson'                => $this->getGeoJsonFile(),
+            'geoJsonField'           => $this->getGeoJsonField(),
+            'geoJsonProperty'        => $this->getGeoJsonProperty(),
+            'geoJsonVisible'         => $this->getGeoJsonVisible(),
+            'debug'                  => $this->getDebug(),
+            'gmaps'                  => MapsHelper::mapsUrl($this->getDrawingControl() ? ['drawing'] : []),
+        ]);
 
         //ray($config);
 
@@ -639,7 +670,7 @@ class Map extends Field
 
     public function mapsJsUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.js']);
     }
@@ -651,7 +682,7 @@ class Map extends Field
 
     public function mapsCssUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.css']);
     }
