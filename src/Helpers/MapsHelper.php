@@ -45,7 +45,11 @@ class MapsHelper
 
     public static function mapsLanguage($server = false): string|null
     {
-        return $server ? config('filament-google-maps.locale.language') : null;
+        if ($server) {
+            return config('filament-google-maps.locale.api') ?? config('filament-google-maps.locale.language');
+        } else {
+            return config('filament-google-maps.locale.api');
+        }
     }
 
     public static function mapsRegion($server = false): string|null
@@ -73,7 +77,7 @@ class MapsHelper
         /**
          * https://developers.google.com/maps/faq#languagesupport
          */
-        if ($server && $language = self::mapsLanguage()) {
+        if ($language = self::mapsLanguage($server)) {
             $gmaps .= '&language='.$language;
         }
 
