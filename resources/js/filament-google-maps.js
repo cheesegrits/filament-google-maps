@@ -195,6 +195,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                             this.map.setCenter(place.geometry.location);
                         }
 
+                        $wire.set(this.config.autocomplete, place.formatted_address);
                         this.marker.setPosition(place.geometry.location);
                         this.markerLocation = place.geometry.location;
                         this.setCoordinates(place.geometry.location);
