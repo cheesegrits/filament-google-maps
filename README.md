@@ -931,7 +931,7 @@ to either geocode or reverse geocode them to fill in the blanks.
 To add lat and lng coordinates to a table with address data, run this command:
 
 ```shell
-php artisan filament-google-maps:geocode
+php artisan filament-google-maps:geocode-table
 ```
 
 ... which will prompt you for the following
