@@ -345,7 +345,7 @@ class Map extends Field
     {
         $file = $this->evaluate($this->geoJsonFile);
 
-        if ($this->filled($file)) {
+        if (filled($file)) {
             if (Str::startsWith($file, ['{', '['])) {
                 return $file;
             }
@@ -637,7 +637,7 @@ class Map extends Field
             'geoJsonProperty'        => $this->getGeoJsonProperty(),
             'geoJsonVisible'         => $this->getGeoJsonVisible(),
             'debug'                  => $this->getDebug(),
-            'gmaps'                  => MapsHelper::mapsUrl($this->getDrawingControl() ? ['drawing'] : []),
+            'gmaps'                  => MapsHelper::mapsUrl(false, $this->getDrawingControl() ? ['drawing'] : []),
         ]);
 
         //ray($config);
