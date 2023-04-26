@@ -71,7 +71,7 @@ class StaticMapAction extends BulkAction
                     ])
                     ->default('roadmap'),
             ])
-            ->columns(2),
+                ->columns(2),
 
         ]);
 
