@@ -32,6 +32,8 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
             '%D': ["sublocality"],
             '%C': ["country"],
             '%c': ["country"],
+            '%p': ['premise'],
+            '%P': ['premise'],
         },
 
         loadGMaps: function () {

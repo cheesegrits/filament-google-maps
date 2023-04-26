@@ -67,6 +67,8 @@ window.filamentGoogleMaps = ($wire, config) => {
             '%D': ["sublocality"],
             '%C': ["country"],
             '%c': ["country"],
+            '%p': ['premise'],
+            '%P': ['premise'],
         },
         drawingManager: null,
         overlays: [],

@@ -377,6 +377,10 @@ defined by [Geocoder PHP](https://github.com/geocoder-php/Geocoder#formatters) a
 * Admin Level Code: %a1, %a2, %a3, %a4, %a5
 * Country: %C
 * Country Code: %c
+* Premise: %p
+
+Note that %p is not listed in the Geocoder PHP docs, and represents the "premise" of an address if present, typically
+a place name like "The Old Farmhouse".
 
 To help you figure out the format strings you need, you can set debug() on the map
 field, which will console.log() the response from each reverse geocode event (e.g. whenever
