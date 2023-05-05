@@ -33,6 +33,12 @@ class Map extends Field
 
     protected Closure|string|null $autocomplete = null;
 
+    protected Closure|array $types = [];
+
+    protected Closure|string|null $placeField = null;
+
+    protected Closure|array $countries = [];
+
     protected Closure|bool $autocompleteReverse = false;
 
     protected Closure|bool $geolocate = false;
@@ -71,19 +77,19 @@ class Map extends Field
      * Main field config variables
      */
     private array $mapConfig = [
-        'autocomplete'        => false,
-        'autocompleteReverse' => false,
-        'geolocate'           => false,
-        'geolocateLabel'      => '',
-        'draggable'           => true,
-        'clickable'           => false,
-        'defaultLocation'     => [
+        'autocomplete'         => false,
+        'autocompleteReverse'  => false,
+        'geolocate'            => false,
+        'geolocateLabel'       => '',
+        'draggable'            => true,
+        'clickable'            => false,
+        'defaultLocation'      => [
             'lat' => 15.3419776,
             'lng' => 44.2171392,
         ],
-        'controls'       => [],
-        'drawingControl' => false,
-        'drawingModes'   => [
+        'controls'             => [],
+        'drawingControl'       => false,
+        'drawingModes'         => [
             'marker'    => true,
             'circle'    => true,
             'rectangle' => true,
@@ -129,15 +135,21 @@ class Map extends Field
      * If specified, the $fieldName on your form will be set up as a Google Places geocomplete field, and the map marker
      * will be updated when a place is selected.
      *
+     * You may optionally specify additional settings for the autocomplete with the $types, $placeField and $countries
+     * params.  See documentation for the Geocomplete field for details.
+     *
      * Use the autoCompleteReverse() method to enable reverse geocoding to this field, such that when the marker is
      * moved, this field will be updated with the 'formatted_address' response attribute from a reverse geocode.
      *
      *
      * @return $this
      */
-    public function autocomplete(Closure|string $fieldName): static
+    public function autocomplete(Closure|string $fieldName, Closure|array $types = [], Closure|string|null $placeField = null, Closure|array $countries = []): static
     {
         $this->autocomplete = $fieldName;
+        $this->types        = $types;
+        $this->placeField   = $placeField;
+        $this->countries    = $countries;
 
         return $this;
     }
@@ -145,6 +157,27 @@ class Map extends Field
     public function getAutocomplete(): string|null
     {
         return $this->evaluate($this->autocomplete);
+    }
+
+    public function getTypes(): array
+    {
+        $types = $this->evaluate($this->types);
+
+        if (count($types) === 0) {
+            $types = ['geocode'];
+        }
+
+        return $types;
+    }
+
+    public function getPlaceField(): string|null
+    {
+        return $this->evaluate($this->placeField) ?? 'formatted_address';
+    }
+
+    public function getCountries(): array
+    {
+        return $this->evaluate($this->countries);
     }
 
     /**
@@ -536,7 +569,7 @@ class Map extends Field
     public function isSearchBoxControlEnabled(): bool
     {
         $controls = $this->getMapControls(false);
-        
+
         return $controls['searchBoxControl'];
     }
 
@@ -619,6 +652,9 @@ class Map extends Field
     {
         $config = array_merge($this->mapConfig, [
             'autocomplete'           => $this->getAutocompleteId(),
+            'types'                  => $this->getTypes(),
+            'countries'              => $this->getCountries(),
+            'placeField'             => $this->getPlaceField(),
             'autocompleteReverse'    => $this->getAutocompleteReverse(),
             'geolocate'              => $this->getGeolocate(),
             'geolocateLabel'         => $this->getGeolocateLabel(),
@@ -672,7 +708,7 @@ class Map extends Field
 
     public function mapsJsUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.js']);
     }
@@ -684,7 +720,7 @@ class Map extends Field
 
     public function mapsCssUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.css']);
     }

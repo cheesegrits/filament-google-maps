@@ -10,6 +10,9 @@ window.filamentGoogleMaps = ($wire, config) => {
         config: {
             debug: false,
             autocomplete: '',
+            types: [],
+            countries: [],
+            placeField: 'formatted_address',
             autocompleteReverse: false,
             geolocate: true,
             geolocateLabel: 'Set Current Location',
@@ -161,13 +164,6 @@ window.filamentGoogleMaps = ($wire, config) => {
                 })
             }
 
-            const geocompleteOptions = {
-                fields: ["formatted_address", "geometry", "name"],
-                strictBounds: false,
-                types: ["geocode"],
-            };
-
-
             if (this.config.autocomplete) {
                 const geoComplete = document.getElementById(this.config.autocomplete);
 
@@ -181,8 +177,24 @@ window.filamentGoogleMaps = ($wire, config) => {
                         }
                     }, true);
 
+                    let fields = ["address_components", "formatted_address", "geometry", "name"];
+
+                    if (!fields.includes(this.config.placeField)) {
+                        fields.push(this.config.placeField);
+                    }
+
+                    const geocompleteOptions = {
+                        fields: fields,
+                        strictBounds: false,
+                        types: this.config.types,
+                    };
+                    
                     const autocomplete = new google.maps.places.Autocomplete(geoComplete, geocompleteOptions);
 
+                    autocomplete.setComponentRestrictions({
+                        country: this.config.countries,
+                    })
+                    
                     autocomplete.addListener("place_changed", () => {
                         const place = autocomplete.getPlace();
 
@@ -197,7 +209,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                             this.map.setCenter(place.geometry.location);
                         }
 
-                        $wire.set(this.config.autocomplete, place.formatted_address);
+                        $wire.set(this.config.autocomplete, place[this.config.placeField]);
                         this.marker.setPosition(place.geometry.location);
                         this.markerLocation = place.geometry.location;
                         this.setCoordinates(place.geometry.location);
