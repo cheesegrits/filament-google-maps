@@ -535,7 +535,9 @@ class Map extends Field
 
     public function isSearchBoxControlEnabled(): bool
     {
-        return $this->controls['searchBoxControl'];
+        $controls = $this->getMapControls(false);
+        
+        return $controls['searchBoxControl'];
     }
 
     public function mapControls(Closure|array $controls): static
@@ -548,11 +550,11 @@ class Map extends Field
     /**
      * @throws JsonException
      */
-    public function getMapControls(): string
+    public function getMapControls($encode = true): string|array
     {
         $controls = $this->evaluate($this->mapControls);
 
-        return json_encode(array_merge($this->controls, $controls), JSON_THROW_ON_ERROR);
+        return $encode ? json_encode(array_merge($this->controls, $controls), JSON_THROW_ON_ERROR) : array_merge($this->controls, $controls);
     }
 
     public function layers(Closure|array $layers): static
