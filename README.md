@@ -362,6 +362,19 @@ map.
 If you specify autocompleteReverse(), moving the map marker will update the field specified
 in autocomplete() with the reverse geocoded address (using the formatted_address component from Google).
 
+There are three additional options you can specify (typically as named params) for the autocomplete() method, see the
+Geocomplete field section for details.
+
+```php
+Map::make('location')
+    ->autocomplete(
+        fieldName: 'airport_name',
+        types: ['airport'],
+        placeField: 'name',
+        countries: ['US', 'CA', 'MX'],
+    )
+```
+
 #### Reverse Geocoding
 
 The reverseGeocode() option lets you specify a list of field names from your form, with corresponding
