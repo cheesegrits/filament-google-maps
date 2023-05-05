@@ -77,19 +77,19 @@ class Map extends Field
      * Main field config variables
      */
     private array $mapConfig = [
-        'autocomplete'         => false,
-        'autocompleteReverse'  => false,
-        'geolocate'            => false,
-        'geolocateLabel'       => '',
-        'draggable'            => true,
-        'clickable'            => false,
-        'defaultLocation'      => [
+        'autocomplete'        => false,
+        'autocompleteReverse' => false,
+        'geolocate'           => false,
+        'geolocateLabel'      => '',
+        'draggable'           => true,
+        'clickable'           => false,
+        'defaultLocation'     => [
             'lat' => 15.3419776,
             'lng' => 44.2171392,
         ],
-        'controls'             => [],
-        'drawingControl'       => false,
-        'drawingModes'         => [
+        'controls'       => [],
+        'drawingControl' => false,
+        'drawingModes'   => [
             'marker'    => true,
             'circle'    => true,
             'rectangle' => true,
@@ -708,7 +708,7 @@ class Map extends Field
 
     public function mapsJsUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.js']);
     }
@@ -720,7 +720,7 @@ class Map extends Field
 
     public function mapsCssUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.css']);
     }
