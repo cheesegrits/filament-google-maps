@@ -43,6 +43,10 @@ class Map extends Field
 
     protected Closure|bool $geolocate = false;
 
+    protected Closure|bool $geolocateOnLoad = false;
+
+    protected Closure|bool $geolocateOnLoadAlways = false;
+
     protected Closure|string|null $geolocateLabel = null;
 
     protected Closure|array $reverseGeocode = [];
@@ -77,19 +81,20 @@ class Map extends Field
      * Main field config variables
      */
     private array $mapConfig = [
-        'autocomplete'        => false,
-        'autocompleteReverse' => false,
-        'geolocate'           => false,
-        'geolocateLabel'      => '',
-        'draggable'           => true,
-        'clickable'           => false,
-        'defaultLocation'     => [
+        'autocomplete'         => false,
+        'autocompleteReverse'  => false,
+        'geolocate'            => false,
+        'geolocateOnLoad'      => false,
+        'geolocateLabel'       => '',
+        'draggable'            => true,
+        'clickable'            => false,
+        'defaultLocation'      => [
             'lat' => 15.3419776,
             'lng' => 44.2171392,
         ],
-        'controls'       => [],
-        'drawingControl' => false,
-        'drawingModes'   => [
+        'controls'             => [],
+        'drawingControl'       => false,
+        'drawingModes'         => [
             'marker'    => true,
             'circle'    => true,
             'rectangle' => true,
@@ -256,6 +261,33 @@ class Map extends Field
     public function getGeolocate(): bool|null
     {
         return $this->evaluate($this->geolocate);
+    }
+
+    /**
+     * Request the user's location and set map marker accordingly on form load.
+     *
+     * @return $this
+     */
+    public function geolocateOnLoad(Closure|bool $geolocateOnLoad = true, Closure|bool $always = false): static
+    {
+        $this->geolocateOnLoad       = $geolocateOnLoad;
+        $this->geolocateOnLoadAlways = $always;
+
+        return $this;
+    }
+
+    public function getGeolocateOnLoad(): bool|null
+    {
+        if ($this->evaluate($this->geolocateOnLoad)) {
+            $always = $this->evaluate($this->geolocateOnLoadAlways);
+            $state  = parent::getState();
+
+            if ($always || is_null($state)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -658,6 +690,7 @@ class Map extends Field
             'autocompleteReverse'    => $this->getAutocompleteReverse(),
             'geolocate'              => $this->getGeolocate(),
             'geolocateLabel'         => $this->getGeolocateLabel(),
+            'geolocateOnLoad'        => $this->getGeolocateOnLoad(),
             'draggable'              => $this->getDraggable(),
             'clickable'              => $this->getClickable(),
             'defaultLocation'        => $this->getDefaultLocation(),
@@ -708,7 +741,7 @@ class Map extends Field
 
     public function mapsJsUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.js']);
     }
@@ -720,7 +753,7 @@ class Map extends Field
 
     public function mapsCssUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps.css']);
     }

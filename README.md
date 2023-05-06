@@ -343,6 +343,7 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Map
     ->clickable(false) // allow clicking to move marker
     ->geolocate() // adds a button to request device location and set map marker accordingly
     ->geolocateLabel('Get Location') // overrides the default label for geolocate button
+    ->geolocateOnLoad(true, false) // geolocate on load, second arg 'always' (default false, only for new form))
     ->layers([
         'https://googlearchive.github.io/js-v2-samples/ggeoxml/cta.kml',
     ]) // array of KML layer URLs to add to the map

@@ -14,7 +14,8 @@ window.filamentGoogleMaps = ($wire, config) => {
             countries: [],
             placeField: 'formatted_address',
             autocompleteReverse: false,
-            geolocate: true,
+            geolocate: false,
+            geolocateOnLoad: false,
             geolocateLabel: 'Set Current Location',
             draggable: true,
             clickable: false,
@@ -245,6 +246,10 @@ window.filamentGoogleMaps = ($wire, config) => {
                 }
             }
 
+            if (this.config.geolocateOnLoad) {
+                this.getLocation()
+            }
+            
             if (this.config.geolocate && "geolocation" in navigator) {
                 const locationButton = document.createElement("button");
 
@@ -254,16 +259,7 @@ window.filamentGoogleMaps = ($wire, config) => {
 
                 locationButton.addEventListener("click", (e) => {
                     e.preventDefault()
-                    navigator.geolocation.getCurrentPosition((position) => {
-                        this.markerLocation = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                        };
-                        this.setCoordinates(this.markerLocation);
-                        this.updateAutocomplete(this.markerLocation);
-                        this.updateGeocode(this.markerLocation);
-                        this.map.panTo(this.markerLocation);
-                    });
+                    this.getLocation()
                 });
             }
 
@@ -411,6 +407,18 @@ window.filamentGoogleMaps = ($wire, config) => {
                 location = {lat: this.config.defaultLocation.lat, lng: this.config.defaultLocation.lng}
             }
             return location;
+        },
+        getLocation: function () {
+            navigator.geolocation.getCurrentPosition((position) => {
+                this.markerLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                this.setCoordinates(this.markerLocation);
+                this.updateAutocomplete(this.markerLocation);
+                this.updateGeocode(this.markerLocation);
+                this.map.panTo(this.markerLocation);
+            });  
         },
 
         getReplacements: function (address_components) {
