@@ -116,7 +116,7 @@ class GeocodeTable extends Command
 
         if ($prompted) {
             $summary = sprintf(
-                'php artisan filament-google-maps:geocode %s --fields=%s --lat=%s --lng=%s --processed=%s --rate-limit=%s',
+                'php artisan filament-google-maps:geocode-table %s --fields=%s --lat=%s --lng=%s --processed=%s --rate-limit=%s',
                 $ogModelName,
                 $fields,
                 $lat,
