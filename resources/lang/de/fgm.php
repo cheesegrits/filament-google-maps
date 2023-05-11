@@ -48,4 +48,7 @@ return [
             'label' => 'Gehe zu',
         ],
     ],
+    'geolocate' => [
+        'label' => 'Aktuellen Standort setzen',
+    ],
 ];

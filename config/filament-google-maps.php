@@ -26,24 +26,27 @@ return [
      | appropriate env key)
      */
 
-    'libraries' => env('FILAMENT_GOOGLE_MAPS_ADDITIONAL_LIBRARIES', null),
+    'libraries' => env('FILAMENT_GOOGLE_MAPS_ADDITIONAL_LIBRARIES', ''),
 
     /*
      | Region and country codes.
      |
-     | Google STRONGLY ENCOURAGED you to set a region code (US, GB, etc) which they use to bias the results
+     | Google STRONGLY ENCOURAGED you to set a region code (US, GB, etc) which they use to bias the results of searches and geocoding
      |
      | https://developers.google.com/maps/coverage
      |
-     | Google discourage you from setting a language, as this should be controlled by the user's browser setting,
-     | and only controls localization of the UI.  So we do not apply a language code to the Javascript API.  However,
-     | we will apply any language code set here to server side API calls like static maps (as used in the Column).
+     | Google discourage you from setting a language, as they feel this should be controlled by the user's browser setting,
+     | and only controls localization of the UI.  However, you may set your language in one of two ways.  If you set the
+     | FILAMENT_GOOGLE_MAPS_LANGUAGE_CODE, then server side calls (like static maps) where there are no browser settings will
+     | use your selected language.  If you set FILAMENT_GOOGLE_MAPS_API_LANGUAGE_CODE, then ALL API usage will use that language
+     | code, overriding FILAMENT_GOOGLE_MAPS_LANGUAGE_CODE.
      |
      | https://developers.google.com/maps/faq#languagesupport
      */
     'locale' => [
         'region'   => env('FILAMENT_GOOGLE_MAPS_REGION_CODE', null),
         'language' => env('FILAMENT_GOOGLE_MAPS_LANGUAGE_CODE', null),
+        'api'      => env('FILAMENT_GOOGLE_MAPS_API_LANGUAGE_CODE', null),
     ],
 
     /*

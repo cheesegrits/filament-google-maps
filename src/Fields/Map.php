@@ -6,8 +6,9 @@ use Cheesegrits\FilamentGoogleMaps\Helpers\FieldHelper;
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Exception;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use JsonException;
 
 class Map extends Field
@@ -32,15 +33,49 @@ class Map extends Field
 
     protected Closure|string|null $autocomplete = null;
 
+    protected Closure|array $types = [];
+
+    protected Closure|string|null $placeField = null;
+
+    protected Closure|array $countries = [];
+
     protected Closure|bool $autocompleteReverse = false;
 
     protected Closure|bool $geolocate = false;
+
+    protected Closure|bool $geolocateOnLoad = false;
+
+    protected Closure|bool $geolocateOnLoadAlways = false;
 
     protected Closure|string|null $geolocateLabel = null;
 
     protected Closure|array $reverseGeocode = [];
 
     protected Closure|bool $debug = false;
+
+    protected Closure|bool $drawingControl = false;
+
+    protected Closure|int $drawingControlPosition = MapsHelper::POSITION_TOP_CENTER;
+
+    protected Closure|string|null $geoJsonFile = null;
+
+    protected Closure|string|null $geoJsonDisk = null;
+
+    protected Closure|string|null $geoJsonField = null;
+
+    protected Closure|string|null $geoJsonProperty = null;
+
+    protected Closure|bool $geoJsonVisible = true;
+
+    protected Closure|array $drawingModes = [
+        'marker'    => true,
+        'circle'    => true,
+        'polygon'   => true,
+        'polyline'  => true,
+        'rectangle' => true,
+    ];
+
+    protected Closure|string|null $drawingField = null;
 
     /**
      * Main field config variables
@@ -49,6 +84,7 @@ class Map extends Field
         'autocomplete'        => false,
         'autocompleteReverse' => false,
         'geolocate'           => false,
+        'geolocateOnLoad'     => false,
         'geolocateLabel'      => '',
         'draggable'           => true,
         'clickable'           => false,
@@ -56,7 +92,16 @@ class Map extends Field
             'lat' => 15.3419776,
             'lng' => 44.2171392,
         ],
-        'controls'             => [],
+        'controls'       => [],
+        'drawingControl' => false,
+        'drawingModes'   => [
+            'marker'    => true,
+            'circle'    => true,
+            'rectangle' => true,
+            'polygon'   => true,
+            'polyline'  => true,
+        ],
+        'drawingField'         => null,
         'statePath'            => '',
         'layers'               => [],
         'defaultZoom'          => 8,
@@ -95,15 +140,21 @@ class Map extends Field
      * If specified, the $fieldName on your form will be set up as a Google Places geocomplete field, and the map marker
      * will be updated when a place is selected.
      *
+     * You may optionally specify additional settings for the autocomplete with the $types, $placeField and $countries
+     * params.  See documentation for the Geocomplete field for details.
+     *
      * Use the autoCompleteReverse() method to enable reverse geocoding to this field, such that when the marker is
      * moved, this field will be updated with the 'formatted_address' response attribute from a reverse geocode.
      *
      *
      * @return $this
      */
-    public function autocomplete(Closure|string $fieldName): static
+    public function autocomplete(Closure|string $fieldName, Closure|array $types = [], Closure|string|null $placeField = null, Closure|array $countries = []): static
     {
         $this->autocomplete = $fieldName;
+        $this->types        = $types;
+        $this->placeField   = $placeField;
+        $this->countries    = $countries;
 
         return $this;
     }
@@ -111,6 +162,27 @@ class Map extends Field
     public function getAutocomplete(): string|null
     {
         return $this->evaluate($this->autocomplete);
+    }
+
+    public function getTypes(): array
+    {
+        $types = $this->evaluate($this->types);
+
+        if (count($types) === 0) {
+            $types = ['geocode'];
+        }
+
+        return $types;
+    }
+
+    public function getPlaceField(): string|null
+    {
+        return $this->evaluate($this->placeField) ?? 'formatted_address';
+    }
+
+    public function getCountries(): array
+    {
+        return $this->evaluate($this->countries);
     }
 
     /**
@@ -192,6 +264,33 @@ class Map extends Field
     }
 
     /**
+     * Request the user's location and set map marker accordingly on form load.
+     *
+     * @return $this
+     */
+    public function geolocateOnLoad(Closure|bool $geolocateOnLoad = true, Closure|bool $always = false): static
+    {
+        $this->geolocateOnLoad       = $geolocateOnLoad;
+        $this->geolocateOnLoadAlways = $always;
+
+        return $this;
+    }
+
+    public function getGeolocateOnLoad(): bool|null
+    {
+        if ($this->evaluate($this->geolocateOnLoad)) {
+            $always = $this->evaluate($this->geolocateOnLoadAlways);
+            $state  = parent::getState();
+
+            if ($always || is_null($state)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Override the label to use for the geolocate feature, defaults to 'Set Current Location'
      *
      * @return $this
@@ -207,6 +306,188 @@ class Map extends Field
     {
         return $this->evaluate($this->geolocateLabel) ?? __('filament-google-maps::fgm.geolocate.label');
     }
+
+    /**
+     * Add drawing controls to the map
+     *
+     * @return $this
+     */
+    public function drawingControl(Closure|bool $drawingControl = true): static
+    {
+        $this->drawingControl = $drawingControl;
+
+        return $this;
+    }
+
+    public function getDrawingControl(): bool
+    {
+        return $this->evaluate($this->drawingControl);
+    }
+
+    /**
+     * Form field to update with GeoJSON (ish) representing drawing coordinates
+     *
+     * @param  Closure|string|null  $drawingField
+     * @return $this
+     */
+    public function drawingField(Closure|string|null $drawingField = null): static
+    {
+        $this->drawingField = $drawingField;
+
+        return $this;
+    }
+
+    public function getDrawingField(): ?string
+    {
+        $drawingField = $this->evaluate($this->drawingField);
+
+        if ($drawingField) {
+            return FieldHelper::getFieldId($drawingField, $this);
+        }
+
+        return null;
+    }
+
+    /**
+     * Drawing modes, as an array of properties ...
+     * [
+     *    'circle' => true,
+     *    'marker' => true,
+     *    'polygon' => true,
+     *    'polyline' => true,
+     *    'rectangle' => true,
+     * ]
+     *
+     * @return $this
+     */
+    public function drawingModes(Closure|array $drawingModes): static
+    {
+        $this->drawingModes = $drawingModes;
+
+        return $this;
+    }
+
+    public function getDrawingModes(): array
+    {
+        return $this->evaluate($this->drawingModes);
+    }
+
+    /**
+     * Drawing control position, using MapsHelper constants
+     *
+     * https://developers.google.com/maps/documentation/javascript/reference/control#ControlPosition
+     *
+     * @return $this
+     */
+    public function drawingControlPosition(Closure|int $drawingControlPosition): static
+    {
+        $this->drawingControlPosition = $drawingControlPosition;
+
+        return $this;
+    }
+
+    public function getDrawingControlPosition(): int
+    {
+        return $this->evaluate($this->drawingControlPosition);
+    }
+
+    /**
+     * Add a GeoJSON layer to the map.  $file can be a local file on the server (optional second argument specifies the
+     * storage disk, defaults to 'public'), a URL, or rawdog GeoJSON.
+     *
+     * @return $this
+     */
+    public function geoJson(Closure|string $file, Closure|string $disk = 'public'): static
+    {
+        $this->geoJsonFile = $file;
+
+        $this->geoJsonDisk = $disk;
+
+        return $this;
+    }
+
+    public function getGeoJsonFile(): string|null
+    {
+        $file = $this->evaluate($this->geoJsonFile);
+
+        if (filled($file)) {
+            if (Str::startsWith($file, ['{', '['])) {
+                return $file;
+            }
+
+            $url = parse_url($file, PHP_URL_SCHEME);
+
+            if ($url) {
+                return $file;
+            } elseif (Storage::disk($this->geoJsonDisk)->exists($file)) {
+                return Storage::disk($this->geoJsonDisk)->get($file);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * This method controls whether the GeoJSON layer is visible or not.  Only useful if you just wish to track containing polygons
+     * without displaying them.
+     *
+     * @return $this
+     */
+    public function geoJsonVisible(Closure|bool $visiblw = true): static
+    {
+        $this->geoJsonVisible = $visiblw;
+
+        return $this;
+    }
+
+    public function getGeoJsonVisible(): string|null
+    {
+        return $this->evaluate($this->geoJsonVisible);
+    }
+
+    /**
+     * This method allows you to record which polygon(s) from the GeoJSON layer the map marker is contained by.  The
+     * $field arg is a field name on your form (which can be a Hidden field type).  Whenever the marker is moved, this field is
+     * updated to show which polygons now contain the marker.  If no $property is given as the second argument, the data saved
+     * in the field will be a GeoJSON FeatureCollection of the containing features.  If a $property is given, the data saved
+     * will be a simple JSON array of that property's value from each of the containing polygons.  In both cases this will save
+     * an empty collection/array if the marker is not within any polygon.
+     *
+     * @return $this
+     */
+    public function geoJsonContainsField(Closure|string|null $field = null, Closure|string|null $property = null): static
+    {
+        $this->geoJsonField = $field;
+
+        $this->geoJsonProperty = $property;
+
+        return $this;
+    }
+
+    public function getGeoJsonField(): string|null
+    {
+        $jsonField = $this->evaluate($this->geoJsonField);
+
+        if ($jsonField) {
+            return FieldHelper::getFieldId($jsonField, $this);
+        }
+
+        return null;
+    }
+
+    public function getGeoJsonProperty(): string|null
+    {
+        return $this->evaluate($this->geoJsonProperty);
+    }
+
+    //public function handleGeoJson(array $features): void
+    //{
+    //    $geoJsonHandler = $this->getGeoJsonHandler();
+    //
+    //    $this->evaluate($geoJsonHandler, [
+    //        'features' => $features,
+    //    ]);
+    //}
 
     /**
      * Set the default location for new maps, accepts an array of either [$lat, $lng] or ['lat' => $lat, 'lng' => $lng],
@@ -319,7 +600,9 @@ class Map extends Field
 
     public function isSearchBoxControlEnabled(): bool
     {
-        return $this->controls['searchBoxControl'];
+        $controls = $this->getMapControls(false);
+
+        return $controls['searchBoxControl'];
     }
 
     public function mapControls(Closure|array $controls): static
@@ -332,11 +615,11 @@ class Map extends Field
     /**
      * @throws JsonException
      */
-    public function getMapControls(): string
+    public function getMapControls($encode = true): string|array
     {
         $controls = $this->evaluate($this->mapControls);
 
-        return json_encode(array_merge($this->controls, $controls), JSON_THROW_ON_ERROR);
+        return $encode ? json_encode(array_merge($this->controls, $controls), JSON_THROW_ON_ERROR) : array_merge($this->controls, $controls);
     }
 
     public function layers(Closure|array $layers): static
@@ -404,28 +687,38 @@ class Map extends Field
      */
     public function getMapConfig(): string
     {
-        $config = json_encode(
-            array_merge($this->mapConfig, [
-                'autocomplete'         => $this->getAutocompleteId(),
-                'autocompleteReverse'  => $this->getAutocompleteReverse(),
-                'geolocate'            => $this->getGeolocate(),
-                'geolocateLabel'       => $this->getGeolocateLabel(),
-                'draggable'            => $this->getDraggable(),
-                'clickable'            => $this->getClickable(),
-                'defaultLocation'      => $this->getDefaultLocation(),
-                'statePath'            => $this->getStatePath(),
-                'controls'             => $this->getMapControls(),
-                'layers'               => $this->getLayers(),
-                'reverseGeocodeFields' => $this->getReverseGeocode(),
-                'defaultZoom'          => $this->getDefaultZoom(),
-                'debug'                => $this->getDebug(),
-                'gmaps'                => MapsHelper::mapsUrl(),
-            ])
-        );
+        $config = array_merge($this->mapConfig, [
+            'autocomplete'           => $this->getAutocompleteId(),
+            'types'                  => $this->getTypes(),
+            'countries'              => $this->getCountries(),
+            'placeField'             => $this->getPlaceField(),
+            'autocompleteReverse'    => $this->getAutocompleteReverse(),
+            'geolocate'              => $this->getGeolocate(),
+            'geolocateLabel'         => $this->getGeolocateLabel(),
+            'geolocateOnLoad'        => $this->getGeolocateOnLoad(),
+            'draggable'              => $this->getDraggable(),
+            'clickable'              => $this->getClickable(),
+            'defaultLocation'        => $this->getDefaultLocation(),
+            'statePath'              => $this->getStatePath(),
+            'controls'               => $this->getMapControls(),
+            'drawingControl'         => $this->getDrawingControl(),
+            'drawingControlPosition' => $this->getDrawingControlPosition(),
+            'drawingModes'           => $this->getDrawingModes(),
+            'drawingField'           => $this->getDrawingField(),
+            'layers'                 => $this->getLayers(),
+            'reverseGeocodeFields'   => $this->getReverseGeocode(),
+            'defaultZoom'            => $this->getDefaultZoom(),
+            'geoJson'                => $this->getGeoJsonFile(),
+            'geoJsonField'           => $this->getGeoJsonField(),
+            'geoJsonProperty'        => $this->getGeoJsonProperty(),
+            'geoJsonVisible'         => $this->getGeoJsonVisible(),
+            'debug'                  => $this->getDebug(),
+            'gmaps'                  => MapsHelper::mapsUrl(false, $this->getDrawingControl() ? ['drawing'] : []),
+        ]);
 
         //ray($config);
 
-        return $config;
+        return json_encode($config);
     }
 
     public function getState(): mixed

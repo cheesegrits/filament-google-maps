@@ -343,6 +343,13 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Map
     ->clickable(false) // allow clicking to move marker
     ->geolocate() // adds a button to request device location and set map marker accordingly
     ->geolocateLabel('Get Location') // overrides the default label for geolocate button
+    ->geolocateOnLoad(true, false) // geolocate on load, second arg 'always' (default false, only for new form))
+    ->layers([
+        'https://googlearchive.github.io/js-v2-samples/ggeoxml/cta.kml',
+    ]) // array of KML layer URLs to add to the map
+    ->geoJson('https://fgm.test/storage/AGEBS01.geojson') // GeoJSON file, URL or JSON
+    ->geoJsonContainsField('geojson') // field to capture GeoJSON polygon(s) which contain the map marker
+
 ```
 The mapControls without comments are standard Google Maps controls, refer to
 the [API documentation](https://developers.google.com/maps/documentation/javascript/controls).
@@ -355,6 +362,19 @@ map.
 
 If you specify autocompleteReverse(), moving the map marker will update the field specified
 in autocomplete() with the reverse geocoded address (using the formatted_address component from Google).
+
+There are three additional options you can specify (typically as named params) for the autocomplete() method, see the
+Geocomplete field section for details.
+
+```php
+Map::make('location')
+    ->autocomplete(
+        fieldName: 'airport_name',
+        types: ['airport'],
+        placeField: 'name',
+        countries: ['US', 'CA', 'MX'],
+    )
+```
 
 #### Reverse Geocoding
 
@@ -371,12 +391,87 @@ defined by [Geocoder PHP](https://github.com/geocoder-php/Geocoder#formatters) a
 * Admin Level Code: %a1, %a2, %a3, %a4, %a5
 * Country: %C
 * Country Code: %c
+* Premise: %p
+
+Note that %p is not listed in the Geocoder PHP docs, and represents the "premise" of an address if present, typically
+a place name like "The Old Farmhouse".
 
 To help you figure out the format strings you need, you can set debug() on the map
 field, which will console.log() the response from each reverse geocode event (e.g. whenever
 you move the marker).
 
 ![Reverse Geocode format string debug](images/debug.png)
+
+#### Layers / GeoJSON
+
+There are two ways to add layers to the map.  The layers() method accepts an array of KML or GeoRSS file URLs, which
+will be added to the map using the Maps API KmlLayer() method.  Note that these URLs must be publicly accessible, as the
+KmlLayer() method requires Google servers to read and process the files, see the [KML & GeoRSS Layers](https://developers.google.com/maps/documentation/javascript/kmllayer#overview)
+documentation for details and limitations.
+
+The second method allows for a single GeoJSON file to be specified using the geoJson() method, which accepts a closure or
+string that can be a local file path, raw GeoJSON, or a URL to a GeoJSON file.  If specifying a local path, the optional
+second argument can be the name of the Storage disk to use.  The GeoJSON is rendered on the map using the Maps API
+[Data Layer](https://developers.google.com/maps/documentation/javascript/datalayer).
+
+```php
+    Map::make('location')
+    //
+        ->geoJson('jsons/MyGeoJson.geojson', 'json-disk')
+    // ... or ...
+        ->geoJson('https://my.site/jsons/MyGeoJson.geojson')
+    // ... or ...
+        ->geoJson(function () { 
+            // code that builds and returns raw GeoJSON
+            return $json;
+        })
+```
+
+When using GeoJSON, we provide a convenience method for storing a reference to any polygon features which contain the
+map marker coordinates, using the geoJsonContainsField() method.  The first argument to this method is the field name
+on your form (which can be a Hidden field type) in which to store the data.  The second is an optional argument
+specifying a property name from your GeoJSON features to store.  If not specified, the entire GeoJSON feature will
+be stored.
+
+```php
+    Map::make('location')
+        ->geoJson(function () { 
+            return <<<EOT
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [100.0, 0.0],
+                    [101.0, 0.0],
+                    [101.0, 1.0],
+                    [100.0, 1.0],
+                    [100.0, 0.0]
+                ]
+            },
+            "properties": {
+                "prop0": "value0",
+                "prop1": 0.0
+            }
+        },
+    ]
+}
+EOT;
+        })
+        ->geoJsonContainsField('geojson_contains', 'prop0')
+        ->geoJsonVisible(false)
+```
+
+With the above example, if the user dropped the map pin inside the rectangle, the 'geojson_contains' field would be
+updated as ["value0"].  If the second argument was omitted, the field would be updated with a GeoJSON FeatureCollection
+containing the JSON for the rectangle.  If you have overlapping features, and multiple polygons contain the marker,
+all features containing the marker will be included in the array / FeatureCollection.
+
+Also note the optional use of the geoJsonVisible(false) method, which hides the layer (creates a separate Data layer
+and does not attach it to the map), so you can track which polygons contain the marker without showing the polygons.
 
 #### Reactive Form Fields
 
@@ -476,6 +571,7 @@ to, using the same method as the Map component, documented above.
             'state'  => '%A1',
             'street' => '%n %S',
         ])
+        ->countries(['us']) // restrict autocomplete results to these countries
         ->debug() // output the results of reverse geocoding in the browser console, useful for figuring out symbol formats
         ->updateLatLng() // update the lat/lng fields on your form when a Place is selected
         ->maxLength(1024)
@@ -485,7 +581,7 @@ to, using the same method as the Map component, documented above.
         ->geolocateIcon('heroicon-o-map'), // override the default icon for the geolocate button
 ```
 
-The Geocomplete field also offers many of the samer features as Filament's TextInput,
+The Geocomplete field also offers many of the same features as Filament's TextInput,
 like prefixes, suffixes, placeholders, etc.
 
 ### Table Column
@@ -529,6 +625,14 @@ use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
         ->selectUnit() // add a Kilometer / Miles select
         ->kilometers() // use (or default the select to) kilometers (defaults to miles)
         ->section('Radius Search') // optionally wrap the filter in a section with heading
+```
+
+If your locations are in a related table, for example if you want to put a RadiusFilter on an 'events' table, and your
+locations are in a 'places' table, and you have a 'place' BelongsTo relationship on your Event model ...
+
+```php
+RadiusFilter::make('radius')
+    ->attribute('place.location') // the relationship, with the computed location attribute
 ```
 
 When using Radius filtering, there is also a RadiusAction you can use, which allows you to click a button on a row
@@ -845,7 +949,7 @@ to either geocode or reverse geocode them to fill in the blanks.
 To add lat and lng coordinates to a table with address data, run this command:
 
 ```shell
-php artisan filament-google-maps:geocode
+php artisan filament-google-maps:geocode-table
 ```
 
 ... which will prompt you for the following

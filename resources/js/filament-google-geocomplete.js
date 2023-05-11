@@ -8,6 +8,7 @@ export default function filamentGoogleGeocomplete(
         reverseGeocodeFields,
         latLngFields,
         types,
+        countries,
         isLocation,
         placeField,
     }
@@ -29,10 +30,12 @@ export default function filamentGoogleGeocomplete(
             '%a3': ["administrative_area_level_3"],
             '%a4': ["administrative_area_level_4"],
             '%a5': ["administrative_area_level_5"],
-            '%L': ["locality"],
+            '%L': ["locality", "postal_town"],
             '%D': ["sublocality"],
             '%C': ["country"],
             '%c': ["country"],
+            '%p': ['premise'],
+            '%P': ['premise'],
         },
 
         loadGMaps: function () {
@@ -94,6 +97,10 @@ export default function filamentGoogleGeocomplete(
                 }, true);
 
                 const autocomplete = new google.maps.places.Autocomplete(geoComplete, geocompleteOptions);
+
+                autocomplete.setComponentRestrictions({
+                    country: countries,
+                })
 
                 autocomplete.addListener("place_changed", () => {
                     const place = autocomplete.getPlace();

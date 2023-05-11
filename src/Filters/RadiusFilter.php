@@ -10,10 +10,13 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Filters\BaseFilter;
+use Filament\Tables\Filters\Concerns\HasRelationship;
 use Illuminate\Database\Eloquent\Builder;
 
 class RadiusFilter extends BaseFilter
 {
+    use HasRelationship;
+
     protected string|Closure|null $latitude = null;
 
     protected string|Closure|null $longitude = null;
@@ -25,6 +28,8 @@ class RadiusFilter extends BaseFilter
     protected bool|string|Closure|null $section = null;
 
     protected int|Closure|null $radius = null;
+
+    protected string|Closure|null $attribute = null;
 
     public function getColumns(): array|int|null
     {
@@ -82,14 +87,25 @@ class RadiusFilter extends BaseFilter
 
             $sql = sprintf($sql, $kilometers ? (1.1515 * 1.609344) : 1.1515);
 
-            $query->whereIn(
-                $query->getModel()->getKeyName(),
-                function ($builder) use ($sql, $query) {
-                    $builder->select($query->getModel()->getKeyName())
-                        ->from($query->getModel()->getTable());
-                    $builder->whereRaw($sql);
-                }
-            );
+            if (! $this->queriesRelationships()) {
+                $query->whereIn(
+                    $query->getModel()->getKeyName(),
+                    function ($builder) use ($sql, $query) {
+                        $builder->select($query->getModel()->getKeyName())
+                            ->from($query->getModel()->getTable());
+                        $builder->whereRaw($sql);
+                    }
+                );
+            } else {
+                $query->whereHas(
+                    $this->getRelationshipName(),
+                    function ($builder) use ($sql) {
+                        $builder->select($this->getRelationshipKey())
+                            ->from($this->getRelationship()->getModel()->getTable());
+                        $builder->whereRaw($sql);
+                    }
+                );
+            }
         }
 
         return $query;
@@ -184,7 +200,8 @@ class RadiusFilter extends BaseFilter
     public function getLatitude(): string
     {
         return $this->evaluate($this->latitude) ??
-            $this->getTable()->getModel()::getLatLngAttributes()['lat'];
+            ! $this->queriesRelationships() ? $this->getTable()->getModel()::getLatLngAttributes()['lat']
+            : $this->getRelationship()->getModel()->getLatLngAttributes()['lat'];
     }
 
     public function longitude(string|Closure|null $name): static
@@ -197,7 +214,8 @@ class RadiusFilter extends BaseFilter
     public function getLongitude(): string
     {
         return $this->evaluate($this->longitude) ??
-            $this->getTable()->getModel()::getLatLngAttributes()['lng'];
+            ! $this->queriesRelationships() ? $this->getTable()->getModel()::getLatLngAttributes()['lng']
+            : $this->getRelationship()->getModel()->getLatLngAttributes()['lng'];
     }
 
     public function section(bool|string|Closure|null $section = true): static
@@ -221,5 +239,34 @@ class RadiusFilter extends BaseFilter
     private function hasSection(): bool
     {
         return ! empty($this->getSection());
+    }
+
+    //public function relation(bool|Closure $relationship = true): static
+    //{
+    //    $this->relationship = $relationship;
+    //
+    //    return $this;
+    //}
+    //
+    //public function getRelationship(): string
+    //{
+    //    return $this->evaluate($this->relationship);
+    //}
+
+    public function isRelationship(): bool
+    {
+        return ! empty($this->getRelationship());
+    }
+
+    public function attribute(string|Closure|null $name): static
+    {
+        $this->attribute = $name;
+
+        return $this;
+    }
+
+    public function getAttribute(): string
+    {
+        return $this->evaluate($this->attribute) ?? $this->getName();
     }
 }

@@ -6,6 +6,28 @@ use Illuminate\Support\Facades\Request;
 
 class MapsHelper
 {
+    const POSITION_BOTTOM_CENTER = 11;
+
+    const POSITION_BOTTOM_LEFT = 10;
+
+    const POSITION_BOTTOM_RIGHT = 12;
+
+    const POSITION_LEFT_CENTER = 4;
+
+    const POSITION_LEFT_TOP = 5;
+
+    const POSITION_RIGHT_BOTTOM = 9;
+
+    const POSITION_RIGHT_CENTER = 8;
+
+    const POSITION_RIGHT_TOP = 7;
+
+    const POSITION_TOP_CENTER = 2;
+
+    const POSITION_TOP_LEFT = 1;
+
+    const POSITION_TOP_RIGHT = 3;
+
     public static function mapsKey($server = false): string
     {
         return $server ? config('filament-google-maps.keys.server_key') : config('filament-google-maps.keys.web_key');
@@ -23,7 +45,11 @@ class MapsHelper
 
     public static function mapsLanguage($server = false): string|null
     {
-        return $server ? config('filament-google-maps.locale.language') : null;
+        if ($server) {
+            return config('filament-google-maps.locale.api') ?? config('filament-google-maps.locale.language');
+        } else {
+            return config('filament-google-maps.locale.api');
+        }
     }
 
     public static function mapsRegion($server = false): string|null
@@ -31,13 +57,14 @@ class MapsHelper
         return config('filament-google-maps.locale.region');
     }
 
-    public static function mapsUrl($server = false): string
+    public static function mapsUrl($server = false, array $libraries = []): string
     {
         $libraries = implode(',', array_unique(
             array_filter(
                 array_merge(
                     ['places'],
-                    explode(',', config('filament-google-maps.libraries'))
+                    explode(',', config('filament-google-maps.libraries')),
+                    $libraries
                 )
             )
         ));
@@ -50,7 +77,7 @@ class MapsHelper
         /**
          * https://developers.google.com/maps/faq#languagesupport
          */
-        if ($server && $language = self::mapsLanguage()) {
+        if ($language = self::mapsLanguage($server)) {
             $gmaps .= '&language='.$language;
         }
 
