@@ -10,6 +10,7 @@ use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Concerns;
 use Filament\Forms\Components\Contracts;
 use Filament\Forms\Components\Field;
+use Filament\Support\Concerns\HasExtraAlpineAttributes;
 
 class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\CanBeLengthConstrained
 {
@@ -18,6 +19,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
     use Concerns\CanBeLengthConstrained;
     use Concerns\CanBeReadOnly;
     use Concerns\HasAffixes;
+    use HasExtraAlpineAttributes;
     use Concerns\HasExtraInputAttributes;
     use Concerns\HasInputMode;
     use Concerns\HasPlaceholder;

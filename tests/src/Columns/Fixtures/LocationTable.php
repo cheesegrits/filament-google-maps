@@ -6,6 +6,7 @@ use Cheesegrits\FilamentGoogleMaps\Columns\MapColumn;
 use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
 use Cheesegrits\FilamentGoogleMaps\Tests\Models\Location;
 use Filament\Tables;
+use Filament\Tables\Actions\BulkActionGroup;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
@@ -59,7 +60,9 @@ class LocationTable extends Component implements Tables\Contracts\HasTable
     protected function getTableBulkActions(): array
     {
         return [
+            //BulkActionGroup::make([
             //			Tables\Actions\DeleteBulkAction::make(),
+            //]),
         ];
     }
 

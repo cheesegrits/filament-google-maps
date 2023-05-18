@@ -5,13 +5,12 @@ export default function filamentGoogleMapsField(
         getStateUsing,
         autocomplete,
         autocompleteReverse,
-        geolocate,
+        geolocate = false,
         geolocateOnLoad,
         geolocateLabel,
         draggable,
         clickable,
         defaultLocation,
-        statePath,
         controls,
         layers,
         reverseGeocodeFields,
@@ -23,10 +22,15 @@ export default function filamentGoogleMapsField(
         gmaps,
         mapEl,
         pacEl,
-        drawingModeL,
         drawingControl,
         drawingControlPosition,
-        drawingModes,
+        drawingModes = {
+            marker: true,
+            circle: true,
+            rectangle: true,
+            polygon: true,
+            polyline: true,
+        },
         drawingField,
         geoJson,
         geoJsonField,
@@ -151,7 +155,7 @@ export default function filamentGoogleMapsField(
             }
 
             if (autocomplete) {
-                const geoComplete = document.getElementById(this.config.autocomplete);
+                const geoComplete = document.getElementById(autocomplete);
 
                 if (geoComplete) {
                     window.addEventListener('keydown', function (e) {
@@ -172,7 +176,7 @@ export default function filamentGoogleMapsField(
                     const geocompleteOptions = {
                         fields: fields,
                         strictBounds: false,
-                        types: this.config.types,
+                        types: types,
                     };
                     
                     const autocomplete = new google.maps.places.Autocomplete(geoComplete, geocompleteOptions);
@@ -195,7 +199,7 @@ export default function filamentGoogleMapsField(
                             this.map.setCenter(place.geometry.location);
                         }
 
-                        $wire.set(autocomplete, place[placeField]);
+                        setStateUsing(autocomplete, place[placeField]);
                         this.marker.setPosition(place.geometry.location);
                         this.markerLocation = place.geometry.location;
                         this.setCoordinates(place.geometry.location);
@@ -206,7 +210,7 @@ export default function filamentGoogleMapsField(
 
             if (layers) {
                 this.layers = layers.map((layerUrl) => {
-                    const kmlLayer = google.maps.KmlLayer({
+                    const kmlLayer = new google.maps.KmlLayer({
                         url: layerUrl,
                         map: this.map,
                     });
@@ -231,7 +235,7 @@ export default function filamentGoogleMapsField(
                 }
             }
 
-            if (this.config.geolocateOnLoad) {
+            if (geolocateOnLoad) {
                 this.getLocation()
             }
 
@@ -295,7 +299,7 @@ export default function filamentGoogleMapsField(
                 if (drawingField) {
                     this.dataLayer = new google.maps.Data();
 
-                    let geoJSON = $wire.get(drawingField);
+                    let geoJSON = getStateUsing(drawingField);
                     geoJSON && this.loadFeaturesCollection(JSON.parse(geoJSON));
 
                     google.maps.event.addListener(this.drawingManager, 'overlaycomplete', (event) => {
@@ -346,8 +350,8 @@ export default function filamentGoogleMapsField(
         updateGeocode: function (address_components) {
             const replacements = this.getReplacements(address_components);
 
-            for (const field in this.config.reverseGeocodeFields) {
-                let replaced = this.config.reverseGeocodeFields[field];
+            for (const field in reverseGeocodeFields) {
+                let replaced = reverseGeocodeFields[field];
                 for (const replacement in replacements) {
                     replaced = replaced.split(replacement).join(replacements[replacement]);
                 }
@@ -357,11 +361,11 @@ export default function filamentGoogleMapsField(
                 }
 
                 replaced = replaced.trim();
-                                setStateUsing(field, replaced)
+                setStateUsing(field, replaced)
             }
         },
         updateGeocodeFromLocation: function (location) {
-            if (Object.keys(this.config.reverseGeocodeFields).length > 0) {
+            if (Object.keys(reverseGeocodeFields).length > 0) {
                 this.geocoder
                     .geocode({ location })
                     .then((response) => response.results[0].address_components)
@@ -643,9 +647,9 @@ export default function filamentGoogleMapsField(
         },
 
         drawingModified: function () {
-            if (this.config.drawingField) {
+            if (drawingField) {
                 this.dataLayer.toGeoJson((obj) => {
-                    $wire.set(this.config.drawingField, JSON.stringify(obj));
+                    setStateUsing(drawingField, JSON.stringify(obj));
                 });
             }
         },
@@ -700,7 +704,7 @@ export default function filamentGoogleMapsField(
         },
         
         geoJsonContains: function (latLng) {
-            if (this.config.geoJson && this.config.geoJsonField) {
+            if (geoJson && geoJsonField) {
                 let features = [];
                 let dataLayer = new google.maps.Data()
                 this.geoJsonDataLayer.forEach((feature) => {
@@ -709,8 +713,8 @@ export default function filamentGoogleMapsField(
                             path: feature.getGeometry().getAt(0).getArray()
                         });
                         if (google.maps.geometry.poly.containsLocation(latLng, poly)) {
-                            if (this.config.geoJsonProperty) {
-                                features.push(feature.getProperty(this.config.geoJsonProperty))
+                            if (geoJsonProperty) {
+                                features.push(feature.getProperty(geoJsonProperty))
                             } else {
                                 dataLayer.add(feature);
                             }
@@ -719,13 +723,13 @@ export default function filamentGoogleMapsField(
                 });
 
                 let fieldContent;
-                if (this.config.geoJsonProperty) {
+                if (geoJsonProperty) {
                     fieldContent = JSON.stringify(features)
-                    $wire.set(this.config.geoJsonField, fieldContent);
+                    setStateUsing(geoJsonField, fieldContent);
                 } else {
                     dataLayer.toGeoJson((gj) => {
                         fieldContent = JSON.stringify(gj);
-                        $wire.set(this.config.geoJsonField, fieldContent);
+                        setStateUsing(geoJsonField, fieldContent);
                     });
                 }
             }

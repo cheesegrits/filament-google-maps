@@ -10,19 +10,19 @@
 @endphp
 
 <x-dynamic-component
-        :component="$getFieldWrapperView()"
-        :field="$field"
+    :component="$getFieldWrapperView()"
+    :field="$field"
 >
-    <x-filament::input.affixes
-            :state-path="$statePath"
-            :prefix="$prefixLabel"
-            :prefix-actions="$getPrefixActions()"
-            :prefix-icon="$prefixIcon"
-            :suffix="$suffixLabel"
-            :suffix-actions="$getSuffixActions()"
-            :suffix-icon="$suffixIcon"
-            class="filament-forms-text-input-component"
-            :attributes="$getExtraAttributeBag()"
+    <x-filament-forms::affixes
+        :state-path="$statePath"
+        :prefix="$prefixLabel"
+        :prefix-actions="$getPrefixActions()"
+        :prefix-icon="$prefixIcon"
+        :suffix="$suffixLabel"
+        :suffix-actions="$getSuffixActions()"
+        :suffix-icon="$suffixIcon"
+        class="filament-forms-text-input-component"
+        :attributes="\Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())"
     >
         <div class="w-full"
              x-ignore
@@ -45,44 +45,47 @@
              wire:ignore
         >
             <input
-                x-bind:class="{
+                    x-bind:class="{
                     'border-gray-300 dark:border-gray-600': ! (@js($statePath) in $wire.__instance.serverMemo.errors),
                     'border-danger-600 ring-danger-600': (@js($statePath) in $wire.__instance.serverMemo.errors),
                 }"
-                {{
-                    $getExtraInputAttributeBag()
-                        ->merge([
-                            'autocapitalize' => $getAutocapitalize(),
-                            'autocomplete' => $getAutocomplete(),
-                            'autofocus' => $isAutofocused(),
-                            'disabled' => $isDisabled(),
-                            'dusk' => "filament.forms.{$statePath}",
-                            'id' => $id,
-                            'inputmode' => $getInputMode(),
-                            'list' => null,
-                            'maxlength' => (! $isConcealed) ? $getMaxLength() : null,
-                            'minlength' => (! $isConcealed) ? $getMinLength() : null,
-                            'placeholder' => $getPlaceholder(),
-                            'readonly' => $isReadOnly(),
-                            'required' => $isRequired() && (! $isConcealed),
-                            'type' => 'text',
-                            $applyStateBindingModifiers('wire:model') => (! $isLocation) ? $statePath : null,
-                        ], escape: false)
-                        ->class([
-                            'block w-full transition duration-75 shadow-sm outline-none sm:text-sm focus:border-primary-500 focus:relative focus:z-[1] focus:ring-1 focus:ring-inset focus:ring-primary-500 disabled:opacity-70 dark:bg-gray-700 dark:text-white dark:focus:border-primary-500',
-                            'rounded-l-lg' => ! ($prefixLabel || $prefixIcon),
-                            'rounded-r-lg' => ! ($suffixLabel || $suffixIcon),
-                        ])
-                }}
+                    {{
+                        $getExtraInputAttributeBag()
+                            ->merge($getExtraAlpineAttributes(), escape: false)
+                            ->merge([
+                                'autocapitalize' => $getAutocapitalize(),
+                                'autocomplete' => $getAutocomplete(),
+                                'autofocus' => $isAutofocused(),
+                                'disabled' => $isDisabled(),
+                                'dusk' => "filament.forms.{$statePath}",
+                                'id' => $id,
+                                'inputmode' => $getInputMode(),
+                                'list' => null,
+                                'max' => null,
+                                'maxlength' => null,
+                                'min' => null,                                
+                                'minlength' => null,
+                                'placeholder' => $getPlaceholder(),
+                                'readonly' => $isReadOnly(),
+                                'required' => $isRequired() && (! $isConcealed),
+                                'type' => 'text',
+                                $applyStateBindingModifiers('wire:model') => (! $isLocation) ? $statePath : null,
+                            ], escape: false)
+                            ->class([
+                                'filament-forms-input block w-full transition duration-75 shadow-sm outline-none sm:text-sm focus:relative focus:z-[1] focus:ring-1 focus:ring-inset disabled:opacity-70 dark:bg-gray-700 dark:text-white',
+                                'rounded-s-lg' => ! ($prefixLabel || $prefixIcon),
+                                'rounded-e-lg' => ! ($suffixLabel || $suffixIcon),
+                            ])
+                    }}
             />
 
             @if($getIsLocation())
                 <input
-                    {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
-                    type="hidden"
-                    id="{{ $id }}"
+                {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
+                type="hidden"
+                id="{{ $id }}"
                 />
             @endif
         </div>
-    </x-filament::input.affixes>
+    </x-filament-forms::affixes>
 </x-dynamic-component>

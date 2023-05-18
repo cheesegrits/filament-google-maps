@@ -3,6 +3,7 @@ const shouldWatch = process.argv.includes('--watch')
 
 esbuild
     .build({
+        sourcemap: 'external',
         define: {
             'process.env.NODE_ENV': shouldWatch
                 ? `'production'`
