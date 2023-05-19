@@ -5,10 +5,13 @@ namespace Cheesegrits\FilamentGoogleMaps\Widgets;
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Widgets;
 
-class MapWidget extends Widgets\Widget implements HasActions
+class MapWidget extends Widgets\Widget implements HasForms, HasActions
 {
+    use InteractsWithForms;
     use InteractsWithActions;
     use Widgets\Concerns\CanPoll;
 
