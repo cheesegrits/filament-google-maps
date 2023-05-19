@@ -11,8 +11,8 @@ use Cheesegrits\FilamentGoogleMaps\Tests\Models\Location;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 
 class MapResource extends Resource
 {
