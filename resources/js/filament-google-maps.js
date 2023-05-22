@@ -51,6 +51,7 @@ window.filamentGoogleMaps = ($wire, config) => {
             geoJsonVisible: true,
             reverseGeocodeFields: {},
             defaultZoom: 8,
+            reverseGeocodeUsing: false,
             gmaps: '',
         },
         symbols: {
@@ -214,7 +215,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                         this.marker.setPosition(place.geometry.location);
                         this.markerLocation = place.geometry.location;
                         this.setCoordinates(place.geometry.location);
-                        this.updateGeocode(place.address_components);
+                        this.updateGeocodeFromAddressComponents(place.address_components);
                     });
                 }
             }
@@ -335,8 +336,9 @@ window.filamentGoogleMaps = ($wire, config) => {
             this.geoJsonContains(event.latLng);
             this.markerLocation = event.latLng.toJSON();
             this.setCoordinates(this.markerLocation);
-            this.updateAutocomplete(this.markerLocation);
-            this.updateGeocodeFromLocation(this.markerLocation);
+            this.updateFromLocation(this.markerLocation)
+            // this.updateAutocomplete(this.markerLocation);
+            // this.updateGeocodeFromLocation(this.markerLocation);
             // this.updateMap(this.markerLocation);
             this.map.panTo(this.markerLocation);
         },
@@ -345,7 +347,7 @@ window.filamentGoogleMaps = ($wire, config) => {
             const markerLocation = this.marker.getPosition();
 
             if (!(location.lat === markerLocation.lat() && location.lng === markerLocation.lng())) {
-                this.updateAutocomplete(location)
+                this.updateFromLocation(location)
                 this.updateMap(location);
             }
         },
@@ -353,38 +355,61 @@ window.filamentGoogleMaps = ($wire, config) => {
             this.marker.setPosition(position);
             this.map.panTo(position);
         },
-        updateGeocode: function (address_components) {
-            const replacements = this.getReplacements(address_components);
-
-            for (const field in this.config.reverseGeocodeFields) {
-                let replaced = this.config.reverseGeocodeFields[field];
-                for (const replacement in replacements) {
-                    replaced = replaced.split(replacement).join(replacements[replacement]);
-                }
-
-                for (const symbol in this.symbols) {
-                    replaced = replaced.split(symbol).join('');
-                }
-
-                replaced = replaced.trim();
-                $wire.set(field, replaced)
-            }
-        },
-        updateGeocodeFromLocation: function (location) {
-            if (Object.keys(this.config.reverseGeocodeFields).length > 0) {
+        updateFromLocation: function (location) {
+            if (this.hasReverseGeocode() || this.hasReverseAutocomplete()) {
                 this.geocoder
                     .geocode({ location })
-                    .then((response) => response.results[0].address_components)
-                    .then((address_components) => this.updateGeocode(address_components))
+                    .then((response) => {
+                        this.updateGeocodeFromAddressComponents(response.results[0].address_components)
+                        this.updateAutocompleteFromFormattedAddress(response.results[0].formatted_address)
+                        if (this.config.reverseGeocodeUsing) {
+                            $wire.reverseGeocodeUsing(this.config.statePath, response);
+                        }
+                    })
                     .catch((error) => {
                         console.log(error.message);
                     })
             }
         },
-        updateAutocomplete: function (position) {
-            if (this.config.autocomplete && this.config.autocompleteReverse) {
+        updateGeocodeFromAddressComponents: function (address_components) {
+            if (this.hasReverseGeocode()) {
+                const replacements = this.getReplacements(address_components);
+
+                for (const field in this.config.reverseGeocodeFields) {
+                    let replaced = this.config.reverseGeocodeFields[field];
+                    for (const replacement in replacements) {
+                        replaced = replaced.split(replacement).join(replacements[replacement]);
+                    }
+
+                    for (const symbol in this.symbols) {
+                        replaced = replaced.split(symbol).join('');
+                    }
+
+                    replaced = replaced.trim();
+                    $wire.set(field, replaced)
+                }
+            }
+        },
+        updateGeocodeFromLocation: function (location) {
+            if (this.hasReverseGeocode()) {
                 this.geocoder
-                    .geocode({location: position})
+                    .geocode({ location })
+                    .then((response) => response.results[0].address_components)
+                    .then((address_components) => this.updateGeocodeFromAddressComponents(address_components))
+                    .catch((error) => {
+                        console.log(error.message);
+                    })
+            }
+        },
+        updateAutocompleteFromFormattedAddress: function (address) {
+            if (this.hasReverseAutocomplete()) {
+                $wire.set(this.config.autocomplete, address);
+            }
+        },
+        updateAutocompleteFromLocation: function (location) {
+            if (this.hasReverseAutocomplete()) {
+                this.geocoder
+                    .geocode({location: location})
                     .then((response) => {
                         if (response.results[0]) {
                             $wire.set(this.config.autocomplete, response.results[0].formatted_address);
@@ -394,6 +419,12 @@ window.filamentGoogleMaps = ($wire, config) => {
                         console.log(error.message);
                     })
             }
+        },
+        hasReverseAutocomplete: function () {
+            return this.config.autocomplete && this.config.autocompleteReverse
+        },
+        hasReverseGeocode: function () {
+            return Object.keys(this.config.reverseGeocodeFields).length > 0 || this.config.reverseGeocodeUsing
         },
         setCoordinates: function (position) {
             $wire.set(this.config.statePath, position);
@@ -412,8 +443,9 @@ window.filamentGoogleMaps = ($wire, config) => {
                     lng: position.coords.longitude
                 };
                 this.setCoordinates(this.markerLocation);
-                this.updateAutocomplete(this.markerLocation);
-                this.updateGeocodeFromLocation(this.markerLocation);
+                // this.updateAutocomplete(this.markerLocation);
+                // this.updateGeocodeFromLocation(this.markerLocation);
+                this.updateFromLocation(this.markerLocation);
                 this.map.panTo(this.markerLocation);
             });  
         },

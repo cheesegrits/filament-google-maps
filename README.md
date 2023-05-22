@@ -384,7 +384,7 @@ defined by [Geocoder PHP](https://github.com/geocoder-php/Geocoder#formatters) a
 
 * Street Number: %n
 * Street Name: %S
-* City (Locality): %L
+* City (Locality, or Postal Town in Sweden & UK): %L
 * City District (Sub-Locality): %D
 * Zipcode (Postal Code): %z
 * Admin Level Name: %A1, %A2, %A3, %A4, %A5

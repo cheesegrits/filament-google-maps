@@ -67,6 +67,8 @@ class Map extends Field
 
     protected Closure|bool $geoJsonVisible = true;
 
+    protected Closure|null $reverseGeocodeUsing = null;
+
     protected Closure|array $drawingModes = [
         'marker'    => true,
         'circle'    => true,
@@ -677,6 +679,28 @@ class Map extends Field
         return null;
     }
 
+    public function reverseGeocodeUsing(?Closure $closure): static
+    {
+        $this->reverseGeocodeUsing = $closure;
+
+        return $this;
+    }
+
+    public function reverseGeocodeUpdated(array $results): static
+    {
+        $callback = $this->reverseGeocodeUsing;
+
+        if (! $callback) {
+            return $this;
+        }
+
+        $this->evaluate($callback, [
+            'results' => $results,
+        ]);
+
+        return $this;
+    }
+
     /**
      * Create json configuration string
      */
@@ -702,6 +726,7 @@ class Map extends Field
             'drawingField'           => $this->getDrawingField(),
             'layers'                 => $this->getLayers(),
             'reverseGeocodeFields'   => $this->getReverseGeocode(),
+            'reverseGeocodeUsing'    => $this->reverseGeocodeUsing !== null,
             'defaultZoom'            => $this->getDefaultZoom(),
             'geoJson'                => $this->getGeoJsonFile(),
             'geoJsonField'           => $this->getGeoJsonField(),
