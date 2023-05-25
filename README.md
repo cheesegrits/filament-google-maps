@@ -509,6 +509,37 @@ If you wish to update your lat and lng fields on the form when the map marker is
         }),
 ```
 
+#### Reverse Geocode & Place Changed Callbacks
+
+If the built-in reverse geocode symbol mapping doesn't do what you need, you can provide a closure which will get
+called via Livewire whenever a reverse geocode occurs on the Map.  You will be passed an array with the geocode
+results, and can then process those how you want, and use a $set callable to set fields on your form accordingly: 
+
+```php
+Map::make('location')
+    ->reverseGeocodeUsing(function (callable $set, array $results) {
+        // get whatever you need from $results, and $set your field(s)
+        $set('city', 'foo bar');
+    })
+```
+
+Likewise, if you want to do custom processing whenever a Place is resolved on the Map, usually from a Geocomplete
+or by clicking on a place pin on the map, you can use the 
+
+```php
+Map::make('location')
+    ->placeUpdatedUsing(function (callable $set, array $place) {
+        // do whatever you need with the $place results, and $set your field(s)
+        $set('city', 'foo wibble');
+    }),
+```
+
+NOTE that when you provide a placeUpdatedUsing() callback, we automatically add 'photos' to the list of Place fields
+to fetch from the API, which are then available to you in the $place array.
+
+ALSO NOTE that placeUpdatedUsing() can add extra API calls when the map is clicked, so just be aware if you are trying
+to keep your API usage to a minimum.
+
 ### Geocomplete Field
 
 The Geocomplete field turns a field on your form into a Google Geocomplete field.  You

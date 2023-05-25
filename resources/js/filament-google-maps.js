@@ -52,6 +52,7 @@ window.filamentGoogleMaps = ($wire, config) => {
             reverseGeocodeFields: {},
             defaultZoom: 8,
             reverseGeocodeUsing: false,
+            placeUpdatedUsing: false,
             gmaps: '',
         },
         symbols: {
@@ -91,6 +92,8 @@ window.filamentGoogleMaps = ($wire, config) => {
             // zIndex: 1,
         },
         selectedShape: null,
+        placesService: null,
+        placeFields: [],
 
         loadGMaps: function () {
             if (!document.getElementById('filament-google-maps-google-maps-js')) {
@@ -166,6 +169,20 @@ window.filamentGoogleMaps = ($wire, config) => {
                 })
             }
 
+            if (this.config.placeUpdatedUsing) {
+                this.placesService = new google.maps.places.PlacesService(this.map);
+            }
+
+            this.placeFields = ["address_components", "formatted_address", "geometry", "name"];
+
+            if (!this.placeFields.includes(this.config.placeField)) {
+                this.placeFields.push(this.config.placeField);
+            }
+
+            if (this.config.placeUpdatedUsing) {
+                this.placeFields.push("photos");
+            }
+
             if (this.config.autocomplete) {
                 const geoComplete = document.getElementById(this.config.autocomplete);
 
@@ -179,24 +196,18 @@ window.filamentGoogleMaps = ($wire, config) => {
                         }
                     }, true);
 
-                    let fields = ["address_components", "formatted_address", "geometry", "name"];
-
-                    if (!fields.includes(this.config.placeField)) {
-                        fields.push(this.config.placeField);
-                    }
-
                     const geocompleteOptions = {
                         fields: fields,
                         strictBounds: false,
                         types: this.config.types,
                     };
-                    
+
                     const autocomplete = new google.maps.places.Autocomplete(geoComplete, geocompleteOptions);
 
                     autocomplete.setComponentRestrictions({
                         country: this.config.countries,
                     })
-                    
+
                     autocomplete.addListener("place_changed", () => {
                         const place = autocomplete.getPlace();
 
@@ -216,6 +227,9 @@ window.filamentGoogleMaps = ($wire, config) => {
                         this.markerLocation = place.geometry.location;
                         this.setCoordinates(place.geometry.location);
                         this.updateGeocodeFromAddressComponents(place.address_components);
+                        if (this.config.placeUpdatedUsing) {
+                            $wire.placeUpdatedUsing(this.config.statePath, place);
+                        }
                     });
                 }
             }
@@ -239,7 +253,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                 } else {
                     this.geoJsonDataLayer = new google.maps.Data();
                 }
-                
+
                 if (/^http/.test(this.config.geoJson)) {
                     this.geoJsonDataLayer.loadGeoJson(this.config.geoJson);
                 } else {
@@ -250,7 +264,7 @@ window.filamentGoogleMaps = ($wire, config) => {
             if (this.config.geolocateOnLoad) {
                 this.getLocation()
             }
-            
+
             if (this.config.geolocate && "geolocation" in navigator) {
                 const locationButton = document.createElement("button");
 
@@ -341,6 +355,18 @@ window.filamentGoogleMaps = ($wire, config) => {
             // this.updateGeocodeFromLocation(this.markerLocation);
             // this.updateMap(this.markerLocation);
             this.map.panTo(this.markerLocation);
+
+            if (this.config.placeUpdatedUsing && event.placeId) {
+                this.placesService.getDetails(
+                    {
+                        placeId: event.placeId,
+                        fields: this.placeFields
+                    },
+                    (results, status) => {
+                        status === 'OK' && $wire.placeUpdatedUsing(this.config.statePath, results);
+                    }
+                );
+            }
         },
         updateMapFromAlpine: function () {
             const location = this.getCoordinates();
@@ -358,7 +384,7 @@ window.filamentGoogleMaps = ($wire, config) => {
         updateFromLocation: function (location) {
             if (this.hasReverseGeocode() || this.hasReverseAutocomplete()) {
                 this.geocoder
-                    .geocode({ location })
+                    .geocode({location})
                     .then((response) => {
                         this.updateGeocodeFromAddressComponents(response.results[0].address_components)
                         this.updateAutocompleteFromFormattedAddress(response.results[0].formatted_address)
@@ -393,7 +419,7 @@ window.filamentGoogleMaps = ($wire, config) => {
         updateGeocodeFromLocation: function (location) {
             if (this.hasReverseGeocode()) {
                 this.geocoder
-                    .geocode({ location })
+                    .geocode({location})
                     .then((response) => response.results[0].address_components)
                     .then((address_components) => this.updateGeocodeFromAddressComponents(address_components))
                     .catch((error) => {
@@ -447,7 +473,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                 // this.updateGeocodeFromLocation(this.markerLocation);
                 this.updateFromLocation(this.markerLocation);
                 this.map.panTo(this.markerLocation);
-            });  
+            });
         },
 
         getReplacements: function (address_components) {
@@ -741,7 +767,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                 });
             });
         },
-        
+
         geoJsonContains: function (latLng) {
             if (this.config.geoJson && this.config.geoJsonField) {
                 let features = [];

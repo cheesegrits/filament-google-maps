@@ -69,6 +69,8 @@ class Map extends Field
 
     protected Closure|null $reverseGeocodeUsing = null;
 
+    protected Closure|null $placeUpdatedUsing = null;
+
     protected Closure|array $drawingModes = [
         'marker'    => true,
         'circle'    => true,
@@ -679,6 +681,13 @@ class Map extends Field
         return null;
     }
 
+    /**
+     * As an alternative to the built-in symbol based reverse geocode handling, you may provide a closure which will be
+     * called with the 'results' array from the Google API response, and use a $set closure to update fields on the form.
+     *
+     * @param  Closure|null  $closure
+     * @return $this
+     */
     public function reverseGeocodeUsing(?Closure $closure): static
     {
         $this->reverseGeocodeUsing = $closure;
@@ -696,6 +705,35 @@ class Map extends Field
 
         $this->evaluate($callback, [
             'results' => $results,
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * As an alternative to the built-in symbol based reverse geocode handling, you may provide a closure which will be
+     * called with the 'results' array from the Google API response, and use a $set closure to update fields on the form.
+     *
+     * @param  Closure|null  $closure
+     * @return $this
+     */
+    public function placeUpdatedUsing(?Closure $closure): static
+    {
+        $this->placeUpdatedUsing = $closure;
+
+        return $this;
+    }
+
+    public function placeUpdated(array $place): static
+    {
+        $callback = $this->placeUpdatedUsing;
+
+        if (! $callback) {
+            return $this;
+        }
+
+        $this->evaluate($callback, [
+            'place' => $place,
         ]);
 
         return $this;
@@ -727,6 +765,7 @@ class Map extends Field
             'layers'                 => $this->getLayers(),
             'reverseGeocodeFields'   => $this->getReverseGeocode(),
             'reverseGeocodeUsing'    => $this->reverseGeocodeUsing !== null,
+            'placeUpdatedUsing'      => $this->placeUpdatedUsing !== null,
             'defaultZoom'            => $this->getDefaultZoom(),
             'geoJson'                => $this->getGeoJsonFile(),
             'geoJsonField'           => $this->getGeoJsonField(),
