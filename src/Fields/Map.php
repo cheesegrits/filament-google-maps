@@ -731,7 +731,7 @@ class Map extends Field
 
         return $this;
     }
-    
+
     public function getPlaceUpdatedUsing(): bool
     {
         return $this->placeUpdatedUsing !== null;
