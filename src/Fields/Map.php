@@ -685,7 +685,6 @@ class Map extends Field
      * As an alternative to the built-in symbol based reverse geocode handling, you may provide a closure which will be
      * called with the 'results' array from the Google API response, and use a $set closure to update fields on the form.
      *
-     * @param  Closure|null  $closure
      * @return $this
      */
     public function reverseGeocodeUsing(?Closure $closure): static
@@ -714,7 +713,6 @@ class Map extends Field
      * As an alternative to the built-in symbol based reverse geocode handling, you may provide a closure which will be
      * called with the 'results' array from the Google API response, and use a $set closure to update fields on the form.
      *
-     * @param  Closure|null  $closure
      * @return $this
      */
     public function placeUpdatedUsing(?Closure $closure): static
