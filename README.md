@@ -511,6 +511,23 @@ If you wish to update your lat and lng fields on the form when the map marker is
 
 #### Reverse Geocode & Place Changed Callbacks
 
+To use the features in this section, you must add the InteractsWithMaps trait to your Livewire component.  If you
+are using it in a Filament app context ("admin panel"), this will typically be on the EditFoo page of your
+resource:
+
+```php
+//
+use Cheesegrits\FilamentGoogleMaps\Concerns\InteractsWithMaps;
+
+class EditLocation extends EditRecord
+{
+    use InteractsWithMaps;
+    
+    //
+}
+```
+In a standalone form context, this would be on your own component.
+
 If the built-in reverse geocode symbol mapping doesn't do what you need, you can provide a closure which will get
 called via Livewire whenever a reverse geocode occurs on the Map.  You will be passed an array with the geocode
 results, and can then process those how you want, and use a $set callable to set fields on your form accordingly: 
