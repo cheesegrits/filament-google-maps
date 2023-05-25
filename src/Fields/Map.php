@@ -67,6 +67,10 @@ class Map extends Field
 
     protected Closure|bool $geoJsonVisible = true;
 
+    protected Closure|null $reverseGeocodeUsing = null;
+
+    protected Closure|null $placeUpdatedUsing = null;
+
     protected Closure|array $drawingModes = [
         'marker'    => true,
         'circle'    => true,
@@ -683,6 +687,62 @@ class Map extends Field
     }
 
     /**
+     * As an alternative to the built-in symbol based reverse geocode handling, you may provide a closure which will be
+     * called with the 'results' array from the Google API response, and use a $set closure to update fields on the form.
+     *
+     * @return $this
+     */
+    public function reverseGeocodeUsing(?Closure $closure): static
+    {
+        $this->reverseGeocodeUsing = $closure;
+
+        return $this;
+    }
+
+    public function reverseGeocodeUpdated(array $results): static
+    {
+        $callback = $this->reverseGeocodeUsing;
+
+        if (! $callback) {
+            return $this;
+        }
+
+        $this->evaluate($callback, [
+            'results' => $results,
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * As an alternative to the built-in symbol based reverse geocode handling, you may provide a closure which will be
+     * called with the 'results' array from the Google API response, and use a $set closure to update fields on the form.
+     *
+     * @return $this
+     */
+    public function placeUpdatedUsing(?Closure $closure): static
+    {
+        $this->placeUpdatedUsing = $closure;
+
+        return $this;
+    }
+
+    public function placeUpdated(array $place): static
+    {
+        $callback = $this->placeUpdatedUsing;
+
+        if (! $callback) {
+            return $this;
+        }
+
+        $this->evaluate($callback, [
+            'place' => $place,
+        ]);
+
+        return $this;
+    }
+
+    /**
      * Create json configuration string
      */
     public function getMapConfig(): string
@@ -707,6 +767,8 @@ class Map extends Field
             'drawingField'           => $this->getDrawingField(),
             'layers'                 => $this->getLayers(),
             'reverseGeocodeFields'   => $this->getReverseGeocode(),
+            'reverseGeocodeUsing'    => $this->reverseGeocodeUsing !== null,
+            'placeUpdatedUsing'      => $this->placeUpdatedUsing !== null,
             'defaultZoom'            => $this->getDefaultZoom(),
             'geoJson'                => $this->getGeoJsonFile(),
             'geoJsonField'           => $this->getGeoJsonField(),
