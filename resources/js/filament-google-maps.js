@@ -11,6 +11,7 @@ export default function filamentGoogleMapsField(
         draggable,
         clickable,
         defaultLocation,
+        statePath,
         controls,
         layers,
         reverseGeocodeFields,
@@ -36,6 +37,10 @@ export default function filamentGoogleMapsField(
         geoJsonField,
         geoJsonProperty,
         geoJsonVisible,
+        reverseGeocodeUsing,
+        placeUpdatedUsing,
+        hasReverseGeocodeUsing = false,
+        hasPlaceUpdatedUsing = false,
     }
 ) {
     return {
@@ -82,6 +87,8 @@ export default function filamentGoogleMapsField(
             // zIndex: 1,
         },
         selectedShape: null,
+        placesService: null,
+        placeFields: [],
 
         loadGMaps: function () {
             if (!document.getElementById('filament-google-maps-google-maps-js')) {
@@ -154,6 +161,20 @@ export default function filamentGoogleMapsField(
                 })
             }
 
+            if (hasPlaceUpdatedUsing) {
+                this.placesService = new google.maps.places.PlacesService(this.map);
+            }
+
+            this.placeFields = ["address_components", "formatted_address", "geometry", "name"];
+
+            if (!this.placeFields.includes(placeField)) {
+                this.placeFields.push(placeField);
+            }
+
+            if (hasPlaceUpdatedUsing) {
+                this.placeFields.push("photos");
+            }
+            
             if (autocomplete) {
                 const geoComplete = document.getElementById(autocomplete);
 
@@ -167,14 +188,8 @@ export default function filamentGoogleMapsField(
                         }
                     }, true);
 
-                    let fields = ["address_components", "formatted_address", "geometry", "name"];
-
-                    if (!fields.includes(placeField)) {
-                        fields.push(placeField);
-                    }
-
                     const geocompleteOptions = {
-                        fields: fields,
+                        fields: this.placeFields,
                         strictBounds: false,
                         types: types,
                     };
@@ -203,7 +218,10 @@ export default function filamentGoogleMapsField(
                         this.marker.setPosition(place.geometry.location);
                         this.markerLocation = place.geometry.location;
                         this.setCoordinates(place.geometry.location);
-                        this.updateGeocode(place.address_components);
+                        this.updateGeocodeFromAddressComponents(place.address_components);
+                        if (hasPlaceUpdatedUsing) {
+                            placeUpdatedUsing(place);
+                        }
                     });
                 }
             }
@@ -329,7 +347,7 @@ export default function filamentGoogleMapsField(
                 const markerLocation = this.marker.getPosition();
 
                 if (!(location.lat === markerLocation.lat() && location.lng === markerLocation.lng())) {
-                    this.updateAutocomplete(location)
+                    this.updateAutocompleteFromLocation(location)
                     this.updateMap(location);
                 }
             })
@@ -338,47 +356,80 @@ export default function filamentGoogleMapsField(
             this.geoJsonContains(event.latLng);
             this.markerLocation = event.latLng.toJSON();
             this.setCoordinates(this.markerLocation);
-            this.updateAutocomplete(this.markerLocation);
-            this.updateGeocodeFromLocation(this.markerLocation);
-            // this.updateMap(this.markerLocation);
+            this.updateFromLocation(this.markerLocation);
             this.map.panTo(this.markerLocation);
+
+            if (hasPlaceUpdatedUsing && event.placeId) {
+                this.placesService.getDetails(
+                    {
+                        placeId: event.placeId,
+                        fields: this.placeFields
+                    },
+                    (results, status) => {
+                        status === 'OK' && placeUpdatedUsing(results);
+                    }
+                );
+            }
         },
         updateMap: function (position) {
             this.marker.setPosition(position);
             this.map.panTo(position);
         },
-        updateGeocode: function (address_components) {
-            const replacements = this.getReplacements(address_components);
-
-            for (const field in reverseGeocodeFields) {
-                let replaced = reverseGeocodeFields[field];
-                for (const replacement in replacements) {
-                    replaced = replaced.split(replacement).join(replacements[replacement]);
-                }
-
-                for (const symbol in this.symbols) {
-                    replaced = replaced.split(symbol).join('');
-                }
-
-                replaced = replaced.trim();
-                setStateUsing(field, replaced)
-            }
-        },
-        updateGeocodeFromLocation: function (location) {
-            if (Object.keys(reverseGeocodeFields).length > 0) {
+        updateFromLocation: function (location) {
+            if (this.hasReverseGeocode() || this.hasReverseAutocomplete()) {
                 this.geocoder
-                    .geocode({ location })
-                    .then((response) => response.results[0].address_components)
-                    .then((address_components) => this.updateGeocode(address_components))
+                    .geocode({location})
+                    .then((response) => {
+                        this.updateGeocodeFromAddressComponents(response.results[0].address_components)
+                        this.updateAutocompleteFromFormattedAddress(response.results[0].formatted_address)
+                        if (hasReverseGeocodeUsing) {
+                            reverseGeocodeUsing(response);
+                        }
+                    })
                     .catch((error) => {
                         console.log(error.message);
                     })
             }
         },
-        updateAutocomplete: function (position) {
-            if (autocomplete && autocompleteReverse) {
+        updateGeocodeFromAddressComponents: function (address_components) {
+            if (this.hasReverseGeocode()) {
+                const replacements = this.getReplacements(address_components);
+
+                for (const field in reverseGeocodeFields) {
+                    let replaced = reverseGeocodeFields[field];
+                    for (const replacement in replacements) {
+                        replaced = replaced.split(replacement).join(replacements[replacement]);
+                    }
+
+                    for (const symbol in this.symbols) {
+                        replaced = replaced.split(symbol).join('');
+                    }
+
+                    replaced = replaced.trim();
+                    setStateUsing(field, replaced)
+                }
+            }
+        },
+        updateGeocodeFromLocation: function (location) {
+            if (this.hasReverseGeocode()) {
                 this.geocoder
-                    .geocode({location: position})
+                    .geocode({location})
+                    .then((response) => response.results[0].address_components)
+                    .then((address_components) => this.updateGeocodeFromAddressComponents(address_components))
+                    .catch((error) => {
+                        console.log(error.message);
+                    })
+            }
+        },
+        updateAutocompleteFromFormattedAddress: function (address) {
+            if (this.hasReverseAutocomplete()) {
+                setStateUsing(autocomplete, address);
+            }
+        },
+        updateAutocompleteFromLocation: function (location) {
+            if (this.hasReverseAutocomplete()) {
+                this.geocoder
+                    .geocode({location: location})
                     .then((response) => {
                         if (response.results[0]) {
                             setStateUsing(autocomplete, response.results[0].formatted_address);
@@ -388,6 +439,12 @@ export default function filamentGoogleMapsField(
                         console.log(error.message);
                     })
             }
+        },
+        hasReverseAutocomplete: function () {
+            return autocomplete && autocompleteReverse
+        },
+        hasReverseGeocode: function () {
+            return Object.keys(reverseGeocodeFields).length > 0 || reverseGeocodeUsing
         },
         setCoordinates: function (position) {
             this.state = position;
@@ -405,8 +462,7 @@ export default function filamentGoogleMapsField(
                     lng: position.coords.longitude
                 };
                 this.setCoordinates(this.markerLocation);
-                this.updateAutocomplete(this.markerLocation);
-                this.updateGeocodeFromLocation(this.markerLocation);
+                this.updateFromLocation(this.markerLocation);
                 this.map.panTo(this.markerLocation);
             });  
         },

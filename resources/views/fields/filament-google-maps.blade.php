@@ -2,6 +2,10 @@
         :component="$getFieldWrapperView()"
         :field="$field"
 >
+    @php
+        $statePath = $getStatePath();
+    @endphp
+    
     <div
             x-ignore
             ax-load
@@ -13,6 +17,12 @@
                 },
                 getStateUsing: (path) => {
                     return $wire.get(path)
+                },
+                reverseGeocodeUsing: (results) => {
+                    $wire.reverseGeocodeUsing(@js($statePath), results)
+                },
+                placeUpdatedUsing: (results) => {
+                    $wire.placeUpdatedUsing(@js($statePath), results)
                 },
                 autocomplete: @js($getAutocompleteId()),
                 autocompleteReverse: @js($getAutocompleteReverse()),
@@ -26,6 +36,8 @@
                 controls: @js($getMapControls()),
                 layers: @js($getLayers()),
                 reverseGeocodeFields: @js($getReverseGeocode()),
+                hasReverseGeocodeUsing: @js($getReverseGeocodeUsing()),
+                hasPlaceUpdatedUsing: @js($getPlaceUpdatedUsing()),
                 defaultZoom: @js($getDefaultZoom()),
                 types: @js($getTypes()),
                 countries: @js($getCountries()),

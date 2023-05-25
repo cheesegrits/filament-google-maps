@@ -699,6 +699,11 @@ class Map extends Field
         return $this;
     }
 
+    public function getReverseGeocodeUsing(): bool
+    {
+        return $this->reverseGeocodeUsing !== null;
+    }
+
     public function reverseGeocodeUpdated(array $results): static
     {
         $callback = $this->reverseGeocodeUsing;
@@ -725,6 +730,11 @@ class Map extends Field
         $this->placeUpdatedUsing = $closure;
 
         return $this;
+    }
+    
+    public function getPlaceUpdatedUsing(): bool
+    {
+        return $this->placeUpdatedUsing !== null;
     }
 
     public function placeUpdated(array $place): static
@@ -767,8 +777,8 @@ class Map extends Field
             'drawingField'           => $this->getDrawingField(),
             'layers'                 => $this->getLayers(),
             'reverseGeocodeFields'   => $this->getReverseGeocode(),
-            'reverseGeocodeUsing'    => $this->reverseGeocodeUsing !== null,
-            'placeUpdatedUsing'      => $this->placeUpdatedUsing !== null,
+            'reverseGeocodeUsing'    => $this->getReverseGeocodeUsing(),
+            'placeUpdatedUsing'      => $this->getPlaceUpdatedUsing(),
             'defaultZoom'            => $this->getDefaultZoom(),
             'geoJson'                => $this->getGeoJsonFile(),
             'geoJsonField'           => $this->getGeoJsonField(),
