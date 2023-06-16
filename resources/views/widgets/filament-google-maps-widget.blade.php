@@ -1,9 +1,10 @@
 @php
     $heading = $this->getHeading();
     $filters = $this->getFilters();
+    $minHeight = "";
 @endphp
 
-<x-filament::widget class="filament-widgets-chart-widget">
+<x-filament::widget class="filament-widgets-map-widget">
     <x-filament::card>
         @if ($heading || $filters)
             <div class="flex items-center justify-between gap-8">
@@ -82,7 +83,12 @@
                         style=" max-height: {{ $maxHeight }}"
                     @endif
             >
-                <div x-ref="map" class="w-full" style="min-height: 50vh; z-index: 1 !important;"></div>
+                @if ($minMapHeight = $this->getMinMapHeight())
+                    @php
+                        $minHeight = "min-height: {$minMapHeight};"
+                    @endphp
+                @endif
+                <div x-ref="map" class="w-full" style="{{ $minHeight }} z-index: 1 !important;"></div>
             </div>
 
         </div>

@@ -197,7 +197,7 @@ window.filamentGoogleMaps = ($wire, config) => {
                     }, true);
 
                     const geocompleteOptions = {
-                        fields: fields,
+                        fields: this.placeFields,
                         strictBounds: false,
                         types: this.config.types,
                     };
