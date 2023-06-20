@@ -200,7 +200,8 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
 
             address_components.forEach(component => {
                 for (const symbol in this.symbols) {
-                    if (this.symbols[symbol].indexOf(component.types[0]) !== -1) {
+                    //if (this.symbols[symbol].indexOf(component.types[0]) !== -1) {
+                    if (component.types.filter(element => this.symbols[symbol].includes(element)).length > 0) {
                         if (symbol === symbol.toLowerCase()) {
                             replacements[symbol] = component.short_name;
                         } else {
