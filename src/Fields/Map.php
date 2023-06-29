@@ -641,34 +641,34 @@ class Map extends Field
         return $this->evaluate($this->layers);
     }
 
-//	private function getTopComponent(Component $component): Component
-//	{
-//		$parentComponent = $component->getContainer()->getParentComponent();
-//
-//		return $parentComponent ? $this->getTopComponent($parentComponent) : $component;
-//	}
-//
-//	public function getFlatFields(): array
-//	{
-//		$topComponent = $this->getTopComponent($this->getContainer()?->getParentComponent());
-//
-//		$flatFields = [];
-//
-//		foreach ($topComponent->getContainer()->getComponents() as $component)
-//		{
-//			foreach ($component->getChildComponentContainers() as $container)
-//			{
-//				if ($container->isHidden())
-//				{
-//					continue;
-//				}
-//
-//				$flatFields = array_merge($flatFields, $container->getFlatFields());
-//			}
-//		}
-//
-//		return $flatFields;
-//	}
+    //	private function getTopComponent(Component $component): Component
+    //	{
+    //		$parentComponent = $component->getContainer()->getParentComponent();
+    //
+    //		return $parentComponent ? $this->getTopComponent($parentComponent) : $component;
+    //	}
+    //
+    //	public function getFlatFields(): array
+    //	{
+    //		$topComponent = $this->getTopComponent($this->getContainer()?->getParentComponent());
+    //
+    //		$flatFields = [];
+    //
+    //		foreach ($topComponent->getContainer()->getComponents() as $component)
+    //		{
+    //			foreach ($component->getChildComponentContainers() as $container)
+    //			{
+    //				if ($container->isHidden())
+    //				{
+    //					continue;
+    //				}
+    //
+    //				$flatFields = array_merge($flatFields, $container->getFlatFields());
+    //			}
+    //		}
+    //
+    //		return $flatFields;
+    //	}
 
     public function getAutocompleteId(): string|null
     {
