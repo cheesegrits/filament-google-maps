@@ -444,7 +444,7 @@ export default function filamentGoogleMapsField(
             return autocomplete && autocompleteReverse
         },
         hasReverseGeocode: function () {
-            return Object.keys(reverseGeocodeFields).length > 0 || reverseGeocodeUsing
+            return Object.keys(reverseGeocodeFields).length > 0 || hasReverseGeocodeUsing
         },
         setCoordinates: function (position) {
             this.state = position;
