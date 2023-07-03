@@ -29,7 +29,7 @@ window.filamentGoogleGeocomplete = ($wire, config) => {
             '%a4': ["administrative_area_level_4"],
             '%a5': ["administrative_area_level_5"],
             '%L': ["locality", "postal_town"],
-            '%D': ["sublocality"],
+            '%D': ["sublocality_level_1", "sublocality", "political"],
             '%C': ["country"],
             '%c': ["country"],
             '%p': ['premise'],
