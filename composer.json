@@ -1,5 +1,5 @@
 {
-    "name": "cheesegrits/filament-google-maps",
+    "name": "mguariero/filament-google-maps",
     "description": "A Google Maps package for Filament PHP with field, column and widget",
     "type": "library",
     "license": "MIT",
