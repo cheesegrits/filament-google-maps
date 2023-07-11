@@ -2,6 +2,7 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Concerns;
 
+use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete;
 use Cheesegrits\FilamentGoogleMaps\Fields\Map;
 
 trait InteractsWithMaps
@@ -20,7 +21,7 @@ trait InteractsWithMaps
     public function reverseGeocodeUpdated($container, string $statePath, array $results): bool
     {
         foreach ($container->getComponents() as $component) {
-            if ($component instanceof Map && $component->getStatePath() === $statePath) {
+            if (($component instanceof Map || $component instanceof Geocomplete) && $component->getStatePath() === $statePath) {
                 $component->reverseGeocodeUpdated($results);
 
                 return true;

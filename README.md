@@ -610,6 +610,9 @@ to the limitations on the number and mix of types - either 1 from Table 3 (like 
 In both modes, you may optionally specify fields to reverse geocode the selected address component data
 to, using the same method as the Map component, documented above.
 
+Not shown in thew following example, but you can also use the reverseGeocodeUsing() method to
+provide your own closure for handling reverse geocode data, as described in the Map component above.
+
 ```php
     Geocomplete::make('location')
         ->isLocation()

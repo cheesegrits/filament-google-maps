@@ -11,6 +11,8 @@ export default function filamentGoogleGeocomplete(
         countries,
         isLocation,
         placeField,
+        reverseGeocodeUsing,
+        hasReverseGeocodeUsing = false,
     }
 ) {
     return {
@@ -166,7 +168,7 @@ export default function filamentGoogleGeocomplete(
             }
         },
         updateReverseGeocode: async function (place) {
-            if (Object.keys(reverseGeocodeFields).length > 0) {
+            if (this.hasReverseGeocode()) {
                 if (place.address_components) {
                     //await setStateUsing(config.autocomplete, response.results[0].formatted_address);
                     const replacements = this.getReplacements(place.address_components);
@@ -185,7 +187,10 @@ export default function filamentGoogleGeocomplete(
                         replaced = replaced.trim();
                         await setStateUsing(field, replaced)
                     }
+                }
 
+                if (hasReverseGeocodeUsing) {
+                    reverseGeocodeUsing(place);
                 }
             }
         },
@@ -217,7 +222,9 @@ export default function filamentGoogleGeocomplete(
             }
 
             return replacements;
+        },
+        hasReverseGeocode: function () {
+            return Object.keys(reverseGeocodeFields).length > 0 || hasReverseGeocodeUsing
         }
-
     }
 }

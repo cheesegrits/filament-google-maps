@@ -10,19 +10,19 @@
 @endphp
 
 <x-dynamic-component
-    :component="$getFieldWrapperView()"
-    :field="$field"
+        :component="$getFieldWrapperView()"
+        :field="$field"
 >
     <x-filament-forms::affixes
-        :state-path="$statePath"
-        :prefix="$prefixLabel"
-        :prefix-actions="$getPrefixActions()"
-        :prefix-icon="$prefixIcon"
-        :suffix="$suffixLabel"
-        :suffix-actions="$getSuffixActions()"
-        :suffix-icon="$suffixIcon"
-        class="filament-forms-text-input-component"
-        :attributes="\Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())"
+            :state-path="$statePath"
+            :prefix="$prefixLabel"
+            :prefix-actions="$getPrefixActions()"
+            :prefix-icon="$prefixIcon"
+            :suffix="$suffixLabel"
+            :suffix-actions="$getSuffixActions()"
+            :suffix-icon="$suffixIcon"
+            class="filament-forms-text-input-component"
+            :attributes="\Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())"
     >
         <div class="w-full"
              x-ignore
@@ -32,10 +32,14 @@
                 setStateUsing: async (path, state) => {
                     return await $wire.set(path, state)
                 },
+                reverseGeocodeUsing: (results) => {
+                    $wire.reverseGeocodeUsing(@js($statePath), results)
+                },
                 filterName: @js($getFilterName()),
                 statePath: @js($getStatePath()),
                 isLocation: @js($getIsLocation()),
                 reverseGeocodeFields: @js($getReverseGeocode()),
+                hasReverseGeocodeUsing: @js($getReverseGeocodeUsing()),
                 latLngFields: @js($getUpdateLatLngFields()),
                 types: @js($getTypes()),
                 placeField: @js($getPlaceField()),

@@ -42,6 +42,8 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
 
     protected Closure|array $reverseGeocode = [];
 
+    protected Closure|null $reverseGeocodeUsing = null;
+
     protected Closure|bool $updateLatLng = false;
 
     protected Closure|array $types = [];
@@ -68,7 +70,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
         $name = $this->evaluate($this->filterName);
 
         if ($name) {
-            return 'tableFilters.'.$name;
+            return 'tableFilters.' . $name;
         }
 
         return null;
@@ -102,7 +104,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
      * If set to true, will update lat and lng fields on the form when a place is selected from the dropdown.  Requires
      * the getLatLngAttributes() method on the model, as per the filament-google-maps:model-code Artisan command.
      *
-     * @param  Closure|bool  $debug
+     * @param Closure|bool $debug
      * @return $this
      */
     public function updateLatLng(Closure|bool $updateLatLng = true): static
@@ -140,7 +142,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
     /**
      * Optionally set this to true, if you want the geocomplete to update lat/lng fields on your form
      *
-     * @param  Closure|string  $name
+     * @param Closure|string $name
      * @return $this
      */
     public function isLocation(Closure|bool $isLocation = true): static
@@ -238,7 +240,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
 
     public function getReverseGeocode(): array
     {
-        $fields     = $this->evaluate($this->reverseGeocode);
+        $fields = $this->evaluate($this->reverseGeocode);
         $statePaths = [];
 
         foreach ($fields as $field => $format) {
@@ -250,6 +252,39 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
         }
 
         return $statePaths;
+    }
+
+    /**
+     * As an alternative to the built-in symbol based reverse geocode handling, you may provide a closure which will be
+     * called with the 'results' array from the Google API response, and use a $set closure to update fields on the form.
+     *
+     * @return $this
+     */
+    public function reverseGeocodeUsing(?Closure $closure): static
+    {
+        $this->reverseGeocodeUsing = $closure;
+
+        return $this;
+    }
+
+    public function getReverseGeocodeUsing(): bool
+    {
+        return $this->reverseGeocodeUsing !== null;
+    }
+
+    public function reverseGeocodeUpdated(array $results): static
+    {
+        $callback = $this->reverseGeocodeUsing;
+
+        if (!$callback) {
+            return $this;
+        }
+
+        $this->evaluate($callback, [
+            'results' => $results,
+        ]);
+
+        return $this;
     }
 
     /**
@@ -325,7 +360,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
             return Action::make('geolocate')
                 ->iconButton()
                 ->icon($this->getGeolocateIcon())
-                ->extraAttributes(['id' => $this->getId().'-geolocate']);
+                ->extraAttributes(['id' => $this->getId() . '-geolocate']);
         }
 
         return null;
@@ -340,7 +375,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
                 if ($component->getGeocodeOnLoad()) {
                     $state = static::getLocationState($state);
 
-                    if (! MapsHelper::isLocationEmpty($state)) {
+                    if (!MapsHelper::isLocationEmpty($state)) {
                         $state = MapsHelper::reverseGeocode($state);
                     } else {
                         $state = '';
@@ -349,7 +384,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
                     $state = '';
                 }
 
-                $component->state((string) $state);
+                $component->state((string)$state);
             }
         });
 
@@ -368,6 +403,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
             'statePath'            => $this->getStatePath(),
             'isLocation'           => $this->getIsLocation(),
             'reverseGeocodeFields' => $this->getReverseGeocode(),
+            'reverseGeocodeUsing'  => $this->getReverseGeocodeUsing(),
             'latLngFields'         => $this->getUpdateLatLngFields(),
             'types'                => $this->getTypes(),
             'countries'            => $this->getCountries(),
