@@ -17,8 +17,8 @@ class ListLocations extends ListRecords
         ];
     }
 
-//    protected function getTableFiltersFormWidth(): string
-//    {
-//        return '4xl';
-//    }
+    //    protected function getTableFiltersFormWidth(): string
+    //    {
+    //        return '4xl';
+    //    }
 }
