@@ -18,8 +18,8 @@ class MapWidget extends Widgets\Widget
     protected static ?string $heading = null;
 
     protected static ?string $maxHeight = null;
-    
-    protected static ?string $minMapHeight = "50vh";
+
+    protected static ?string $minMapHeight = '50vh';
 
     protected static ?array $options = null;
 
