@@ -67,9 +67,9 @@ class Map extends Field
 
     protected Closure|bool $geoJsonVisible = true;
 
-    protected Closure|null $reverseGeocodeUsing = null;
+    protected ?Closure $reverseGeocodeUsing = null;
 
-    protected Closure|null $placeUpdatedUsing = null;
+    protected ?Closure $placeUpdatedUsing = null;
 
     protected Closure|array $drawingModes = [
         'marker'    => true,
@@ -153,7 +153,7 @@ class Map extends Field
      *
      * @return $this
      */
-    public function autocomplete(Closure|string $fieldName, Closure|array $types = [], Closure|string|null $placeField = null, Closure|array $countries = []): static
+    public function autocomplete(Closure|string $fieldName, Closure|array $types = [], Closure|string $placeField = null, Closure|array $countries = []): static
     {
         $this->autocomplete = $fieldName;
         $this->types        = $types;
@@ -163,7 +163,7 @@ class Map extends Field
         return $this;
     }
 
-    public function getAutocomplete(): string|null
+    public function getAutocomplete(): ?string
     {
         return $this->evaluate($this->autocomplete);
     }
@@ -179,7 +179,7 @@ class Map extends Field
         return $types;
     }
 
-    public function getPlaceField(): string|null
+    public function getPlaceField(): ?string
     {
         return $this->evaluate($this->placeField) ?? 'formatted_address';
     }
@@ -202,7 +202,7 @@ class Map extends Field
         return $this;
     }
 
-    public function getAutocompleteReverse(): string|null
+    public function getAutocompleteReverse(): ?string
     {
         return $this->evaluate($this->autocompleteReverse);
     }
@@ -262,7 +262,7 @@ class Map extends Field
         return $this;
     }
 
-    public function getGeolocate(): bool|null
+    public function getGeolocate(): ?bool
     {
         return $this->evaluate($this->geolocate);
     }
@@ -280,7 +280,7 @@ class Map extends Field
         return $this;
     }
 
-    public function getGeolocateOnLoad(): bool|null
+    public function getGeolocateOnLoad(): ?bool
     {
         if ($this->evaluate($this->geolocateOnLoad)) {
             $always = $this->evaluate($this->geolocateOnLoadAlways);
@@ -334,7 +334,7 @@ class Map extends Field
      * @param  Closure|string|null  $drawingField
      * @return $this
      */
-    public function drawingField(Closure|string|null $drawingField = null): static
+    public function drawingField(Closure|string $drawingField = null): static
     {
         $this->drawingField = $drawingField;
 
@@ -410,7 +410,7 @@ class Map extends Field
         return $this;
     }
 
-    public function getGeoJsonFile(): string|null
+    public function getGeoJsonFile(): ?string
     {
         $file = $this->evaluate($this->geoJsonFile);
 
@@ -444,7 +444,7 @@ class Map extends Field
         return $this;
     }
 
-    public function getGeoJsonVisible(): string|null
+    public function getGeoJsonVisible(): ?string
     {
         return $this->evaluate($this->geoJsonVisible);
     }
@@ -459,7 +459,7 @@ class Map extends Field
      *
      * @return $this
      */
-    public function geoJsonContainsField(Closure|string|null $field = null, Closure|string|null $property = null): static
+    public function geoJsonContainsField(Closure|string $field = null, Closure|string $property = null): static
     {
         $this->geoJsonField = $field;
 
@@ -468,7 +468,7 @@ class Map extends Field
         return $this;
     }
 
-    public function getGeoJsonField(): string|null
+    public function getGeoJsonField(): ?string
     {
         $jsonField = $this->evaluate($this->geoJsonField);
 
@@ -479,7 +479,7 @@ class Map extends Field
         return null;
     }
 
-    public function getGeoJsonProperty(): string|null
+    public function getGeoJsonProperty(): ?string
     {
         return $this->evaluate($this->geoJsonProperty);
     }
@@ -641,36 +641,36 @@ class Map extends Field
         return $this->evaluate($this->layers);
     }
 
-//	private function getTopComponent(Component $component): Component
-//	{
-//		$parentComponent = $component->getContainer()->getParentComponent();
-//
-//		return $parentComponent ? $this->getTopComponent($parentComponent) : $component;
-//	}
-//
-//	public function getFlatFields(): array
-//	{
-//		$topComponent = $this->getTopComponent($this->getContainer()?->getParentComponent());
-//
-//		$flatFields = [];
-//
-//		foreach ($topComponent->getContainer()->getComponents() as $component)
-//		{
-//			foreach ($component->getChildComponentContainers() as $container)
-//			{
-//				if ($container->isHidden())
-//				{
-//					continue;
-//				}
-//
-//				$flatFields = array_merge($flatFields, $container->getFlatFields());
-//			}
-//		}
-//
-//		return $flatFields;
-//	}
+    //	private function getTopComponent(Component $component): Component
+    //	{
+    //		$parentComponent = $component->getContainer()->getParentComponent();
+    //
+    //		return $parentComponent ? $this->getTopComponent($parentComponent) : $component;
+    //	}
+    //
+    //	public function getFlatFields(): array
+    //	{
+    //		$topComponent = $this->getTopComponent($this->getContainer()?->getParentComponent());
+    //
+    //		$flatFields = [];
+    //
+    //		foreach ($topComponent->getContainer()->getComponents() as $component)
+    //		{
+    //			foreach ($component->getChildComponentContainers() as $container)
+    //			{
+    //				if ($container->isHidden())
+    //				{
+    //					continue;
+    //				}
+    //
+    //				$flatFields = array_merge($flatFields, $container->getFlatFields());
+    //			}
+    //		}
+    //
+    //		return $flatFields;
+    //	}
 
-    private function getAutocompleteId(): string|null
+    private function getAutocompleteId(): ?string
     {
         $autoCompleteField = $this->getAutocomplete();
 

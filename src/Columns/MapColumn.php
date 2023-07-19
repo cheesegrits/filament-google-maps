@@ -41,7 +41,7 @@ class MapColumn extends Column
         return $this;
     }
 
-    public function getIcon(): string|null
+    public function getIcon(): ?string
     {
         return $this->evaluate($this->icon);
     }
@@ -193,7 +193,7 @@ class MapColumn extends Column
         return new ComponentAttributeBag($this->getExtraImgAttributes());
     }
 
-    private function getStaticMapURL(): string|null
+    private function getStaticMapURL(): ?string
     {
         $location = $this->getState();
 
@@ -227,7 +227,7 @@ class MapColumn extends Column
         return $src;
     }
 
-    public static function cacheImage($url): string|null
+    public static function cacheImage($url): ?string
     {
         $cacheKey = 'fgm-'.md5($url);
 

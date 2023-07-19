@@ -148,7 +148,7 @@ class MapWidget extends Widgets\Widget
         );
     }
 
-    public function getMapId(): string|null
+    public function getMapId(): ?string
     {
         return static::$mapId ?? str(get_called_class())->afterLast('\\')->studly()->toString();
     }

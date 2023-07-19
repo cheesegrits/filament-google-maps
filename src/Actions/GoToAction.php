@@ -28,7 +28,7 @@ class GoToAction extends Action
         return $this;
     }
 
-    public function getZoom(): null|int
+    public function getZoom(): ?int
     {
         return $this->evaluate($this->zoom) ?? 8;
     }
