@@ -42,7 +42,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
 
     protected Closure|array $reverseGeocode = [];
 
-    protected Closure|null $reverseGeocodeUsing = null;
+    protected ?Closure $reverseGeocodeUsing = null;
 
     protected Closure|bool $updateLatLng = false;
 
@@ -65,7 +65,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
         return $this;
     }
 
-    public function getFilterName(): string|null
+    public function getFilterName(): ?string
     {
         $name = $this->evaluate($this->filterName);
 
@@ -152,7 +152,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
         return $this;
     }
 
-    public function getIsLocation(): bool|null
+    public function getIsLocation(): ?bool
     {
         return $this->evaluate($this->isLocation);
     }
@@ -172,7 +172,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
         return $this;
     }
 
-    public function getGeocodeOnLoad(): bool|null
+    public function getGeocodeOnLoad(): ?bool
     {
         return $this->evaluate($this->geocodeOnLoad);
     }
@@ -190,7 +190,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
         return $this;
     }
 
-    public function getGeolocate(): bool|null
+    public function getGeolocate(): ?bool
     {
         return $this->evaluate($this->geolocate);
     }
@@ -349,7 +349,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
         return $this;
     }
 
-    public function getPlaceField(): string|null
+    public function getPlaceField(): ?string
     {
         return $this->evaluate($this->placeField) ?? 'formatted_address';
     }

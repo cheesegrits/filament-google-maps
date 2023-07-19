@@ -173,7 +173,7 @@ class RadiusFilter extends BaseFilter
         return $this;
     }
 
-    public function getRadius(): int|null
+    public function getRadius(): ?int
     {
         return $this->evaluate($this->radius);
     }
@@ -225,7 +225,7 @@ class RadiusFilter extends BaseFilter
         return $this;
     }
 
-    public function getSection(): string|null
+    public function getSection(): ?string
     {
         $section = $this->evaluate($this->section);
 
