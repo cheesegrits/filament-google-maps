@@ -7,7 +7,7 @@ This package provides a comprehensive set of tools for using Google Maps within 
 either as part of an admin panel, or in standalone front end forms, tables and dashboards.
 
 <!-- ABOUT THE PROJECT -->
-<a name="about"/>
+<a name="about"></a>
 
 ## About The Project
 
@@ -55,7 +55,7 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Map
 ]
 ```
 
-<a name="components"/>
+<a name="components"></a>
 
 ## Components
 
@@ -120,7 +120,7 @@ a combination of address fields into lat lng, or reverse geocoding lat and lng t
 
 
 <!-- GETTING STARTED -->
-<a name="getting-started"/>
+<a name="getting-started"></a>
 
 ## Getting Started 
 
@@ -286,7 +286,7 @@ return [
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
-<a name="usage"/>
+<a name="usage"></a>
 
 ## Usage
 
@@ -929,7 +929,7 @@ the selected location when clicked.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ARTISAN COMMANDS -->
-<a name="artisan"/>
+<a name="artisan"></a>
 
 ## Artisan Commands
 
@@ -1151,7 +1151,7 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
-<a name="roadmap"/>
+<a name="roadmap"></a>
 
 ## Roadmap
 
@@ -1171,7 +1171,7 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ISSUES -->
-<a name="issues"/>
+<a name="issues"></a>
 
 ## Issues
 
@@ -1181,7 +1181,7 @@ and we'll fix them ASAP.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
-<a name="contributing"/>
+<a name="contributing"></a>
 
 ## Contributing
 
@@ -1196,7 +1196,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- LICENSE -->
-<a name="license"/>
+<a name="license"></a>
 
 ## License
 
@@ -1207,7 +1207,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 
 <!-- CONTACT -->
-<a name="contact"/>
+<a name="contact"></a>
 
 ## Contact
 
@@ -1218,7 +1218,7 @@ Project Link: [https://github.com/cheesegrits/filament-google-maps](https://gith
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
-<a name="acknowledgements"/>
+<a name="acknowledgements"></a>
 
 ## Acknowledgments
 
