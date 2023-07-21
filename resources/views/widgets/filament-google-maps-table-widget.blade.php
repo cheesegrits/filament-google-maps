@@ -98,7 +98,7 @@
 
         </div>
     </x-filament::card>
-
+    <br>
     <x-filament::card>
         {{ $this->table }}
     </x-filament::card>
