@@ -8,9 +8,9 @@
         @if ($heading || $filters)
             <div class="flex items-center justify-between gap-8">
                 @if ($heading)
-                    <x-filament::card.heading>
+                    <h3 class="text-base font-semibold leading-6">
                         {{ $heading }}
-                    </x-filament::card.heading>
+                    </h3>
                 @endif
 
                 @if ($filters)
@@ -30,8 +30,6 @@
                     </select>
                 @endif
             </div>
-
-            <x-filament::hr/>
         @endif
 
         <div class=""
