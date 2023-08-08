@@ -3,15 +3,14 @@
 namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
 use Cheesegrits\FilamentGoogleMaps\Helpers\Geocoder;
-use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Throwable;
+use function Laravel\Prompts\text;
+
 
 class ReverseGeocodeTable extends Command
 {
-    use CanValidateInput;
-
     protected $signature = 'filament-google-maps:reverse-geocode-table {model?} {--lat=} {--lng=} {--fields=*} {--processed=} {--rate-limit=} {--verbose?}}';
 
     protected $description = 'Reverse geocode a table';
@@ -22,7 +21,7 @@ class ReverseGeocodeTable extends Command
         $verbose  = $this->option('verbose');
 
         $ogModelName = $modelName = (string) Str::of($this->argument('model')
-            ?? $this->askRequired('Model (e.g. `Location` or `Maps/Dealership`)', 'model'))
+            ?? text(label: 'Model (e.g. `Location` or `Maps/Dealership`)', placeholder: 'Location', required: true))
             ->studly()
             ->trim('/')
             ->trim('\\')
@@ -49,11 +48,12 @@ class ReverseGeocodeTable extends Command
 
         while ($rateLimit > 300 || $rateLimit < 1) {
             $prompted = true;
-
-            $rateLimit = (int) $this->askRequired(
-                'Rate limit as API calls per minute (max 300)',
-                'rate-limit',
-                config('filament-google-maps.rate-limit', 150),
+            
+            $rateLimit = (int)text(
+                label: 'Rate limit as API calls per minute (max 300)',
+                placeholder: '150',
+                default: config('filament-google-maps.rate-limit', 150),
+                required: true
             );
         }
 
@@ -64,9 +64,10 @@ class ReverseGeocodeTable extends Command
         if (empty($lat)) {
             $prompted = true;
 
-            $lat = $this->askRequired(
-                'Name of latitude element on table (e.g. `latitude`)',
-                'lat'
+            $lat = text(
+                label: 'Name of latitude element on table (e.g. `latitude`)',
+                placeholder: 'lat',
+                required: true
             );
         }
 
@@ -75,9 +76,10 @@ class ReverseGeocodeTable extends Command
         if (empty($lng)) {
             $prompted = true;
 
-            $lng = $this->askRequired(
-                'Name of longitude element on table (e.g. `longitude`)',
-                'lng'
+            $lng = text(
+                label: 'Name of longitude element on table (e.g. `longitude`)',
+                placeholder: 'lng',
+                required: true
             );
         }
 
@@ -86,8 +88,9 @@ class ReverseGeocodeTable extends Command
         if (empty($processedField)) {
             $prompted = true;
 
-            $processedField = $this->ask(
-                'Optional name of field to set to 1 when record is processed (e.g. `processed`)',
+            $processedField = text(
+                label: 'Optional name of field to set to 1 when record is processed (e.g. `processed`)',
+                placeholder: 'processed'
             );
         }
 

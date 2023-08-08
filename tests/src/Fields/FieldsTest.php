@@ -51,7 +51,7 @@ it('can load a record without geocodeOnLoad', function () {
 });
 
 it('can save a record with isLocation', function () {
-    $location    = Location::factory()->create();
+    $location = Location::factory()->create();
     $newLocation = Location::factory()->make();
 
     livewire(TestComponentWithoutGeocodeOnLoad::class, [
@@ -67,18 +67,19 @@ it('can save a record with isLocation', function () {
             'zip'               => $location->zip,
             'formatted_address' => $location->formatted_address,
         ])
-        ->fillForm([
-            'location' => [
+        ->set(
+            'data.location',
+            [
                 'lat' => $newLocation->lat,
                 'lng' => $newLocation->lng,
             ],
-        ])
+        )
         ->call('save')
         ->assertHasNoFormErrors();
 
     expect($location->refresh())
-        ->lat->toBe((string) $newLocation->lat)
-        ->lng->toBe((string) $newLocation->lng);
+        ->lat->toBe((string)$newLocation->lat)
+        ->lng->toBe((string)$newLocation->lng);
 });
 
 class TestComponentWithGeocodeOnLoad extends Livewire

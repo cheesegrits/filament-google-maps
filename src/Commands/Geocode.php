@@ -3,13 +3,11 @@
 namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
 use Cheesegrits\FilamentGoogleMaps\Helpers\Geocoder;
-use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
+use function Laravel\Prompts\text;
 
 class Geocode extends Command
 {
-    use CanValidateInput;
-
     protected $signature = 'filament-google-maps:geocode {--address=} {--A|array} {--C|command} {--G|args}';
 
     protected $description = 'Geocode a single address';
@@ -23,9 +21,10 @@ class Geocode extends Command
         $address = $this->option('address');
 
         if (empty($address)) {
-            $address = $this->askRequired(
-                'Enter an address to geocode (e.g. `123 Some Street, Mapville, TN 12345`)',
-                'address'
+            $address = text(
+                label: 'Enter an address to geocode (e.g. `123 Some Street, Mapville, TN 12345`)',
+                placeholder: 'address',
+                required: true
             );
         }
 

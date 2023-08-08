@@ -1,0 +1,15 @@
+{
+    "plugins": [
+        "./node_modules/prettier-plugin-blade/"
+    ],
+    "overrides": [
+        {
+            "files": [
+                "*.blade.php"
+            ],
+            "options": {
+                "parser": "blade"
+            }
+        }
+    ]
+}

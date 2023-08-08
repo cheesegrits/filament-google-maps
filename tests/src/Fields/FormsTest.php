@@ -14,13 +14,6 @@ use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
 
-beforeEach(function () {
-    Filament::registerResources([
-        LocationResource::class,
-        GeocompleteResource::class,
-    ]);
-});
-
 it('can create geocomplete field as computed location attribute', function () {
     $location = Location::factory()->create();
 

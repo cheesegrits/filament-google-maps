@@ -5,14 +5,17 @@ namespace Cheesegrits\FilamentGoogleMaps\Tests\Columns\Fixtures;
 use Cheesegrits\FilamentGoogleMaps\Columns\MapColumn;
 use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
 use Cheesegrits\FilamentGoogleMaps\Tests\Models\Location;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Tables;
 use Filament\Tables\Actions\BulkActionGroup;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 
-class LocationTable extends Component implements Tables\Contracts\HasTable
+class LocationTable extends Component implements HasForms, Tables\Contracts\HasTable
 {
+    use InteractsWithForms;
     use Tables\Concerns\InteractsWithTable;
 
     protected function getTableColumns(): array

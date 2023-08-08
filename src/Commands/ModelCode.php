@@ -2,14 +2,12 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
-use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use function Laravel\Prompts\text;
 
 class ModelCode extends Command
 {
-    use CanValidateInput;
-
     protected $signature = 'filament-google-maps:model-code {model?} {--lat=} {--lng=} {--location=} {--T|terse}';
 
     protected $description = 'Produce computed attribute code for a model to work with Filament Google Maps';
@@ -22,7 +20,11 @@ class ModelCode extends Command
 
         if (! $modelName) {
             $asking    = true;
-            $modelName = $this->askRequired('Model (e.g. `Location` or `Maps/Dealership`)', 'model');
+            $modelName = text(
+                label: 'Model (e.g. `Location` or `Maps/Dealership`)', 
+                placeholder: 'Location', 
+                required: true
+            );
         }
 
         $modelName = (string) Str::of($modelName)
@@ -46,13 +48,13 @@ class ModelCode extends Command
         }
 
         $latField = $this->option('lat')
-            ?? $this->askRequired('Latitude table field name (e.g. `lat`)', 'lat');
+            ?? text(label: 'Latitude table field name (e.g. `lat`)', placeholder: 'lat', required: true);
 
         $lngField = $this->option('lng')
-            ?? $this->askRequired('Longitude table field name (e.g. `lat`)', 'lng');
+            ?? text(label: 'Longitude table field name (e.g. `lat`)', placeholder: 'lng', required: true);
 
         $locationField = $this->option('location')
-            ?? $this->askRequired('Computed location attribute name (e.g. `location`)', 'location');
+            ?? text(label: 'Computed location attribute name (e.g. `location`)', placeholder: 'location', required: true);
 
         if ($asking) {
             $comments = $this->confirm('Include comments in the code?', true);

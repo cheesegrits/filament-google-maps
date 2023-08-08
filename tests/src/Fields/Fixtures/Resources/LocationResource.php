@@ -99,7 +99,7 @@ class LocationResource extends Resource
                 //                    ->section('Radius Search'),
             ]
             )
-            ->filtersLayout(Tables\Filters\Layout::Popover)
+            ->filtersLayout(Tables\Enums\FiltersLayout::Dropdown)
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

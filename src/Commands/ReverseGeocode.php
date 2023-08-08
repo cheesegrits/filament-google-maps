@@ -3,13 +3,11 @@
 namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
 use Cheesegrits\FilamentGoogleMaps\Helpers\Geocoder;
-use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
+use function Laravel\Prompts\text;
 
 class ReverseGeocode extends Command
 {
-    use CanValidateInput;
-
     protected $signature = 'filament-google-maps:reverse-geocode {--lat=} {--lng=} {--C|components}';
 
     protected $description = 'Geocode a single lat/lng tuple';
@@ -23,9 +21,10 @@ class ReverseGeocode extends Command
         if (empty($lat)) {
             $prompted = true;
 
-            $lat = $this->askRequired(
-                'Latitude (e.g. `34.38461`)',
-                'lat'
+            $lat = text(
+                label: 'Latitude (e.g. `34.38461`)',
+                placeholder: 'lat',
+                required: true
             );
         }
 
@@ -34,9 +33,10 @@ class ReverseGeocode extends Command
         if (empty($lng)) {
             $prompted = true;
 
-            $lng = $this->askRequired(
-                'Longitude (e.g. `-83.185639`)',
-                'lng'
+            $lng = text(
+                label: 'Longitude (e.g. `-83.185639`)',
+                placeholder: 'lng',
+                required: true
             );
         }
 
