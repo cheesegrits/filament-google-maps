@@ -2,13 +2,13 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
+use Cheesegrits\FilamentGoogleMaps\Commands\Concerns\CanValidateInput;
 use Cheesegrits\FilamentGoogleMaps\Helpers\Geocoder;
-//use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
 
 class ReverseGeocode extends Command
 {
-//    use CanValidateInput;
+    use CanValidateInput;
 
     protected $signature = 'filament-google-maps:reverse-geocode {--lat=} {--lng=} {--C|components}';
 
