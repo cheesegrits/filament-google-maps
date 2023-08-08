@@ -3,14 +3,14 @@
 namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Concerns\CanValidateInput;
+//use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
 class MakeWidgetCommand extends Command
 {
     use CanManipulateFiles;
-    use CanValidateInput;
+//    use CanValidateInput;
 
     private $widgetClasses = ['MapWidget', 'MapTableWidget'];
 

@@ -3,14 +3,14 @@
 namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
 use Cheesegrits\FilamentGoogleMaps\Helpers\Geocoder;
-use Filament\Support\Commands\Concerns\CanValidateInput;
+//use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Throwable;
 
 class ReverseGeocodeTable extends Command
 {
-    use CanValidateInput;
+//    use CanValidateInput;
 
     protected $signature = 'filament-google-maps:reverse-geocode-table {model?} {--lat=} {--lng=} {--fields=*} {--processed=} {--rate-limit=} {--verbose?}}';
 

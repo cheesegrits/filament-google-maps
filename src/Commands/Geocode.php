@@ -3,12 +3,12 @@
 namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
 use Cheesegrits\FilamentGoogleMaps\Helpers\Geocoder;
-use Filament\Support\Commands\Concerns\CanValidateInput;
+//use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
 
 class Geocode extends Command
 {
-    use CanValidateInput;
+//    use CanValidateInput;
 
     protected $signature = 'filament-google-maps:geocode {--address=} {--A|array} {--C|command} {--G|args}';
 

@@ -2,27 +2,25 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
-use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\text;
 
 class ModelCode extends Command
 {
-    use CanValidateInput;
-
     protected $signature = 'filament-google-maps:model-code {model?} {--lat=} {--lng=} {--location=} {--T|terse}';
 
     protected $description = 'Produce computed attribute code for a model to work with Filament Google Maps';
 
     public function handle()
     {
-        $asking = false;
-
         $modelName = $this->argument('model');
 
         if (! $modelName) {
-            $asking    = true;
-            $modelName = $this->askRequired('Model (e.g. `Location` or `Maps/Dealership`)', 'model');
+            $modelName = text(
+                label: 'Model (e.g. `Location` or `Maps/Dealership`)', required: true
+            );
         }
 
         $modelName = (string) Str::of($modelName)
@@ -46,18 +44,17 @@ class ModelCode extends Command
         }
 
         $latField = $this->option('lat')
-            ?? $this->askRequired('Latitude table field name (e.g. `lat`)', 'lat');
+            ?? text(label: 'Longitude table field name (e.g. `lat`)', default: 'lat', required: true);
 
         $lngField = $this->option('lng')
-            ?? $this->askRequired('Longitude table field name (e.g. `lat`)', 'lng');
+            ?? text(label: 'Longitude table field name (e.g. `lng`)', default: 'lng', required: true);
 
         $locationField = $this->option('location')
-            ?? $this->askRequired('Computed location attribute name (e.g. `location`)', 'location');
+            ?? text(label: 'Computed location attribute name (e.g. `location`)', default: 'location', required: true);
 
-        if ($asking) {
-            $comments = $this->confirm('Include comments in the code?', true);
-        } else {
-            $comments = ! $this->option('terse');
+        $comments = confirm('Include comments in the code?', default: true, yes: 'Include them', no: 'Do not include them');
+        if(! $comments) {
+            $this->option('terse');
         }
 
         $guardedStr = '';
