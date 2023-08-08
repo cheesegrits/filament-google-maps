@@ -19,7 +19,7 @@ class LocationSynthesizer extends Synth
             [
                 'lat' => $target['lat'],
                 'lng' => $target['lng'],
-            ], []
+            ], [],
         ];
     }
 

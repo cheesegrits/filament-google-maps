@@ -21,8 +21,8 @@ class ModelCode extends Command
         if (! $modelName) {
             $asking    = true;
             $modelName = text(
-                label: 'Model (e.g. `Location` or `Maps/Dealership`)', 
-                placeholder: 'Location', 
+                label: 'Model (e.g. `Location` or `Maps/Dealership`)',
+                placeholder: 'Location',
                 required: true
             );
         }

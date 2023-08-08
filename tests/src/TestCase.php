@@ -5,7 +5,6 @@ namespace Cheesegrits\FilamentGoogleMaps\Tests;
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
 use Cheesegrits\FilamentGoogleMaps\FilamentGoogleMapsServiceProvider;
-use Cheesegrits\FilamentGoogleMaps\Synthesizers\LocationSynthesizer;
 use Cheesegrits\FilamentGoogleMaps\Tests\Columns\ColumnsServiceProvider;
 use Cheesegrits\FilamentGoogleMaps\Tests\Fields\FieldsServiceProvider;
 use Cheesegrits\FilamentGoogleMaps\Tests\Models\User;
@@ -20,7 +19,6 @@ use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
 use Geocoder\Laravel\Providers\GeocoderService;
-use Livewire\Livewire;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
@@ -44,8 +42,8 @@ class TestCase extends BaseTestCase
             InfolistsServiceProvider::class,
             LivewireServiceProvider::class,
             NotificationsServiceProvider::class,
-//            SpatieLaravelSettingsPluginServiceProvider::class,
-//            SpatieLaravelTranslatablePluginServiceProvider::class,
+            //            SpatieLaravelSettingsPluginServiceProvider::class,
+            //            SpatieLaravelTranslatablePluginServiceProvider::class,
             SupportServiceProvider::class,
             TablesServiceProvider::class,
             WidgetsServiceProvider::class,

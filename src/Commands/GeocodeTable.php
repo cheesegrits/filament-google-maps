@@ -5,8 +5,8 @@ namespace Cheesegrits\FilamentGoogleMaps\Commands;
 use Cheesegrits\FilamentGoogleMaps\Helpers\Geocoder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use Throwable;
 use function Laravel\Prompts\text;
+use Throwable;
 
 class GeocodeTable extends Command
 {
@@ -19,9 +19,9 @@ class GeocodeTable extends Command
         $verbose = $this->option('verbose');
 
         $prompted = false;
-        $verbose = $this->option('verbose');
+        $verbose  = $this->option('verbose');
 
-        $ogModelName = $modelName = (string)Str::of($this->argument('model')
+        $ogModelName = $modelName = (string) Str::of($this->argument('model')
             ?? text(label: 'Model (e.g. `Location` or `Maps/Dealership`)', placeholder: 'Location', required: true))
             ->studly()
             ->trim('/')
@@ -36,8 +36,8 @@ class GeocodeTable extends Command
         } catch (Throwable $e) {
             try {
                 /** @noinspection PhpUnusedLocalVariableInspection */
-                $model = new ('\\App\\Models\\' . $modelName)();
-                $modelName = '\\App\\Models\\' . $modelName;
+                $model     = new ('\\App\\Models\\'.$modelName)();
+                $modelName = '\\App\\Models\\'.$modelName;
             } catch (Throwable $e) {
                 echo "Can't find class $modelName or \\App\\Models\\$modelName\n";
 
@@ -57,12 +57,12 @@ class GeocodeTable extends Command
             );
         }
 
-        $rateLimit = (int)$this->option('rate-limit');
+        $rateLimit = (int) $this->option('rate-limit');
 
         while ($rateLimit > 300 || $rateLimit < 1) {
             $prompted = true;
 
-            $rateLimit = (int)text(
+            $rateLimit = (int) text(
                 label: 'Rate limit as API calls per minute (max 300)',
                 placeholder: '150',
                 default: config('filament-google-maps.rate-limit', 150),
@@ -114,8 +114,8 @@ class GeocodeTable extends Command
         [$records, $processed, $updated] = $geocoder->geocodeBatch($modelName, $lat, $lng, $fields, $processedField, null, $verbose);
 
         $this->info('Results');
-        $this->line('API Lookups: ' . $processed);
-        $this->line('Records Updated: ' . $updated);
+        $this->line('API Lookups: '.$processed);
+        $this->line('Records Updated: '.$updated);
 
         if ($prompted) {
             $summary = sprintf(

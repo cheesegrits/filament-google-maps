@@ -1,15 +1,12 @@
 <?php
 
-use Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources\GeocompleteResource;
 use Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources\GeocompleteResource\Pages\CreateGeocomplete;
 use Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources\GeocompleteResource\Pages\EditGeocomplete;
-use Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources\LocationResource;
 use Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources\LocationResource\Pages\CreateLocation;
 use Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources\LocationResource\Pages\EditLocation;
 use Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources\MapResource\Pages\EditMap;
 use Cheesegrits\FilamentGoogleMaps\Tests\Fields\TestCase;
 use Cheesegrits\FilamentGoogleMaps\Tests\Models\Location;
-use Filament\Facades\Filament;
 use function Pest\Livewire\livewire;
 
 uses(TestCase::class);

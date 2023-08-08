@@ -19,13 +19,13 @@ class MakeWidgetCommand extends Command
 
     public function handle(): int
     {
-        $path = config('filament.widgets.path', app_path('Filament/Widgets/'));
-        $resourcePath = config('filament.resources.path', app_path('Filament/Resources/'));
-        $namespace = config('filament.widgets.namespace', 'App\\Filament\\Widgets');
+        $path              = config('filament.widgets.path', app_path('Filament/Widgets/'));
+        $resourcePath      = config('filament.resources.path', app_path('Filament/Resources/'));
+        $namespace         = config('filament.widgets.namespace', 'App\\Filament\\Widgets');
         $resourceNamespace = config('filament.resources.namespace', 'App\\Filament\\Resources');
 
-        $type = false;
-        $typeMap = $this->option('map');
+        $type      = false;
+        $typeMap   = $this->option('map');
         $typeTable = $this->option('table');
 
         if ($typeMap) {
@@ -37,33 +37,33 @@ class MakeWidgetCommand extends Command
                 'Widget type (just a map, or map with integrated table',
                 ['Map', 'Map & Table'],
                 0,
-                $maxAttempts = null,
+                $maxAttempts             = null,
                 $allowMultipleSelections = false
             );
 
             $type = $type === 'Map' ? 'map' : 'table';
         }
 
-        $widget = (string)Str::of($this->argument('name') ??
+        $widget = (string) Str::of($this->argument('name') ??
             text(label: 'Name (e.g. `DealershipMap`)', placeholder: 'DealershipMap', required: true))
             ->trim('/')
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
 
-        $widgetClass = (string)Str::of($widget)->afterLast('\\');
+        $widgetClass = (string) Str::of($widget)->afterLast('\\');
 
         if (in_array($widgetClass, $this->widgetClasses)) {
-            $this->error("Sorry, you can't call your widget any of: " . implode(', ', $this->widgetClasses));
+            $this->error("Sorry, you can't call your widget any of: ".implode(', ', $this->widgetClasses));
 
             return static::INVALID;
         }
 
         $widgetNamespace = Str::of($widget)->contains('\\') ?
-            (string)Str::of($widget)->beforeLast('\\') :
+            (string) Str::of($widget)->beforeLast('\\') :
             '';
 
-        $ogModelName = $modelName = (string)Str::of($this->argument('model')
+        $ogModelName = $modelName = (string) Str::of($this->argument('model')
             ?? text(label: 'Model (e.g. `Location` or `Maps/Dealership`)', placeholder: 'Location', required: true))
             ->studly()
             ->trim('/')
@@ -74,8 +74,8 @@ class MakeWidgetCommand extends Command
 
         try {
             /** @noinspection PhpUnusedLocalVariableInspection */
-            $model = new ('\\App\\Models\\' . $modelName)();
-            $modelName = '\\App\\Models\\' . $modelName;
+            $model     = new ('\\App\\Models\\'.$modelName)();
+            $modelName = '\\App\\Models\\'.$modelName;
         } catch (\Throwable) {
             try {
                 $model = new $modelName;
@@ -97,37 +97,37 @@ class MakeWidgetCommand extends Command
             return static::INVALID;
         }
 
-        $resource = null;
+        $resource      = null;
         $resourceClass = null;
 
         $resourceInput = $this->option('resource') ?? text(label: '(Optional) Resource (e.g. `LocationResource`)', placeholder: 'LocationResource');
 
         if ($resourceInput !== null) {
-            $resource = (string)Str::of($resourceInput)
+            $resource = (string) Str::of($resourceInput)
                 ->studly()
                 ->trim('/')
                 ->trim('\\')
                 ->trim(' ')
                 ->replace('/', '\\');
 
-            if (!Str::of($resource)->endsWith('Resource')) {
+            if (! Str::of($resource)->endsWith('Resource')) {
                 $resource .= 'Resource';
             }
 
-            $resourceClass = (string)Str::of($resource)
+            $resourceClass = (string) Str::of($resource)
                 ->afterLast('\\');
         }
 
         $view = Str::of($widget)->prepend(
-            (string)Str::of($resource === null ? "{$namespace}\\" : "{$resourceNamespace}\\{$resource}\\widgets\\")
+            (string) Str::of($resource === null ? "{$namespace}\\" : "{$resourceNamespace}\\{$resource}\\widgets\\")
                 ->replace('App\\', '')
         )
             ->replace('\\', '/')
             ->explode('/')
-            ->map(fn($segment) => Str::lower(Str::kebab($segment)))
+            ->map(fn ($segment) => Str::lower(Str::kebab($segment)))
             ->implode('.');
 
-        $path = (string)Str::of($widget)
+        $path = (string) Str::of($widget)
             ->prepend('/')
             ->prepend($resource === null ? $path : "{$resourcePath}\\{$resource}\\Widgets\\")
             ->replace('\\', '/')
@@ -135,31 +135,31 @@ class MakeWidgetCommand extends Command
             ->append('.php');
 
         $viewPath = resource_path(
-            (string)Str::of($view)
+            (string) Str::of($view)
                 ->replace('.', '/')
                 ->prepend('views/')
                 ->append('.blade.php'),
         );
 
-        if (!$this->option('force') && $this->checkForCollision([$path, $viewPath])) {
+        if (! $this->option('force') && $this->checkForCollision([$path, $viewPath])) {
             return static::INVALID;
         }
 
         if ($type === 'table') {
             $this->copyStubToApp('MapTableWidget', $path, [
-                    'location'  => $locationField,
-                    'og-model'  => $ogModelName,
-                    'model'     => $modelName,
-                    'class'     => $widgetClass,
-                    'pk'        => $model->getKeyName(),
-                    'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets" . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
-                ] + $latLongFields);
+                'location'  => $locationField,
+                'og-model'  => $ogModelName,
+                'model'     => $modelName,
+                'class'     => $widgetClass,
+                'pk'        => $model->getKeyName(),
+                'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets".($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace.($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
+            ] + $latLongFields);
         } else {
             $this->copyStubToApp('MapWidget', $path, [
-                    'model'     => $modelName,
-                    'class'     => $widgetClass,
-                    'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets" . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
-                ] + $latLongFields);
+                'model'     => $modelName,
+                'class'     => $widgetClass,
+                'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets".($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace.($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
+            ] + $latLongFields);
         }
 
         if ($resource !== null) {
@@ -168,13 +168,13 @@ class MakeWidgetCommand extends Command
             $this->info("Make sure to register the widget both in `{$resourceClass}::getWidgets()`,");
             $this->info("and in either `getHeaderWidgets()` or `getFooterWidgets()` of any `{$resourceClass}` page.");
         } else {
-            $livewire = (string)Str::of($widget)->snake();
-            $widgetPath = (string)Str::of($resourceNamespace)->replace('\\', '/') . '/' . $widget . '.php';
+            $livewire   = (string) Str::of($widget)->snake();
+            $widgetPath = (string) Str::of($resourceNamespace)->replace('\\', '/').'/'.$widget.'.php';
             $this->info("Your widget has been created as: $widgetPath");
             $this->newLine();
             $this->info('If you want to use it on the front end, copy/move it to somewhere in your Livewire folder, say ...');
             $this->newLine();
-            $this->info('/Http/Livewire/Widgets/' . $widget . '.php');
+            $this->info('/Http/Livewire/Widgets/'.$widget.'.php');
             $this->newLine();
             $this->info('... and then invoke it from a front end Blade template like ...');
             $this->newLine();
