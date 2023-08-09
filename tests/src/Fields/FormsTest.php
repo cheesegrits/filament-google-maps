@@ -15,20 +15,23 @@ use function Pest\Livewire\livewire;
 uses(TestCase::class);
 
 it('can create geocomplete field as computed location attribute', function () {
-    $location = Location::factory()->create();
+    $location = Location::factory()->make();
 
     livewire(CreateLocation::class)
         ->fillForm([
-            'location' => [
+            'street'   => $location->street,
+            'city'     => $location->city,
+            'state'    => $location->state,
+            'zip'      => $location->zip,
+            'location' => '',
+        ])
+        ->set(
+            'data.location',
+            [
                 'lat' => $location->lat,
                 'lng' => $location->lng,
             ],
-            'street'            => $location->street,
-            'city'              => $location->city,
-            'state'             => $location->state,
-            'zip'               => $location->zip,
-            'formatted_address' => $location->formatted_address,
-        ])
+        )
         ->call('create')
         ->assertHasNoFormErrors();
 
@@ -110,7 +113,7 @@ it('can edit map field as computed location attribute', function () {
 });
 
 it('can save map field as computed location attribute', function () {
-    $location    = Location::factory()->create();
+    $location = Location::factory()->create();
     $newLocation = Location::factory()->make();
 
     livewire(EditMap::class, [

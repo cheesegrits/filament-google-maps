@@ -5,14 +5,10 @@ namespace Cheesegrits\FilamentGoogleMaps\Tests;
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
 use Cheesegrits\FilamentGoogleMaps\FilamentGoogleMapsServiceProvider;
-use Cheesegrits\FilamentGoogleMaps\Synthesizers\LocationSynthesizer;
 use Cheesegrits\FilamentGoogleMaps\Tests\Columns\ColumnsServiceProvider;
-use Cheesegrits\FilamentGoogleMaps\Tests\Fields\FieldsServiceProvider;
 use Cheesegrits\FilamentGoogleMaps\Tests\Models\User;
 use Filament\Actions\ActionsServiceProvider;
 use Filament\FilamentServiceProvider;
-//use Filament\SpatieLaravelSettingsPluginServiceProvider;
-//use Filament\SpatieLaravelTranslatablePluginServiceProvider;
 use Filament\Forms\FormsServiceProvider;
 use Filament\Infolists\InfolistsServiceProvider;
 use Filament\Notifications\NotificationsServiceProvider;
@@ -33,7 +29,6 @@ class TestCase extends BaseTestCase
             FilamentGoogleMapsServiceProvider::class,
             ColumnsServiceProvider::class,
             GeocoderService::class,
-            FieldsServiceProvider::class,
 
             ActionsServiceProvider::class,
             BladeCaptureDirectiveServiceProvider::class,
@@ -44,8 +39,6 @@ class TestCase extends BaseTestCase
             InfolistsServiceProvider::class,
             LivewireServiceProvider::class,
             NotificationsServiceProvider::class,
-//            SpatieLaravelSettingsPluginServiceProvider::class,
-//            SpatieLaravelTranslatablePluginServiceProvider::class,
             SupportServiceProvider::class,
             TablesServiceProvider::class,
             WidgetsServiceProvider::class,
@@ -63,12 +56,13 @@ class TestCase extends BaseTestCase
         $app['config']->set('auth.providers.users.model', User::class);
         $app['config']->set('view.paths', array_merge(
             $app['config']->get('view.paths'),
-            [__DIR__.'/../resources/views']
+            [__DIR__.'/../resources/views'],
+            [__DIR__.'/../../vendor/filament/filament/resources/views']
         ));
         $app['config']->set('realaddress.countries.united-states-of-america', [
             'cities' => ['New York, NY', 'Los Angeles, CA', 'San Francisco, CA', 'Dallas, TX', 'Chicago, IL', 'Houston, TX', 'Phoenix, AZ', 'San Diego, CA'],
         ]);
         $app['config']->set('realaddress.rate-limiter', 100);
-        $app['config']->set('livewire.legacy_model_binding', true);
+//        $app['config']->set('livewire.legacy_model_binding', true);
     }
 }

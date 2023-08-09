@@ -2,13 +2,11 @@
 
 namespace Cheesegrits\FilamentGoogleMaps;
 
-use Cheesegrits\FilamentGoogleMaps\Synthesizers\LocationSynthesizer;
 use Cheesegrits\FilamentGoogleMaps\Widgets\MapTableWidget;
 use Cheesegrits\FilamentGoogleMaps\Widgets\MapWidget;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\AssetManager;
 use Filament\Support\Facades\FilamentAsset;
-use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -60,8 +58,6 @@ class FilamentGoogleMapsServiceProvider extends PackageServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/filament-google-maps.php', 'filament-google-maps');
         $this->app->resolving(AssetManager::class, function () {
-//            Livewire::propertySynthesizer(LocationSynthesizer::class);
-            
             FilamentAsset::register([
                 AlpineComponent::make('filament-google-maps-geocomplete', __DIR__ . '/../dist/cheesegrits/filament-google-maps/filament-google-geocomplete.js'),
                 AlpineComponent::make('filament-google-maps-field', __DIR__ . '/../dist/cheesegrits/filament-google-maps/filament-google-maps.js'),
