@@ -90,6 +90,11 @@ class Location extends Model
         ];
     }
 
+    public static function getComputedLocation(): string
+    {
+        return 'location';
+    }
+
     protected static function newFactory()
     {
         return LocationFactory::new();

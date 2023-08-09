@@ -102,7 +102,7 @@ class MakeWidgetCommand extends Command
 
         $resourceInput = $this->option('resource') ?? text(label: '(Optional) Resource (e.g. `LocationResource`)', placeholder: 'LocationResource');
 
-        if ($resourceInput !== null) {
+        if (filled($resourceInput)) {
             $resource = (string) Str::of($resourceInput)
                 ->studly()
                 ->trim('/')
