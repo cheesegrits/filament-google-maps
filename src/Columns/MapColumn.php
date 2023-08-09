@@ -164,7 +164,7 @@ class MapColumn extends Column
         $icon = $this->getIcon();
 
         if ($icon) {
-            $marker = 'icon:'.$icon.'|'.$marker;
+            $marker = 'icon:' . $icon . '|' . $marker;
         }
 
         return $marker;
@@ -221,7 +221,7 @@ class MapColumn extends Column
         $src = $url->make();
 
         if ($language = MapsHelper::mapsLanguage(true)) {
-            $src .= '&language='.$language;
+            $src .= '&language=' . $language;
         }
 
         return $src;
@@ -229,7 +229,7 @@ class MapColumn extends Column
 
     public static function cacheImage($url): ?string
     {
-        $cacheKey = 'fgm-'.md5($url);
+        $cacheKey = 'fgm-' . md5($url);
 
         if (! Cache::has($cacheKey)) {
             $map = file_get_contents($url);
@@ -261,7 +261,7 @@ class MapColumn extends Column
             return null;
         }
 
-        return url('/cheesegrits/filament-google-maps/'.$cacheKey.'.png');
+        return url('/cheesegrits/filament-google-maps/' . $cacheKey . '.png');
     }
 
     public function getState(): mixed

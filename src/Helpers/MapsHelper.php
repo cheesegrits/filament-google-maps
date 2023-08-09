@@ -69,23 +69,23 @@ class MapsHelper
             )
         ));
 
-        $gmaps = (Request::getScheme() ?? 'https').'://maps.googleapis.com/maps/api/js'
-            .'?key='.self::mapsKey($server)
-            .'&libraries='.$libraries
-            .'&v=weekly';
+        $gmaps = (Request::getScheme() ?? 'https') . '://maps.googleapis.com/maps/api/js'
+            . '?key=' . self::mapsKey($server)
+            . '&libraries=' . $libraries
+            . '&v=weekly';
 
         /**
          * https://developers.google.com/maps/faq#languagesupport
          */
         if ($language = self::mapsLanguage($server)) {
-            $gmaps .= '&language='.$language;
+            $gmaps .= '&language=' . $language;
         }
 
         /**
          * https://developers.google.com/maps/coverage
          */
         if ($region = self::mapsRegion()) {
-            $gmaps .= '&region='.$region;
+            $gmaps .= '&region=' . $region;
         }
 
         return $gmaps;

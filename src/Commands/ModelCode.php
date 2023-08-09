@@ -36,7 +36,7 @@ class ModelCode extends Command
             ->replace('/', '\\');
 
         try {
-            $model = new ('\\App\\Models\\'.$modelName)();
+            $model = new ('\\App\\Models\\' . $modelName)();
         } catch (\Throwable) {
             try {
                 $model = new $modelName;

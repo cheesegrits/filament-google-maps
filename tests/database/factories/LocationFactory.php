@@ -37,7 +37,7 @@ class LocationFactory extends Factory
         return $this->state([
             'lat'               => $address->getCoordinates()->getLatitude(),
             'lng'               => $address->getCoordinates()->getLongitude(),
-            'street'            => $address->getStreetNumber().' '.$address->getStreetName(),
+            'street'            => $address->getStreetNumber() . ' ' . $address->getStreetName(),
             'city'              => $address->getLocality(),
             'state'             => $address->getAdminLevels()->get(1)->getName(),
             'zip'               => $address->getPostalCode(),
@@ -71,7 +71,7 @@ class LocationFactory extends Factory
         return $this->state([
             'lat'               => null,
             'lng'               => null,
-            'street'            => $address->getStreetNumber().' '.$address->getStreetName(),
+            'street'            => $address->getStreetNumber() . ' ' . $address->getStreetName(),
             'city'              => $address->getLocality(),
             'state'             => $address->getAdminLevels()->get(1)->getName(),
             'zip'               => $address->getPostalCode(),

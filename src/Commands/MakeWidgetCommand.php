@@ -54,7 +54,7 @@ class MakeWidgetCommand extends Command
         $widgetClass = (string) Str::of($widget)->afterLast('\\');
 
         if (in_array($widgetClass, $this->widgetClasses)) {
-            $this->error("Sorry, you can't call your widget any of: ".implode(', ', $this->widgetClasses));
+            $this->error("Sorry, you can't call your widget any of: " . implode(', ', $this->widgetClasses));
 
             return static::INVALID;
         }
@@ -74,8 +74,8 @@ class MakeWidgetCommand extends Command
 
         try {
             /** @noinspection PhpUnusedLocalVariableInspection */
-            $model     = new ('\\App\\Models\\'.$modelName)();
-            $modelName = '\\App\\Models\\'.$modelName;
+            $model     = new ('\\App\\Models\\' . $modelName)();
+            $modelName = '\\App\\Models\\' . $modelName;
         } catch (\Throwable) {
             try {
                 $model = new $modelName;
@@ -152,13 +152,13 @@ class MakeWidgetCommand extends Command
                 'model'     => $modelName,
                 'class'     => $widgetClass,
                 'pk'        => $model->getKeyName(),
-                'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets".($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace.($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
+                'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets" . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
             ] + $latLongFields);
         } else {
             $this->copyStubToApp('MapWidget', $path, [
                 'model'     => $modelName,
                 'class'     => $widgetClass,
-                'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets".($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace.($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
+                'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets" . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
             ] + $latLongFields);
         }
 
@@ -169,12 +169,12 @@ class MakeWidgetCommand extends Command
             $this->info("and in either `getHeaderWidgets()` or `getFooterWidgets()` of any `{$resourceClass}` page.");
         } else {
             $livewire   = (string) Str::of($widget)->snake();
-            $widgetPath = (string) Str::of($resourceNamespace)->replace('\\', '/').'/'.$widget.'.php';
+            $widgetPath = (string) Str::of($resourceNamespace)->replace('\\', '/') . '/' . $widget . '.php';
             $this->info("Your widget has been created as: $widgetPath");
             $this->newLine();
             $this->info('If you want to use it on the front end, copy/move it to somewhere in your Livewire folder, say ...');
             $this->newLine();
-            $this->info('/Http/Livewire/Widgets/'.$widget.'.php');
+            $this->info('/Http/Livewire/Widgets/' . $widget . '.php');
             $this->newLine();
             $this->info('... and then invoke it from a front end Blade template like ...');
             $this->newLine();

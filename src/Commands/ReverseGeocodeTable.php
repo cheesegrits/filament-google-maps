@@ -34,8 +34,8 @@ class ReverseGeocodeTable extends Command
         } catch (Throwable $e) {
             try {
                 /** @noinspection PhpUnusedLocalVariableInspection */
-                $model     = new ('\\App\\Models\\'.$modelName)();
-                $modelName = '\\App\\Models\\'.$modelName;
+                $model     = new ('\\App\\Models\\' . $modelName)();
+                $modelName = '\\App\\Models\\' . $modelName;
             } catch (Throwable $e) {
                 echo "Can't find class $modelName or \\App\\Models\\$modelName\n";
 
@@ -159,14 +159,14 @@ class ReverseGeocodeTable extends Command
         [$records, $processed, $updated] = $geocoder->reverseBatch($modelName, $lat, $lng, $fields, $processedField, null, $verbose);
 
         $this->info('Results');
-        $this->line('API Lookups: '.$processed);
-        $this->line('Records Updated: '.$updated);
+        $this->line('API Lookups: ' . $processed);
+        $this->line('Records Updated: ' . $updated);
 
         if ($prompted) {
             $summary = sprintf(
                 'php artisan filament-google-maps:reverse-geocode %s %s --lat=%s --lng=%s --processed=%s',
                 $ogModelName,
-                implode(' ', array_map(fn ($field) => '--fields="'.$field.'"', $fields)),
+                implode(' ', array_map(fn ($field) => '--fields="' . $field . '"', $fields)),
                 $lat,
                 $lng,
                 $processedField ? $processedField : 'no-processed-field',

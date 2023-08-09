@@ -396,10 +396,10 @@ class Geocoder
                 );
         } catch (InvalidServerResponse $e) {
             Log::channel(config('filament-google-maps.log.channel', 'null'))
-                ->error('Error in Maps API call: '.$e->getMessage());
+                ->error('Error in Maps API call: ' . $e->getMessage());
 
             if (App::runningInConsole()) {
-                echo 'Error from Maps API: '.$e->getMessage();
+                echo 'Error from Maps API: ' . $e->getMessage();
 
                 exit;
             }

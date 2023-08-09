@@ -36,8 +36,8 @@ class GeocodeTable extends Command
         } catch (Throwable $e) {
             try {
                 /** @noinspection PhpUnusedLocalVariableInspection */
-                $model     = new ('\\App\\Models\\'.$modelName)();
-                $modelName = '\\App\\Models\\'.$modelName;
+                $model     = new ('\\App\\Models\\' . $modelName)();
+                $modelName = '\\App\\Models\\' . $modelName;
             } catch (Throwable $e) {
                 echo "Can't find class $modelName or \\App\\Models\\$modelName\n";
 
@@ -114,8 +114,8 @@ class GeocodeTable extends Command
         [$records, $processed, $updated] = $geocoder->geocodeBatch($modelName, $lat, $lng, $fields, $processedField, null, $verbose);
 
         $this->info('Results');
-        $this->line('API Lookups: '.$processed);
-        $this->line('Records Updated: '.$updated);
+        $this->line('API Lookups: ' . $processed);
+        $this->line('Records Updated: ' . $updated);
 
         if ($prompted) {
             $summary = sprintf(

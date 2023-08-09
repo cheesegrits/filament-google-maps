@@ -101,7 +101,7 @@ class StaticMapAction extends BulkAction
                 $src = $url->make();
 
                 if ($language = MapsHelper::mapsLanguage(true)) {
-                    $src .= '&language='.$language;
+                    $src .= '&language=' . $language;
                 }
 
                 $cacheKey = MapColumn::cacheImage($src);
@@ -117,7 +117,7 @@ class StaticMapAction extends BulkAction
                 //					]
                 //				);
 
-                return redirect()->to('/cheesegrits/filament-google-maps/'.$cacheKey.'.png');
+                return redirect()->to('/cheesegrits/filament-google-maps/' . $cacheKey . '.png');
             });
 
             $this->success();

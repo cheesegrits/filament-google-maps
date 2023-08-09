@@ -70,7 +70,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
         $name = $this->evaluate($this->filterName);
 
         if ($name) {
-            return 'tableFilters.'.$name;
+            return 'tableFilters.' . $name;
         }
 
         return null;
@@ -360,7 +360,7 @@ class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\
             return Action::make('geolocate')
                 ->iconButton()
                 ->icon($this->getGeolocateIcon())
-                ->extraAttributes(['id' => $this->getId().'-geolocate']);
+                ->extraAttributes(['id' => $this->getId() . '-geolocate']);
         }
 
         return null;

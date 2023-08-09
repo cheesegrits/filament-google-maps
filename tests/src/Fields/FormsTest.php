@@ -110,7 +110,7 @@ it('can edit map field as computed location attribute', function () {
 });
 
 it('can save map field as computed location attribute', function () {
-    $location = Location::factory()->create();
+    $location    = Location::factory()->create();
     $newLocation = Location::factory()->make();
 
     livewire(EditMap::class, [
