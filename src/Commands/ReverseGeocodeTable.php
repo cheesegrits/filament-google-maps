@@ -5,9 +5,8 @@ namespace Cheesegrits\FilamentGoogleMaps\Commands;
 use Cheesegrits\FilamentGoogleMaps\Helpers\Geocoder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use Throwable;
 use function Laravel\Prompts\text;
-
+use Throwable;
 
 class ReverseGeocodeTable extends Command
 {
@@ -48,8 +47,8 @@ class ReverseGeocodeTable extends Command
 
         while ($rateLimit > 300 || $rateLimit < 1) {
             $prompted = true;
-            
-            $rateLimit = (int)text(
+
+            $rateLimit = (int) text(
                 label: 'Rate limit as API calls per minute (max 300)',
                 placeholder: '150',
                 default: config('filament-google-maps.rate-limit', 150),

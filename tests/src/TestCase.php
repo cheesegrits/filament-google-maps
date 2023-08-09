@@ -56,8 +56,7 @@ class TestCase extends BaseTestCase
         $app['config']->set('auth.providers.users.model', User::class);
         $app['config']->set('view.paths', array_merge(
             $app['config']->get('view.paths'),
-            [__DIR__.'/../resources/views'],
-            [__DIR__.'/../../vendor/filament/filament/resources/views']
+            [__DIR__.'/../resources/views']
         ));
         $app['config']->set('realaddress.countries.united-states-of-america', [
             'cities' => ['New York, NY', 'Los Angeles, CA', 'San Francisco, CA', 'Dallas, TX', 'Chicago, IL', 'Houston, TX', 'Phoenix, AZ', 'San Diego, CA'],

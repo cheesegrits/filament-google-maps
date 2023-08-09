@@ -4,7 +4,6 @@ namespace Cheesegrits\FilamentGoogleMaps\Tests\Fields;
 
 use Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources\LocationResource;
 use Filament\FilamentServiceProvider;
-use Livewire\Livewire;
 
 //use Filament\Tests\Admin\Fixtures\Resources\UserResource;
 
