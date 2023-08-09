@@ -10,7 +10,7 @@ class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->beforeApplicationDestroyed(function () {
             File::cleanDirectory(app_path());
         });

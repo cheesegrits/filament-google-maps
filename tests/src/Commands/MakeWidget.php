@@ -6,7 +6,7 @@ uses(TestCase::class);
 
 it('makes a widget with the artisan make-widget command', function () {
     expect(app_path('Filament/Widgets/') . 'LocationMap.php')->not->toBeFile();
-    
+
     $this->artisan('make:filament-google-maps-widget')
         ->expectsQuestion(
             'Widget type (just a map, or map with integrated table',
