@@ -5,6 +5,7 @@ namespace Cheesegrits\FilamentGoogleMaps\Commands;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
 class MakeWidgetCommand extends Command
@@ -33,15 +34,14 @@ class MakeWidgetCommand extends Command
         } elseif ($typeTable) {
             $type = 'table';
         } else {
-            $type = $this->choice(
-                'Widget type (just a map, or map with integrated table',
-                ['Map', 'Map & Table'],
-                0,
-                $maxAttempts             = null,
-                $allowMultipleSelections = false
+            $type = select(
+                label: 'Widget type (just a map, or map with integrated table',
+                options: [
+                    'map'   => 'Map',
+                    'table' => 'Map & Table',
+                ],
+                default: 'map'
             );
-
-            $type = $type === 'Map' ? 'map' : 'table';
         }
 
         $widget = (string) Str::of($this->argument('name') ??

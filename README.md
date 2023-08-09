@@ -11,10 +11,13 @@ either as part of an admin panel, or in standalone front end forms, tables and d
 
 ## About The Project
 
-### First release
+### Filament v3 release
 
-v1.0.0 has been released, so there will be no more breaking changes.  I'm sure there will be bugs, though. Please report
-any you find either on the [GitHub Issues](https://github.com/cheesegrits/filament-google-maps/issues) page,
+This is the v3 branch, compatible with the recent Filament v3 release.  At some point soon we will replace
+the main branch (currently the Filament v2 compatible branch) with this v3 branch, and move Filament v2 support to
+a v2 branch.
+
+Please report any you find either on the [GitHub Issues](https://github.com/cheesegrits/filament-google-maps/issues) page,
 or find me (@cheesegrits) on the [Filament Discord server](https://filamentphp.com/discord).
 
 ### API Usage
@@ -31,7 +34,7 @@ We are not liable if you get a surprise bill!
 If you just can't handle reading documentation and want to dive right in ...
 
 ```sh
-composer require cheesegrits/filament-google-maps
+composer require cheesegrits/filament-google-maps "^3.0"
 ```
 
 ... then follow these instructions to add a computed attribute to any  model(s) that will use these components (which
@@ -530,13 +533,19 @@ In a standalone form context, this would be on your own component.
 
 If the built-in reverse geocode symbol mapping doesn't do what you need, you can provide a closure which will get
 called via Livewire whenever a reverse geocode occurs on the Map.  You will be passed an array with the geocode
-results, and can then process those how you want, and use a $set callable to set fields on your form accordingly: 
+results, and can then process those how you want, and use a $set callable to set fields on your form accordingly.
+
+NOTE that reverseGeocodeUsing() can be used in combination with reverseGeocode(), so you can fill some fields
+with the simpler reverseGeocode() method, and others with reverseGeocodeUsing().  This is useful if, for example,
+you have counties and/or states tables and use those with Select fields with relationships, so need to handle
+counties / states differently (by looking up the corresponding address components in your tables and setting your
+form fields to the appropriate keys).
 
 ```php
 Map::make('location')
     ->reverseGeocodeUsing(function (callable $set, array $results) {
         // get whatever you need from $results, and $set your field(s)
-        $set('city', 'foo bar');
+        $set('street', $results['address_components'][1]['long_name'])
     })
 ```
 
