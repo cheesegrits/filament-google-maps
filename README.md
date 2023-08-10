@@ -515,8 +515,8 @@ If you wish to update your lat and lng fields on the form when the map marker is
 #### Reverse Geocode & Place Changed Callbacks
 
 To use the features in this section, you must add the InteractsWithMaps trait to your Livewire component.  If you
-are using it in a Filament app context ("admin panel"), this will typically be on the EditFoo page of your
-resource:
+are using it in a Filament panel, this will typically be on the EditFoo page of your resource (or ManageFoo for a
+simple resource):
 
 ```php
 //
