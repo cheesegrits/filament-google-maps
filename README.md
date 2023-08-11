@@ -696,7 +696,9 @@ RadiusFilter::make('radius')
 ```
 
 When using Radius filtering, there is also a RadiusAction you can use, which allows you to click a button on a row
-in the table to set the address being used for the current Radius Filter ...
+in the table to set the address being used for the current Radius Filter.
+
+NOTE - you must name the RadiusAction the same as your RadiusFilter.  The default is 'radius'.
 
 ```php
 use Cheesegrits\FilamentGoogleMaps\Actions\RadiusAction;

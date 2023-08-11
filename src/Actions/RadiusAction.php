@@ -57,11 +57,11 @@ class RadiusAction extends Action
 
                 $form                                 = $livewire->getTableFiltersForm();
                 $state                                = $form->getState();
-                $state[$locationField]['geocomplete'] = $address;
+                $state[$this->getName()]['geocomplete'] = $address;
                 $form->fill($state);
 
-                $livewire->tableFilters[$record->getComputedLocation()]['latitude']  = $record->{$latLngFields['lat']};
-                $livewire->tableFilters[$record->getComputedLocation()]['longitude'] = $record->{$latLngFields['lng']};
+                $livewire->tableFilters[$this->getName()]['latitude']  = $record->{$latLngFields['lat']};
+                $livewire->tableFilters[$this->getName()]['longitude'] = $record->{$latLngFields['lng']};
             });
 
             $this->success();

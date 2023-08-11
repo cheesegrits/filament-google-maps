@@ -135,7 +135,7 @@ class Geocoder
         return '';
     }
 
-    public function reverseQuery(array $latLng): Collection
+    public function reverseQuery(array $latLng): ?Collection
     {
         $query = ReverseQuery::fromCoordinates($latLng['lat'], $latLng['lng']);
 
