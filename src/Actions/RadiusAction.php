@@ -55,8 +55,8 @@ class RadiusAction extends Action
                 $lat           = $record->{$latLngFields['lat']};
                 $lng           = $record->{$latLngFields['lng']};
 
-                $form                                 = $livewire->getTableFiltersForm();
-                $state                                = $form->getState();
+                $form                                   = $livewire->getTableFiltersForm();
+                $state                                  = $form->getState();
                 $state[$this->getName()]['geocomplete'] = $address;
                 $form->fill($state);
 
