@@ -125,7 +125,7 @@ class Map extends Field
         'rotateControl'     => true,
         'fullscreenControl' => true,
         'searchBoxControl'  => false,
-        'zoomControl'       => false,
+        'zoomControl'       => true,
     ];
 
     public function height(Closure|string $height): static
@@ -769,7 +769,7 @@ class Map extends Field
             'clickable'              => $this->getClickable(),
             'defaultLocation'        => $this->getDefaultLocation(),
             'statePath'              => $this->getStatePath(),
-            'controls'               => $this->getMapControls(),
+            'controls'               => $this->getMapControls(false),
             'drawingControl'         => $this->getDrawingControl(),
             'drawingControlPosition' => $this->getDrawingControlPosition(),
             'drawingModes'           => $this->getDrawingModes(),

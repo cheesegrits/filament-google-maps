@@ -56,7 +56,7 @@ class WidgetMap extends Field
         'rotateControl'     => true,
         'fullscreenControl' => true,
         'searchBoxControl'  => false,
-        'zoomControl'       => false,
+        'zoomControl'       => true,
     ];
 
     public function getHeading(): string
@@ -178,11 +178,11 @@ class WidgetMap extends Field
     /**
      * @throws JsonException
      */
-    public function getMapControls(): string
+    public function getMapControls($encode = true): string|array
     {
         $controls = $this->evaluate($this->mapControls);
 
-        return json_encode(array_merge($this->controls, $controls), JSON_THROW_ON_ERROR);
+        return $encode ? json_encode(array_merge($this->controls, $controls), JSON_THROW_ON_ERROR) : array_merge($this->controls, $controls);
     }
 
     public function layers(Closure|array $layers): static
@@ -257,7 +257,7 @@ class WidgetMap extends Field
                 'clustering' => self::getClustering(),
                 'layers'     => $this->getLayers(),
                 'zoom'       => $this->getZoom(),
-                'controls'   => $this->getMapControls(),
+                'controls'   => $this->getMapControls(false),
                 //				'center'     => $this->getCenter(),
                 'fit'   => $this->getFitToBounds(),
                 'gmaps' => MapsHelper::mapsUrl(),
