@@ -2,7 +2,7 @@
     $isLocation            = $getIsLocation();
     $datalistOptions       = [];
     $extraAlpineAttributes = $getExtraAlpineAttributes();
-    $id                    = $getIsLocation() ? $getId().'-fgm-address' : $getId();
+    $id                    = $getIsLocation() ? $getId() . '-fgm-address' : $getId();
     $isConcealed           = $isConcealed();
     $isDisabled            = $isDisabled();
     $isPrefixInline        = $isPrefixInline();
@@ -100,27 +100,28 @@
                     \Filament\Support\prepare_inherited_attributes($getExtraInputAttributeBag())
                         ->merge($extraAlpineAttributes, escape: false)
                         ->merge([
-                            'autocapitalize'                                                      => $getAutocapitalize(),
-                            'autocomplete'                                                        => $getAutocomplete(),
-                            'autofocus'                                                           => $isAutofocused(),
-                            'disabled'                                                            => $isDisabled,
-                            'id'                                                                  => $id,
-                            'inlinePrefix'                                                        => $isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel)),
-                            'inlineSuffix'                                                        => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),
-                            'inputmode'                                                           => $getInputMode(),
-                            'list'                                                                => $datalistOptions ? $id.'-list' : null,
-                            'max'                                                                 => null,
-                            'maxlength'                                                           => null,
-                            'min'                                                                 => null,
-                            'minlength'                                                           => null,
-                            'placeholder'                                                         => $getPlaceholder(),
-                            'readonly'                                                            => $isReadOnly(),
-                            'required'                                                            => $isRequired() && (! $isConcealed),
-                            'step'                                                                => null,
-                            'type'                                                                => 'text',
-                            $applyStateBindingModifiers('wire:model')                             => (! $isLocation) ? $statePath : null,
-                            'x-data'                                                              => (count($extraAlpineAttributes) || filled($mask)) ? '{}' : null,
-                            'x-mask'.($mask instanceof \Filament\Support\RawJs ? ':dynamic' : '') => filled($mask) ? $mask : null,
+                            'autocapitalize'                                                        => $getAutocapitalize(),
+                            'autocomplete'                                                          => $getAutocomplete(),
+                            'autofocus'                                                             => $isAutofocused(),
+                            'disabled'                                                              => $isDisabled,
+                            'id'                                                                    => $id,
+                            'inlinePrefix'                                                          => $isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel)),
+                            'inlineSuffix'                                                          => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),
+                            'inputmode'                                                             => $getInputMode(),
+                            'list'                                                                  => $datalistOptions ? $id . '-list' : null,
+                            'max'                                                                   => null,
+                            'maxlength'                                                             => null,
+                            'min'                                                                   => null,
+                            'minlength'                                                             => null,
+                            'placeholder'                                                           => $getPlaceholder(),
+                            'readonly'                                                              => $isReadOnly(),
+                            'required'                                                              => $isRequired() && (! $isConcealed),
+                            'step'                                                                  => null,
+                            'type'                                                                  => 'text',
+                            $applyStateBindingModifiers('wire:model')                               => (! $isLocation) ? $statePath : null,
+                            'x-data'                                                                => (count($extraAlpineAttributes) || filled($mask)) ? '{}' : null,
+                            'x-mask' . ($mask instanceof \Filament\Support\RawJs ? ':dynamic' : '') => filled($mask) ? $mask : null,
+                            'value'                                                                 => $isLocation ? $getState() : null,
                         ], escape: false)
                 "
             />
