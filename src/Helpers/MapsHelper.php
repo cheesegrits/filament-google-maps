@@ -69,7 +69,7 @@ class MapsHelper
             )
         ));
 
-        $gmaps = (Request::getScheme() ?? 'https') . '://maps.googleapis.com/maps/api/js'
+        $gmaps = (config('filament-google-maps.force-https') ? 'https' : Request::getScheme() ?? 'https') . '://maps.googleapis.com/maps/api/js'
             . '?key=' . self::mapsKey($server)
             . '&libraries=' . $libraries
             . '&v=weekly';

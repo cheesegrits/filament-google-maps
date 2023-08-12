@@ -74,4 +74,11 @@ return [
         'duration' => env('FILAMENT_GOOGLE_MAPS_CACHE_DURATION_SECONDS', 60 * 60 * 24 * 30),
         'store'    => env('FILAMENT_GOOGLE_MAPS_CACHE_STORE', null),
     ],
+
+    /*
+    | Force https for Google API calls, rather than matching the schema of the current request,
+    | may be needed if your app is behind a reverse proxy.
+    */
+
+    'force-https' => env('FILAMENT_GOOGLE_MAPS_FORCE_HTTPS', false),
 ];
