@@ -682,7 +682,7 @@ class Map extends Field
 
     public function getMapsUrl(): string
     {
-        return MapsHelper::mapsUrl();
+        return MapsHelper::mapsUrl(false, $this->getDrawingControl() ? ['drawing'] : []);
     }
 
     /**
