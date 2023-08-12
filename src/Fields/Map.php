@@ -722,7 +722,7 @@ class Map extends Field
      * You may provide a closure which is called with the response from the Google Places service when an
      * address is chosen from an autocomplete menu, or a Place pin is clicked on the map, which will include
      * the place photos.
-     * 
+     *
      * @return $this
      */
     public function placeUpdatedUsing(?Closure $closure): static
