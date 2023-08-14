@@ -4,8 +4,8 @@ namespace Cheesegrits\FilamentGoogleMaps;
 
 use Cheesegrits\FilamentGoogleMaps\Widgets\MapTableWidget;
 use Cheesegrits\FilamentGoogleMaps\Widgets\MapWidget;
-use Filament\Contracts\Plugin;
 use Spatie\LaravelPackageTools\Package;
+use Filament\Contracts\Plugin;
 
 class FilamentGoogleMapsServiceProvider extends Plugin
 {
