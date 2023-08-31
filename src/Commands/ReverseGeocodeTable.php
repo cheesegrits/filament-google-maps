@@ -5,8 +5,9 @@ namespace Cheesegrits\FilamentGoogleMaps\Commands;
 use Cheesegrits\FilamentGoogleMaps\Helpers\Geocoder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use function Laravel\Prompts\text;
 use Throwable;
+
+use function Laravel\Prompts\text;
 
 class ReverseGeocodeTable extends Command
 {

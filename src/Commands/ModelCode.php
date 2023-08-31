@@ -4,6 +4,7 @@ namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+
 use function Laravel\Prompts\text;
 
 class ModelCode extends Command
