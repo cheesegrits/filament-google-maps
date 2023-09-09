@@ -868,6 +868,59 @@ provide an icon (svg or png) ...
                 ]; 
 ```
 
+To add a clickable popup action to your markers, for example to display an Infolist with record details, you can add
+a markerAction() method, which can use the 'model_id' from $arguments in the actions's record() method to locate the
+record for the clicked marker, for example:
+
+```php
+use Filament\Actions\Action;
+
+	public function markerAction(): Action
+	{
+		return Action::make('markerAction')
+			->label('Details')
+			->infolist([
+				Card::make([
+					TextEntry::make('name'),
+					TextEntry::make('street'),
+					TextEntry::make('city'),
+					TextEntry::make('state'),
+					TextEntry::make('zip'),
+					TextEntry::make('formatted_address'),
+				])
+				->columns(3)
+			])
+			->record(function (array $arguments) {
+				return Location::find($arguments['model_id']);
+			})
+			->modalFooterActions([]);
+	}
+```
+
+You can add options to the map config (the 'opts' object passed to the Google map creation in Javascript) by overriding
+the getConfig() method, and adding a ['mapConfig'] entry to the $config.  Anything you add to this will be passed
+verbatim to the map creation.  For example, to hide POI (points of interest) markers:
+
+```php
+    public function getConfig(): array
+    {
+        $config = parent::getConfig();
+
+        // Disable points of interest
+        $config['mapConfig']['styles'] = [
+            [
+                'featureType' => 'poi',
+                'elementType' => 'labels',
+                'stylers' => [
+                    ['visibility' => 'off'],
+                ],
+            ],
+        ];
+
+        return $config;
+    }
+```
+
 See the parent component code for further methods and variables you can override.
 
 ### Map Table Widget

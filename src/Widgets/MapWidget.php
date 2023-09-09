@@ -63,6 +63,7 @@ class MapWidget extends Widgets\Widget implements HasForms, HasActions
         'fit'        => true,
         'gmaps'      => '',
         'clustering' => true,
+        'mapConfig'  => [],
     ];
 
     public function mount()
@@ -140,6 +141,7 @@ class MapWidget extends Widgets\Widget implements HasForms, HasActions
             'fit'          => $this->getFitToBounds(),
             'markerAction' => $this->getMarkerAction(),
             'gmaps'        => MapsHelper::mapsUrl(),
+            'mapConfig'    => [],
         ];
     }
 

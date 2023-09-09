@@ -52,7 +52,7 @@ class MapTableWidget extends MapWidget implements Tables\Contracts\HasTable
         if (static::$filtered) {
             return $this->traitGetTableRecords();
         } else {
-            return $this->getTableModel()::all();
+            return $this->getTable()->getModel()::all();
         }
     }
 
