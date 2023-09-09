@@ -11,4 +11,15 @@
       </tool>
     </test_tools>
   </component>
+  <component name="PhpTestFrameworkVersionCache">
+    <tools_cache>
+      <tool tool_name="PHPUnit">
+        <cache>
+          <versions>
+            <info id="Local/Users/hugh/gits/filament-google-maps-v3/vendor/autoload.php" version="10.3.1" />
+          </versions>
+        </cache>
+      </tool>
+    </tools_cache>
+  </component>
 </project>

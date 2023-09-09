@@ -96,7 +96,7 @@
       <data directive="@once" />
       <data directive="@overwrite" />
       <data directive="@parent" />
-      <data directive="@persist" injection="true" prefix="&lt;?php _bladeDirective(" suffix="); ?&gt;" />
+      <data directive="@persist" injection="true" prefix="&lt;?php echo e(" suffix="); ?&gt;" />
       <data directive="@php" injection="true" prefix="&lt;?php (" suffix="); ?&gt;" />
       <data directive="@prepend" injection="true" prefix="&lt;?php $__env-&gt;startPrepend(" suffix="); ?&gt;" />
       <data directive="@prependonce" injection="true" prefix="&lt;?php $___phpstorm_prepend_once_params = [" suffix="]; if (! $__env-&gt;hasRenderedOnce($___phpstorm_prepend_once_params[1])): $__env-&gt;markAsRenderedOnce($___phpstorm_prepend_once_params); $__env-&gt;startPrepend($___phpstorm_prepend_once_params[0]); ?&gt;" />
