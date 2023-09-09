@@ -12,17 +12,17 @@ use Filament\Forms\Components\Contracts;
 use Filament\Forms\Components\Field;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 
-class Geocomplete extends Field implements Contracts\HasAffixActions, Contracts\CanBeLengthConstrained
+class Geocomplete extends Field implements Contracts\CanBeLengthConstrained, Contracts\HasAffixActions
 {
     use Concerns\CanBeAutocapitalized;
     use Concerns\CanBeAutocompleted;
     use Concerns\CanBeLengthConstrained;
     use Concerns\CanBeReadOnly;
     use Concerns\HasAffixes;
-    use HasExtraAlpineAttributes;
     use Concerns\HasExtraInputAttributes;
     use Concerns\HasInputMode;
     use Concerns\HasPlaceholder;
+    use HasExtraAlpineAttributes;
 
     protected string $view = 'filament-google-maps::fields.filament-google-geocomplete';
 

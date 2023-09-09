@@ -9,8 +9,8 @@ use Illuminate\Support\HtmlString;
 
 class GoToAction extends Action
 {
-    protected bool | Closure | null $isLivewireClickHandlerEnabled = false;
-    
+    protected bool|Closure|null $isLivewireClickHandlerEnabled = false;
+
     public null|Closure|int $zoom = null;
 
     public static function getDefaultName(): ?string

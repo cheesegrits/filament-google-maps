@@ -9,10 +9,10 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Widgets;
 
-class MapWidget extends Widgets\Widget implements HasForms, HasActions
+class MapWidget extends Widgets\Widget implements HasActions, HasForms
 {
-    use InteractsWithForms;
     use InteractsWithActions;
+    use InteractsWithForms;
     use Widgets\Concerns\CanPoll;
 
     protected ?array $cachedData = null;
