@@ -9,10 +9,10 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Widgets;
 
-class MapWidget extends Widgets\Widget implements HasForms, HasActions
+class MapWidget extends Widgets\Widget implements HasActions, HasForms
 {
-    use InteractsWithForms;
     use InteractsWithActions;
+    use InteractsWithForms;
     use Widgets\Concerns\CanPoll;
 
     protected ?array $cachedData = null;
@@ -63,6 +63,7 @@ class MapWidget extends Widgets\Widget implements HasForms, HasActions
         'fit'        => true,
         'gmaps'      => '',
         'clustering' => true,
+        'mapConfig'  => [],
     ];
 
     public function mount()
@@ -140,6 +141,7 @@ class MapWidget extends Widgets\Widget implements HasForms, HasActions
             'fit'          => $this->getFitToBounds(),
             'markerAction' => $this->getMarkerAction(),
             'gmaps'        => MapsHelper::mapsUrl(),
+            'mapConfig'    => [],
         ];
     }
 
@@ -157,7 +159,9 @@ class MapWidget extends Widgets\Widget implements HasForms, HasActions
 
     public function getMapId(): ?string
     {
-        return static::$mapId ?? str(get_called_class())->afterLast('\\')->studly()->toString();
+        $mapId = static::$mapId ?? str(get_called_class())->afterLast('\\')->studly()->toString();
+
+        return preg_replace('/[^a-zA-Z0-9_]/', '', $mapId);
     }
 
     public function updateMapData()
@@ -193,7 +197,7 @@ class MapWidget extends Widgets\Widget implements HasForms, HasActions
 
     public function jsUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps-widget.js']);
     }
@@ -205,7 +209,7 @@ class MapWidget extends Widgets\Widget implements HasForms, HasActions
 
     public function cssUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps-widget.css']);
     }
