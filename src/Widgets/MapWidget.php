@@ -197,7 +197,7 @@ class MapWidget extends Widgets\Widget implements HasActions, HasForms
 
     public function jsUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps-widget.js']);
     }
@@ -209,7 +209,7 @@ class MapWidget extends Widgets\Widget implements HasActions, HasForms
 
     public function cssUrl(): string
     {
-        $manifest = json_decode(file_get_contents(__DIR__ . '/../../dist/mix-manifest.json'), true);
+        $manifest = json_decode(file_get_contents(__DIR__.'/../../dist/mix-manifest.json'), true);
 
         return url($manifest['/cheesegrits/filament-google-maps/filament-google-maps-widget.css']);
     }
