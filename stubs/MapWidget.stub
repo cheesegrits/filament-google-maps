@@ -33,8 +33,10 @@ class {{ class }} extends MapWidget
 			/**
 			 * Each element in the returned data must be an array
 			 * containing a 'location' array of 'lat' and 'lng',
-			 * and a 'label' string (optional but reccomended by Google
+			 * and a 'label' string (optional but recommended by Google
 			 * for accessibility.
+			 *
+			 * You should also include an 'id' attribute for internal use by this plugin
 			 */
             $data[] = [
                 'location'  => [
@@ -43,6 +45,8 @@ class {{ class }} extends MapWidget
                 ],
 
                 'label'     => $location->{{ lat }} . ',' . $location->{{ lng }},
+                
+                'id' => $location->getKey(),
 
 				/**
 				 * Optionally you can provide custom icons for the map markers,

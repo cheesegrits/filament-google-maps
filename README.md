@@ -821,6 +821,8 @@ class DealershipMap extends MapWidget
                  * Each element in the returned data must be an array
                  * containing a 'location' array of 'lat' and 'lng',
                  * and a 'label' string.
+                 * 
+                 * You should also aan 'id' attribute for internal use by this plugin. 
                  */
                 $data[] = [
                     'location'  => [
@@ -829,6 +831,8 @@ class DealershipMap extends MapWidget
                     ],
                     
                     'label' => $dealership->name,
+                    
+                    'id' => $dealership->getKey(),
                     
                     /**
                      * Optionally you can provide custom icons for the map markers,
@@ -899,7 +903,7 @@ class DealershipMap extends MapWidget
 				->columns(3)
 			])
 			->record(function (array $arguments) {
-				return Location::find($arguments['model_id']);
+				return array_key_exists('model_id', $arguments) ? Location::find($arguments['model_id']) : null;
 			})
 			->modalFooterActions([]);
 	}
