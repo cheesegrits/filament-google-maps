@@ -874,7 +874,15 @@ record for the clicked marker, for example:
 
 ```php
 use Filament\Actions\Action;
+use Filament\Infolists\Components\Card;
+use Filament\Infolists\Components\TextEntry;
 
+class DealershipMap extends MapWidget
+{
+	protected static ?string $markerAction = 'markerAction';
+
+    //
+    
 	public function markerAction(): Action
 	{
 		return Action::make('markerAction')
@@ -895,6 +903,9 @@ use Filament\Actions\Action;
 			})
 			->modalFooterActions([]);
 	}
+
+    //
+}
 ```
 
 You can add options to the map config (the 'opts' object passed to the Google map creation in Javascript) by overriding
