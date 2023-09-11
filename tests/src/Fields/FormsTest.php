@@ -17,16 +17,16 @@ it('can create geocomplete field as computed location attribute', function () {
 
     livewire(CreateLocation::class)
         ->fillForm([
-            'street'   => $location->street,
-            'city'     => $location->city,
-            'state'    => $location->state,
-            'zip'      => $location->zip,
+            'street' => $location->street,
+            'city'   => $location->city,
+            'state'  => $location->state,
+            'zip'    => $location->zip,
         ])
         ->set(
             'data.location',
             [
-                'lat' => $location->lat,
-                'lng' => $location->lng,
+                'lat'               => $location->lat,
+                'lng'               => $location->lng,
                 'formatted_address' => $location->formatted_address,
             ],
         )
@@ -65,10 +65,10 @@ it('can edit geocomplete field as computed location attribute without geocodeOnL
         'record' => $location->getKey(),
     ])
         ->assertFormSet([
-            'street'            => $location->street,
-            'city'              => $location->city,
-            'state'             => $location->state,
-            'zip'               => $location->zip,
+            'street' => $location->street,
+            'city'   => $location->city,
+            'state'  => $location->state,
+            'zip'    => $location->zip,
         ]);
 });
 

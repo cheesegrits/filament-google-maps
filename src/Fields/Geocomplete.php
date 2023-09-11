@@ -388,11 +388,11 @@ class Geocomplete extends Field implements Contracts\CanBeLengthConstrained, Con
             }
         });
 
-//        $this->afterStateUpdated(static function (Geocomplete $component, $state) {
-//            if ($component->getIsLocation()) {
-//                $component->state($state['formatted_address']);
-//            }
-//        });
+        //        $this->afterStateUpdated(static function (Geocomplete $component, $state) {
+        //            if ($component->getIsLocation()) {
+        //                $component->state($state['formatted_address']);
+        //            }
+        //        });
 
         $this->suffixActions([
             Closure::fromCallable([$this, 'getGeolocateAction']),
@@ -445,7 +445,6 @@ class Geocomplete extends Field implements Contracts\CanBeLengthConstrained, Con
 
         return $state;
     }
-
 
     public function getFormattedState(): string
     {

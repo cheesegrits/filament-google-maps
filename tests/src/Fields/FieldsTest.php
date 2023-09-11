@@ -22,11 +22,11 @@ it('can load a record with geocodeOnLoad', function () {
         'id' => $location->getKey(),
     ])
         ->assertFormSet([
-            'lat'               => round($location->lat, 8),
-            'lng'               => round($location->lng, 8),
-            'location'          => [
-                'lat' => $location->lat,
-                'lng' => $location->lng,
+            'lat'      => round($location->lat, 8),
+            'lng'      => round($location->lng, 8),
+            'location' => [
+                'lat'               => $location->lat,
+                'lng'               => $location->lng,
                 'formatted_address' => $location->formatted_address,
             ],
             'street'            => $location->street,
@@ -44,11 +44,11 @@ it('can load a record without geocodeOnLoad', function () {
         'id' => $location->getKey(),
     ])
         ->assertFormSet([
-            'lat'               => $location->lat,
-            'lng'               => $location->lng,
-            'location'          => [
-                'lat' => $location->lat,
-                'lng' => $location->lng,
+            'lat'      => $location->lat,
+            'lng'      => $location->lng,
+            'location' => [
+                'lat'               => $location->lat,
+                'lng'               => $location->lng,
                 'formatted_address' => '',
             ],
             'street'            => $location->street,
@@ -67,11 +67,11 @@ it('can save a record with isLocation', function () {
         'id' => $location->getKey(),
     ])
         ->assertFormSet([
-            'lat'               => $location->lat,
-            'lng'               => $location->lng,
-            'location'          => [
-                'lat' => $location->lat,
-                'lng' => $location->lng,
+            'lat'      => $location->lat,
+            'lng'      => $location->lng,
+            'location' => [
+                'lat'               => $location->lat,
+                'lng'               => $location->lng,
                 'formatted_address' => '',
             ],
             'street'            => $location->street,
@@ -83,8 +83,8 @@ it('can save a record with isLocation', function () {
         ->set(
             'data.location',
             [
-                'lat' => $newLocation->lat,
-                'lng' => $newLocation->lng,
+                'lat'               => $newLocation->lat,
+                'lng'               => $newLocation->lng,
                 'formatted_address' => $newLocation->formatted_address,
             ],
         )
