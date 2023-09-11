@@ -1239,6 +1239,16 @@ php artisan filament-google-maps:reverse-geocode Location --fields="street=%n %S
 <!-- ROADMAP -->
 <a name="roadmap"></a>
 
+## Example / Test Repo
+
+There is an [example app](https://github.com/cheesegrits/fgm) you can use for testing, which provides examples of most
+of the features provided by this package.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- ROADMAP -->
+<a name="roadmap"></a>
+
 ## Roadmap
 
 - [x] Add caching for all API usage
