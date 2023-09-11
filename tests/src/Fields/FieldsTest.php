@@ -24,7 +24,11 @@ it('can load a record with geocodeOnLoad', function () {
         ->assertFormSet([
             'lat'               => round($location->lat, 8),
             'lng'               => round($location->lng, 8),
-            'location'          => $location->formatted_address,
+            'location'          => [
+                'lat' => $location->lat,
+                'lng' => $location->lng,
+                'formatted_address' => $location->formatted_address,
+            ],
             'street'            => $location->street,
             'city'              => $location->city,
             'state'             => $location->state,
@@ -42,7 +46,11 @@ it('can load a record without geocodeOnLoad', function () {
         ->assertFormSet([
             'lat'               => $location->lat,
             'lng'               => $location->lng,
-            'location'          => '',
+            'location'          => [
+                'lat' => $location->lat,
+                'lng' => $location->lng,
+                'formatted_address' => '',
+            ],
             'street'            => $location->street,
             'city'              => $location->city,
             'state'             => $location->state,
@@ -61,7 +69,11 @@ it('can save a record with isLocation', function () {
         ->assertFormSet([
             'lat'               => $location->lat,
             'lng'               => $location->lng,
-            'location'          => '',
+            'location'          => [
+                'lat' => $location->lat,
+                'lng' => $location->lng,
+                'formatted_address' => '',
+            ],
             'street'            => $location->street,
             'city'              => $location->city,
             'state'             => $location->state,
@@ -73,6 +85,7 @@ it('can save a record with isLocation', function () {
             [
                 'lat' => $newLocation->lat,
                 'lng' => $newLocation->lng,
+                'formatted_address' => $newLocation->formatted_address,
             ],
         )
         ->call('save')

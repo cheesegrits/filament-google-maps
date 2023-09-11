@@ -121,7 +121,7 @@
                             $applyStateBindingModifiers('wire:model')                               => (! $isLocation) ? $statePath : null,
                             'x-data'                                                                => (count($extraAlpineAttributes) || filled($mask)) ? '{}' : null,
                             'x-mask' . ($mask instanceof \Filament\Support\RawJs ? ':dynamic' : '') => filled($mask) ? $mask : null,
-                            'value'                                                                 => $isLocation ? $getState() : null,
+                            'value'                                                                 => $isLocation ? $getFormattedState() : null,
                         ], escape: false)
                 "
             />
@@ -130,7 +130,7 @@
                 <input
                     {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
                     type="hidden"
-                    id="{{ $id }}"
+                    id="{{ $getId() }}"
                 />
             @endif
         </div>

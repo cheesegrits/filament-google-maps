@@ -376,17 +376,23 @@ class Geocomplete extends Field implements Contracts\CanBeLengthConstrained, Con
                     $state = static::getLocationState($state);
 
                     if (! MapsHelper::isLocationEmpty($state)) {
-                        $state = MapsHelper::reverseGeocode($state);
+                        $state['formatted_address'] = MapsHelper::reverseGeocode($state);
                     } else {
-                        $state = '';
+                        $state['formatted_address'] = '';
                     }
                 } else {
-                    $state = '';
+                    $state['formatted_address'] = '';
                 }
 
-                $component->state((string) $state);
+                $component->state($state);
             }
         });
+
+//        $this->afterStateUpdated(static function (Geocomplete $component, $state) {
+//            if ($component->getIsLocation()) {
+//                $component->state($state['formatted_address']);
+//            }
+//        });
 
         $this->suffixActions([
             Closure::fromCallable([$this, 'getGeolocateAction']),
@@ -431,5 +437,20 @@ class Geocomplete extends Field implements Contracts\CanBeLengthConstrained, Con
                 ];
             }
         }
+    }
+
+    public function getState(): mixed
+    {
+        $state = parent::getState();
+
+        return $state;
+    }
+
+
+    public function getFormattedState(): string
+    {
+        $state = $this->getState();
+
+        return $state['formatted_address'];
     }
 }

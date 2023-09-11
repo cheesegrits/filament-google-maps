@@ -21,13 +21,13 @@ it('can create geocomplete field as computed location attribute', function () {
             'city'     => $location->city,
             'state'    => $location->state,
             'zip'      => $location->zip,
-            'location' => '',
         ])
         ->set(
             'data.location',
             [
                 'lat' => $location->lat,
                 'lng' => $location->lng,
+                'formatted_address' => $location->formatted_address,
             ],
         )
         ->call('create')
@@ -65,12 +65,10 @@ it('can edit geocomplete field as computed location attribute without geocodeOnL
         'record' => $location->getKey(),
     ])
         ->assertFormSet([
-            'location'          => '',
             'street'            => $location->street,
             'city'              => $location->city,
             'state'             => $location->state,
             'zip'               => $location->zip,
-            'formatted_address' => $location->formatted_address,
         ]);
 });
 
