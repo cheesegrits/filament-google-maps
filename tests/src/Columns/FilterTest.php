@@ -1,9 +1,10 @@
 <?php
 
+use Cheesegrits\FilamentGoogleMaps\Tests\Columns\Fixtures\CustomerTable;
 use Cheesegrits\FilamentGoogleMaps\Tests\Columns\Fixtures\LocationTable;
 use Cheesegrits\FilamentGoogleMaps\Tests\Columns\TestCase;
+use Cheesegrits\FilamentGoogleMaps\Tests\Models\Customer;
 use Cheesegrits\FilamentGoogleMaps\Tests\Models\Location;
-
 use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
@@ -25,6 +26,39 @@ it('can filter records by radius', function () {
         )
         ->assertCanSeeTableRecords($west)
         ->assertCanNotSeeTableRecords($east);
+});
+
+it('can filter related records by radius', function () {
+    $east = Location::factory()->withRealAddressAndLatLng('united-states-of-america', 'New York, NY')->count(5)->create();
+    $west = Location::factory()->withRealAddressAndLatLng('united-states-of-america', 'Los Angeles, CA')->count(5)->create();
+
+    $eastCustomers = [];
+
+    foreach ($east as $location) {
+        $eastCustomers[] = Customer::factory()->location($location)->create();
+    }
+
+    $westCustomers = [];
+
+    foreach ($west as $location) {
+        $westCustomers[] = Customer::factory()->location($location)->create();
+    }
+
+    $allCustomers = array_merge($eastCustomers, $westCustomers);
+
+    livewire(CustomerTable::class)
+        ->assertCanSeeTableRecords($allCustomers)
+        ->filterTable(
+            'radius',
+            [
+                'latitude'  => '34.0',
+                'longitude' => '-118.2',
+                'unit'      => 'km',
+                'radius'    => 500,
+            ]
+        )
+        ->assertCanSeeTableRecords($westCustomers)
+        ->assertCanNotSeeTableRecords($eastCustomers);
 });
 
 it('can reset radius filter', function () {
