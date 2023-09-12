@@ -331,7 +331,6 @@ class Map extends Field
     /**
      * Form field to update with GeoJSON (ish) representing drawing coordinates
      *
-     * @param  Closure|string|null  $drawingField
      * @return $this
      */
     public function drawingField(Closure|string $drawingField = null): static
