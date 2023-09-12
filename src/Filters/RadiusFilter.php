@@ -78,7 +78,7 @@ class RadiusFilter extends BaseFilter
 
             $latName = $this->getLatitude();
             $lngName = $this->getLongitude();
-            
+
             $sql = "((ACOS(SIN($latitude * PI() / 180) * SIN(" . $latName . " * PI() / 180) + COS($latitude * PI() / 180) * COS(" .
                 $latName . " * PI() / 180) * COS(($longitude - " . $lngName . ") * PI() / 180)) * 180 / PI()) * 60 * %f) < $distance";
 
