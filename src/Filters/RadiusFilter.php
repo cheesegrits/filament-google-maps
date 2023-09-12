@@ -78,30 +78,18 @@ class RadiusFilter extends BaseFilter
 
             $latName = $this->getLatitude();
             $lngName = $this->getLongitude();
-
-            //			$sql = "((ACOS(SIN(? * PI() / 180) * SIN(" . $latName . " * PI() / 180) + COS(? * PI() / 180) * COS(" .
-            //				$latName . " * PI() / 180) * COS((? - " . $lngName . ") * PI() / 180)) * 180 / PI()) * 60 * ?) as distance";
-
+            
             $sql = "((ACOS(SIN($latitude * PI() / 180) * SIN(" . $latName . " * PI() / 180) + COS($latitude * PI() / 180) * COS(" .
                 $latName . " * PI() / 180) * COS(($longitude - " . $lngName . ") * PI() / 180)) * 180 / PI()) * 60 * %f) < $distance";
 
             $sql = sprintf($sql, $kilometers ? (1.1515 * 1.609344) : 1.1515);
 
             if (! $this->queriesRelationships()) {
-                $query->whereIn(
-                    $query->getModel()->getKeyName(),
-                    function ($builder) use ($sql, $query) {
-                        $builder->select($query->getModel()->getKeyName())
-                            ->from($query->getModel()->getTable());
-                        $builder->whereRaw($sql);
-                    }
-                );
+                $query->whereRaw($sql);
             } else {
                 $query->whereHas(
                     $this->getRelationshipName(),
                     function ($builder) use ($sql) {
-                        $builder->select($this->getRelationshipKey())
-                            ->from($this->getRelationship()->getModel()->getTable());
                         $builder->whereRaw($sql);
                     }
                 );
