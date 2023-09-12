@@ -788,10 +788,7 @@ class Map extends Field
             try {
                 return @json_decode($state, true, 512, JSON_THROW_ON_ERROR);
             } catch (Exception $e) {
-                return [
-                    'lat' => 0,
-                    'lng' => 0,
-                ];
+                return $this->getDefaultLocation();
             }
         }
     }
