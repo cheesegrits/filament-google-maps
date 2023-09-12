@@ -95,7 +95,9 @@ export default function filamentGoogleMapsWidget({
         ...this.config.mapConfig,
       });
 
-      (this.center = this.config.center), this.createMarkers();
+      this.center = this.config.center;
+
+      this.createMarkers();
 
       this.createClustering();
 
@@ -113,11 +115,13 @@ export default function filamentGoogleMapsWidget({
       this.show(true);
     },
     show: function (force = false) {
-      if (this.config.fit) {
+      if (this.markers.length > 0 && this.config.fit) {
         this.fitToBounds(force);
       } else {
         if (this.markers.length > 0) {
           this.map.setCenter(this.markers[0].getPosition());
+        } else {
+          this.map.setCenter(this.config.center);
         }
       }
     },
@@ -245,7 +249,11 @@ export default function filamentGoogleMapsWidget({
       this.fitToBounds();
     },
     fitToBounds: function (force = false) {
-      if (this.config.fit && (force || !this.config.mapIsFilter)) {
+      if (
+        this.markers.length > 0 &&
+        this.config.fit &&
+        (force || !this.config.mapIsFilter)
+      ) {
         this.bounds = new google.maps.LatLngBounds();
 
         for (const marker of this.markers) {
@@ -256,7 +264,7 @@ export default function filamentGoogleMapsWidget({
       }
     },
     createClustering: function () {
-      if (this.config.clustering) {
+      if (this.markers.length > 0 && this.config.clustering) {
         // use default algorithm and renderer
         this.clusterer = new MarkerClusterer({
           map: this.map,
