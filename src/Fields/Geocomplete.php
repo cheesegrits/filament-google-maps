@@ -450,6 +450,6 @@ class Geocomplete extends Field implements Contracts\CanBeLengthConstrained, Con
     {
         $state = $this->getState();
 
-        return $state['formatted_address'];
+        return $state['formatted_address'] ?? '';
     }
 }
