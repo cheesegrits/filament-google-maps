@@ -883,6 +883,7 @@ use Filament\Infolists\Components\TextEntry;
 
 class DealershipMap extends MapWidget
 {
+    // must be the name of both the Action and your method that returns the Action
 	protected static ?string $markerAction = 'markerAction';
 
     //
@@ -905,7 +906,7 @@ class DealershipMap extends MapWidget
 			->record(function (array $arguments) {
 				return array_key_exists('model_id', $arguments) ? Location::find($arguments['model_id']) : null;
 			})
-			->modalFooterActions([]);
+			->modalSubmitAction(false);
 	}
 
     //
