@@ -41,6 +41,10 @@ class MapWidget extends Widgets\Widget implements HasActions, HasForms
 
     protected static ?string $markerAction = null;
 
+    protected static ?string $icon = 'heroicon-o-map';
+
+    protected static bool $collapsible = false;
+
     protected static string $view = 'filament-google-maps::widgets.filament-google-maps-widget';
 
     public array $controls = [
@@ -129,6 +133,16 @@ class MapWidget extends Widgets\Widget implements HasActions, HasForms
     protected function getMarkerAction(): ?string
     {
         return static::$markerAction;
+    }
+
+    protected function getIcon(): ?string
+    {
+        return static::$icon;
+    }
+
+    protected function getCollapsible(): bool
+    {
+        return static::$collapsible;
     }
 
     public function getConfig(): array

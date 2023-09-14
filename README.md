@@ -937,7 +937,8 @@ verbatim to the map creation.  For example, to hide POI (points of interest) mar
     }
 ```
 
-See the parent component code for further methods and variables you can override.
+See the parent component code for further methods and variables you can override, like changing or removing the icon
+or making the map section collapsible.
 
 ### Map Table Widget
 
