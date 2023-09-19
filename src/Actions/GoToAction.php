@@ -38,7 +38,7 @@ class GoToAction extends Action
 
         $this->color($this->getColor() ?? 'danger');
 
-        $this->icon($this->getIcon() ?? 'heroicon-s-');
+        $this->icon($this->getIcon() ?? 'heroicon-s-map');
 
         $this->extraAttributes(function (Model $record) {
             $latLngFields = $record::getLatLngAttributes();
