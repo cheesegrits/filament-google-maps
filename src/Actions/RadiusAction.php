@@ -3,18 +3,35 @@
 namespace Cheesegrits\FilamentGoogleMaps\Actions;
 
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
+use Closure;
 use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Contracts\HasTable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class RadiusAction extends Action
 {
     use CanCustomizeProcess;
 
+    protected Closure | string | null $relationship = null;
+
     public static function getDefaultName(): ?string
     {
         return 'radius';
+    }
+
+    public function relationship(Closure | string $relationship): static
+    {
+        $this->relationship = $relationship;
+
+        return $this;
+    }
+
+    public function getRelationship(): ?string
+    {
+        return $this->evaluate($this->relationship);
     }
 
     protected function setUp(): void
@@ -23,45 +40,33 @@ class RadiusAction extends Action
 
         $this->label(__('filament-google-maps::fgm.radius_action.button.label'));
 
-        $this->color('danger');
+        $this->color($this->getColor() ?? 'danger');
 
-        $this->icon('heroicon-s-magnifying-glass-circle');
+        $this->icon($this->getIcon() ?? 'heroicon-s-magnifying-glass-circle');
 
         $this->action(function (): void {
             $this->process(function (HasTable $livewire, Model $record): void {
-                $latLngFields = $record::getLatLngAttributes();
-
-                //				$livewire->tableFilters['radius']['latitude']  = $record->{$latLngFields['lat']};
-                //				$livewire->tableFilters['radius']['longitude'] = $record->{$latLngFields['lng']};
-
-                //				$address = MapsHelper::reverseGeocode([
-                //					'lat' => $record->{$latLngFields['lat']},
-                //					'lng' => $record->{$latLngFields['lng']},
-                //				]);
-
-                //				$livewire->emit('centerMapWidget', [
-                //					'center' => [
-                //						'lat' => $record->{$latLngFields['lat']},
-                //						'lng' => $record->{$latLngFields['lng']},
-                //					],
-                //				]);
-
+                if ($relationship = $this->getRelationship()) {
+                    $latLngFields = $record->{$relationship}::getLatLngAttributes();
+                    $lat = $record->{$relationship}->{$latLngFields['lat']};
+                    $lng = $record->{$relationship}->{$latLngFields['lng']};
+                } else {
+                    $latLngFields = $record::getLatLngAttributes();
+                    $lat = $record->{$latLngFields['lat']};
+                    $lng = $record->{$latLngFields['lng']};
+                }
                 $address = MapsHelper::reverseGeocode([
-                    'lat' => $record->{$latLngFields['lat']},
-                    'lng' => $record->{$latLngFields['lng']},
+                    'lat' => $lat,
+                    'lng' => $lng,
                 ]);
-
-                $locationField = $record->getComputedLocation();
-                $lat           = $record->{$latLngFields['lat']};
-                $lng           = $record->{$latLngFields['lng']};
 
                 $form                                   = $livewire->getTableFiltersForm();
                 $state                                  = $form->getState();
                 $state[$this->getName()]['geocomplete'] = $address;
                 $form->fill($state);
 
-                $livewire->tableFilters[$this->getName()]['latitude']  = $record->{$latLngFields['lat']};
-                $livewire->tableFilters[$this->getName()]['longitude'] = $record->{$latLngFields['lng']};
+                $livewire->tableFilters[$this->getName()]['latitude']  = $lat;
+                $livewire->tableFilters[$this->getName()]['longitude'] = $lng;
             });
 
             $this->success();

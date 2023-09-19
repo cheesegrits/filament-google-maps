@@ -36,9 +36,9 @@ class GoToAction extends Action
 
         $this->label(__('filament-google-maps::fgm.goto_action.button.label'));
 
-        $this->color('danger');
+        $this->color($this->getColor() ?? 'danger');
 
-        $this->icon('heroicon-s-map');
+        $this->icon($this->getIcon() ?? 'heroicon-s-');
 
         $this->extraAttributes(function (Model $record) {
             $latLngFields = $record::getLatLngAttributes();
