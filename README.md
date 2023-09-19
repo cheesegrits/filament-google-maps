@@ -695,11 +695,15 @@ use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
 ```
 
 If your locations are in a related table, for example if you want to put a RadiusFilter on an 'events' table, and your
-locations are in a 'places' table, and you have a 'place' BelongsTo relationship on your Event model ...
+locations are in a 'places' table, and you have a 'place' BelongsTo relationship on your Event model.
+
+You may also override the color and icon.
 
 ```php
 RadiusFilter::make('radius')
     ->attribute('place.location') // the relationship, with the computed location attribute
+    ->color('primary')
+    ->icon('heroicon-m-map'),
 ```
 
 When using Radius filtering, there is also a RadiusAction you can use, which allows you to click a button on a row
@@ -717,6 +721,26 @@ use Cheesegrits\FilamentGoogleMaps\Actions\RadiusAction;
         return [
             //
             RadiusAction::make(),
+        ];
+    }
+```
+
+If your locations are in related data, you may add a relationship() method to the RadiusAction.  You may also override
+the color and icon:
+
+```php
+use Cheesegrits\FilamentGoogleMaps\Actions\RadiusAction;
+
+//
+
+    protected function getTableActions(): array
+    {
+        return [
+            //
+            RadiusAction::make()
+                ->relationship('location')
+                ->color('primary')
+                ->icon('heroicon-m-map'),
         ];
     }
 ```
