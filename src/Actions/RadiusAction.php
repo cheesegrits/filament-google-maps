@@ -7,22 +7,20 @@ use Closure;
 use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Contracts\HasTable;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 
 class RadiusAction extends Action
 {
     use CanCustomizeProcess;
 
-    protected Closure | string | null $relationship = null;
+    protected Closure|string|null $relationship = null;
 
     public static function getDefaultName(): ?string
     {
         return 'radius';
     }
 
-    public function relationship(Closure | string $relationship): static
+    public function relationship(Closure|string $relationship): static
     {
         $this->relationship = $relationship;
 
@@ -48,12 +46,12 @@ class RadiusAction extends Action
             $this->process(function (HasTable $livewire, Model $record): void {
                 if ($relationship = $this->getRelationship()) {
                     $latLngFields = $record->{$relationship}::getLatLngAttributes();
-                    $lat = $record->{$relationship}->{$latLngFields['lat']};
-                    $lng = $record->{$relationship}->{$latLngFields['lng']};
+                    $lat          = $record->{$relationship}->{$latLngFields['lat']};
+                    $lng          = $record->{$relationship}->{$latLngFields['lng']};
                 } else {
                     $latLngFields = $record::getLatLngAttributes();
-                    $lat = $record->{$latLngFields['lat']};
-                    $lng = $record->{$latLngFields['lng']};
+                    $lat          = $record->{$latLngFields['lat']};
+                    $lng          = $record->{$latLngFields['lng']};
                 }
                 $address = MapsHelper::reverseGeocode([
                     'lat' => $lat,
