@@ -24,10 +24,6 @@ class MapIsFilter extends BaseFilter
     {
         parent::setUp();
 
-        $this->columnSpan(2);
-
-        //		$this->getTable()->getFiltersFormWidth('7xl');
-
         $this->indicateUsing(function (MapIsFilter $filter, array $state): array {
             if ($this->getLivewire()->mapIsFilter) {
                 if (! $this->getLivewire()->mapFilterFirstTime) {
