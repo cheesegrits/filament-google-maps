@@ -45,6 +45,8 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 
     protected Closure|bool $debug = false;
 
+    protected Closure|array|null $latLngAttributes = null;
+
     /**
      * DO NOT USE!  Only used by the Radius Filter, to set the state path for the filter form data.
      *
@@ -90,7 +92,8 @@ class Geocomplete extends Field implements CanBeLengthConstrained
 
     /**
      * If set to true, will update lat and lng fields on the form when a place is selected from the dropdown.  Requires
-     * the getLatLngAttributes() method on the model, as per the filament-google-maps:model-code Artisan command.
+     * the getLatLngAttributes() method on the model, as per the filament-google-maps:model-code Artisan command
+     * or the usage latLngAttributes() method on the component
      *
      * @param  Closure|bool  $debug
      * @return $this
@@ -107,13 +110,39 @@ class Geocomplete extends Field implements CanBeLengthConstrained
         return $this->evaluate($this->updateLatLng);
     }
 
+    /**
+     * Set the fields for latitude and longitude on the form.
+     * This method allows the user to specify which fields on the form should be
+     * updated with the latitude and longitude values when a place is selected
+     * from the dropdown.
+     *
+     * @return $this
+     */
+    public function latLngAttributes(Closure|array $latLngAttributes): static
+    {
+        $this->latLngAttributes = $latLngAttributes;
+
+        return $this;
+    }
+
+    public function getLatLngAttributes(): ?array
+    {
+        return $this->evaluate($this->latLngAttributes);
+    }
+
     private function getUpdateLatLngFields(): array
     {
         $statePaths = [];
 
         if ($this->getUpdateLatLng()) {
-            /** @noinspection PhpUndefinedMethodInspection */
-            $fields = $this->getModel()::getLatLngAttributes();
+
+            $latLngAttributes = $this->getLatLngAttributes();
+            if (blank($latLngAttributes)) {
+                /** @noinspection PhpUndefinedMethodInspection */
+                $fields = $this->getModel()::getLatLngAttributes();
+            } else {
+                $fields = $latLngAttributes;
+            }
 
             foreach ($fields as $fieldKey => $field) {
                 $fieldId = FieldHelper::getFieldId($field, $this);
