@@ -133,7 +133,7 @@ export default function filamentGoogleMapsWidget({
         });
       });
     },
-    createMarker: function (location) {
+    createMarkerIcon: function (location) {
       let markerIcon;
 
       if (location.icon && typeof location.icon === "object") {
@@ -154,6 +154,11 @@ export default function filamentGoogleMapsWidget({
           }
         }
       }
+
+      return markerIcon;
+    },
+    createMarker: function (location) {
+      const markerIcon = this.createMarkerIcon(location);
 
       const point = location.location;
       const label = location.label;
@@ -188,6 +193,7 @@ export default function filamentGoogleMapsWidget({
       });
     },
     removeMarker: function (marker) {
+      marker.setVisible(false);
       marker.setMap(null);
     },
     removeMarkers: function () {
@@ -198,53 +204,47 @@ export default function filamentGoogleMapsWidget({
       this.markers = [];
     },
     mergeMarkers: function () {
-      const operation = (list1, list2, isUnion = false) =>
-        list1.filter(
-          (a) =>
-            isUnion ===
-            list2.some(
-              (b) =>
-                a.getPosition().lat() === b.getPosition().lat() &&
-                a.getPosition().lng() === b.getPosition().lng()
-            )
-        );
+      const newMarkerData = this.data;
+      const existingMarkerIds = new Set(this.markers.map(marker => marker.model_id));
 
-      const inBoth = (list1, list2) => operation(list1, list2, true),
-        inFirstOnly = operation,
-        inSecondOnly = (list1, list2) => inFirstOnly(list2, list1);
+      for (let i = this.markers.length - 1; i >= 0; i--) {
+        const marker = this.markers[i];
+        const newData = newMarkerData.find(d => d.id === marker.model_id);
 
-      const newMarkers = this.data.map((location) => {
-        let marker = this.createMarker(location);
-        marker.addListener("click", () => {
-          this.infoWindow.setContent(location.label);
-          this.infoWindow.open(this.map, marker);
-        });
+        if (newData) {
+          const location = newData.location;
+          const markerIcon = this.createMarkerIcon(newData);
 
-        return marker;
-      });
+          if (location.lat !== marker.getPosition().lat() || location.lng !== marker.getPosition().lng()) {
+            marker.setPosition(new google.maps.LatLng(location.lat, location.lng));
+          }
+          
+          if (marker.icon !== markerIcon) {
+            marker.setIcon(markerIcon);
+          }
 
-      if (!this.config.mapIsFilter) {
-        const oldMarkersRemove = inSecondOnly(newMarkers, this.markers);
-
-        for (let i = oldMarkersRemove.length - 1; i >= 0; i--) {
-          oldMarkersRemove[i].setMap(null);
-          const index = this.markers.findIndex(
-            (marker) =>
-              marker.getPosition().lat() ===
-                oldMarkersRemove[i].getPosition().lat() &&
-              marker.getPosition().lng() ===
-                oldMarkersRemove[i].getPosition().lng()
-          );
-          this.markers.splice(index, 1);
+          if (marker.title !== newData.label) {
+            marker.tetTitle(newData.label);
+          }
+          
+          existingMarkerIds.delete(marker.id);
+        } else if (!this.config.mapIsFilter) {
+          this.removeMarker(marker);
+          this.markers.splice(i, 1);
         }
       }
 
-      const newMarkersCreate = inSecondOnly(this.markers, newMarkers);
-
-      for (let i = 0; i < newMarkersCreate.length; i++) {
-        newMarkersCreate[i].setMap(this.map);
-        this.markers.push(newMarkersCreate[i]);
-      }
+      newMarkerData.forEach(data => {
+        if (!existingMarkerIds.has(data.id)) {
+          const newMarker = this.createMarker(data);
+          newMarker.addListener("click", () => {
+            this.infoWindow.setContent(location.label);
+            this.infoWindow.open(this.map, marker);
+          });
+          newMarker.setMap(this.map);
+          this.markers.push(newMarker);
+        }
+      });
 
       this.fitToBounds();
     },

@@ -185,9 +185,7 @@ class MapWidget extends Widgets\Widget implements HasActions, HasForms
         if ($newDataChecksum !== $this->dataChecksum) {
             $this->dataChecksum = $newDataChecksum;
 
-            $this->dispatch('updateMapData', [
-                'data' => $this->getCachedData(),
-            ])->self();
+            $this->dispatch('update-map-data', data: $this->getCachedData());
         }
     }
 

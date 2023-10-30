@@ -48,6 +48,7 @@
                             config: {{ $this->getMapConfig() }},
                             mapEl: $refs.map,
                         })"
+                x-on:update-map-data.window="$data.update($event.detail.data)"
                 wire:ignore
                 @if ($maxHeight = $this->getMaxHeight())
                     style=" max-height: {{ $maxHeight }}"
