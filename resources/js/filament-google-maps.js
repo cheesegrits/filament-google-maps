@@ -25,6 +25,36 @@ export default function filamentGoogleMapsField(
         pacEl,
         drawingControl,
         drawingControlPosition,
+        polyOptions = {
+            fillColor: '#f06eaa',
+            strokeColor: '#00ff00',
+            strokeOpacity: '0.5',
+            strokeWeight: 3,
+            fillOpacity: 0.45,
+            draggable: true,
+            editable: false,
+            clickable: true,
+        },
+        circleOptions = {
+            fillColor: '#f06eaa',
+            strokeColor: '#00ff00',
+            strokeOpacity: '0.5',
+            strokeWeight: 3,
+            fillOpacity: 0.45,
+            draggable: true,
+            editable: false,
+            clickable: true,
+        },
+        rectangleOptions = {
+            fillColor: '#f06eaa',
+            strokeColor: '#00ff00',
+            strokeOpacity: '0.5',
+            strokeWeight: 3,
+            fillOpacity: 0.45,
+            draggable: true,
+            editable: false,
+            clickable: true,
+        },
         drawingModes = {
             marker: true,
             circle: true,
@@ -75,17 +105,9 @@ export default function filamentGoogleMapsField(
         overlays: [],
         dataLayer: null,
         geoJsonDataLayer: null,
-        polyOptions: {
-            // strokeColor: '#f06eaa',
-            strokeColor: '#00ff00',
-            strokeOpacity: '0.5',
-            strokeWeight: 3,
-            fillOpacity: 0.45,
-            draggable: true,
-            editable: false,
-            clickable: true,
-            // zIndex: 1,
-        },
+        polyOptions: polyOptions,
+        circleOptions: circleOptions,
+        rectangleOptions: rectangleOptions,
         selectedShape: null,
         placesService: null,
         placeFields: [],
@@ -174,7 +196,7 @@ export default function filamentGoogleMapsField(
             if (hasPlaceUpdatedUsing) {
                 this.placeFields.push("photos");
             }
-            
+
             if (autocomplete) {
                 const geoComplete = document.getElementById(autocomplete);
 
@@ -193,13 +215,13 @@ export default function filamentGoogleMapsField(
                         strictBounds: false,
                         types: types,
                     };
-                    
+
                     const autocomplete = new google.maps.places.Autocomplete(geoComplete, geocompleteOptions);
 
                     autocomplete.setComponentRestrictions({
                         country: countries,
                     })
-                    
+
                     autocomplete.addListener("place_changed", () => {
                         const place = autocomplete.getPlace();
 
@@ -245,7 +267,7 @@ export default function filamentGoogleMapsField(
                 } else {
                     this.geoJsonDataLayer = new google.maps.Data();
                 }
-                
+
                 if (/^http/.test(geoJson)) {
                     this.geoJsonDataLayer.loadGeoJson(geoJson);
                 } else {
@@ -301,8 +323,8 @@ export default function filamentGoogleMapsField(
                         draggable: true,
                         editable: false
                     },
-                    rectangleOptions: this.polyOptions,
-                    circleOptions: this.polyOptions,
+                    rectangleOptions: this.rectangleOptions,
+                    circleOptions: this.circleOptions,
                     polygonOptions: this.polyOptions,
                 });
 
@@ -464,7 +486,7 @@ export default function filamentGoogleMapsField(
                 this.setCoordinates(this.markerLocation);
                 this.updateFromLocation(this.markerLocation);
                 this.map.panTo(this.markerLocation);
-            });  
+            });
         },
 
         getReplacements: function (address_components) {
@@ -758,7 +780,7 @@ export default function filamentGoogleMapsField(
                 });
             });
         },
-        
+
         geoJsonContains: function (latLng) {
             if (geoJson && geoJsonField) {
                 let features = [];
