@@ -114,6 +114,39 @@ class Map extends Field
         'gmaps'                => '',
     ];
 
+    protected Closure|array $polyOptions = [
+        'fillColor'             =>  '#f06eaa',
+        'strokeColor'           =>  '#00ff00',
+        'strokeOpacity'         =>  '0.5',
+        'strokeWeight'          =>  3,
+        'fillOpacity'           =>  0.45,
+        'draggable'             =>  true,
+        'editable'              =>  false,
+        'clickable'             =>  true,
+    ];
+
+    protected Closure|array $rectangleOptions = [
+        'fillColor'             =>  '#f06eaa',
+        'strokeColor'           =>  '#00ff00',
+        'strokeOpacity'         =>  '0.5',
+        'strokeWeight'          =>  3,
+        'fillOpacity'           =>  0.45,
+        'draggable'             =>  true,
+        'editable'              =>  false,
+        'clickable'             =>  true,
+    ];
+
+    protected Closure|array $circleOptions = [
+        'fillColor'             =>  '#f06eaa',
+        'strokeColor'           =>  '#00ff00',
+        'strokeOpacity'         =>  '0.5',
+        'strokeWeight'          =>  3,
+        'fillOpacity'           =>  0.45,
+        'draggable'             =>  true,
+        'editable'              =>  false,
+        'clickable'             =>  true,
+    ];
+
     //	protected Closure|string|bool $geocodeFieldsReverse = false;
 
     private array $componentTree = [];
@@ -786,6 +819,9 @@ class Map extends Field
             'geoJsonVisible'         => $this->getGeoJsonVisible(),
             'debug'                  => $this->getDebug(),
             'gmaps'                  => MapsHelper::mapsUrl(false, $this->getDrawingControl() ? ['drawing'] : []),
+            'polyOptions'            => $this->getPolyOptions(),
+            'rectangleOptions'       => $this->getRectangeOptions(),
+            'circleOptions'          => $this->getCircleOptions(),
         ]);
 
         //ray($config);
@@ -806,5 +842,41 @@ class Map extends Field
                 return $this->getDefaultLocation();
             }
         }
+    }
+
+    public function polyOptions(Closure|array $polyOptions): static
+    {
+        $this->polyOptions = $polyOptions;
+
+        return $this;
+    }
+
+    public function getPolyOptions(): ?array
+    {
+        return $this->evaluate($this->polyOptions);
+    }
+
+    public function rectangleOptions(Closure|array $rectangleOptions): static
+    {
+        $this->recatangleOptions = $rectangleOptions;
+
+        return $this;
+    }
+
+    public function getRectangleOptions(): ?array
+    {
+        return $this->evaluate($this->rectangleOptions);
+    }
+
+    public function circleOptions(Closure|array $circleOptions): static
+    {
+        $this->circleOptions = $circleOptions;
+
+        return $this;
+    }
+
+    public function getCircleOptions(): ?array
+    {
+        return $this->evaluate($this->circleOptions);
     }
 }
