@@ -115,36 +115,36 @@ class Map extends Field
     ];
 
     protected Closure|array $polyOptions = [
-        'fillColor'             =>  '#f06eaa',
-        'strokeColor'           =>  '#00ff00',
-        'strokeOpacity'         =>  '0.5',
-        'strokeWeight'          =>  3,
-        'fillOpacity'           =>  0.45,
-        'draggable'             =>  true,
-        'editable'              =>  false,
-        'clickable'             =>  true,
+        'fillColor'     => '#f06eaa',
+        'strokeColor'   => '#00ff00',
+        'strokeOpacity' => '0.5',
+        'strokeWeight'  => 3,
+        'fillOpacity'   => 0.45,
+        'draggable'     => true,
+        'editable'      => false,
+        'clickable'     => true,
     ];
 
     protected Closure|array $rectangleOptions = [
-        'fillColor'             =>  '#f06eaa',
-        'strokeColor'           =>  '#00ff00',
-        'strokeOpacity'         =>  '0.5',
-        'strokeWeight'          =>  3,
-        'fillOpacity'           =>  0.45,
-        'draggable'             =>  true,
-        'editable'              =>  false,
-        'clickable'             =>  true,
+        'fillColor'     => '#f06eaa',
+        'strokeColor'   => '#00ff00',
+        'strokeOpacity' => '0.5',
+        'strokeWeight'  => 3,
+        'fillOpacity'   => 0.45,
+        'draggable'     => true,
+        'editable'      => false,
+        'clickable'     => true,
     ];
 
     protected Closure|array $circleOptions = [
-        'fillColor'             =>  '#f06eaa',
-        'strokeColor'           =>  '#00ff00',
-        'strokeOpacity'         =>  '0.5',
-        'strokeWeight'          =>  3,
-        'fillOpacity'           =>  0.45,
-        'draggable'             =>  true,
-        'editable'              =>  false,
-        'clickable'             =>  true,
+        'fillColor'     => '#f06eaa',
+        'strokeColor'   => '#00ff00',
+        'strokeOpacity' => '0.5',
+        'strokeWeight'  => 3,
+        'fillOpacity'   => 0.45,
+        'draggable'     => true,
+        'editable'      => false,
+        'clickable'     => true,
     ];
 
     //	protected Closure|string|bool $geocodeFieldsReverse = false;
