@@ -51,6 +51,9 @@
                     gmaps: @js($getMapsUrl()),
                     mapEl: $refs.map,
                     pacEl: $refs.pacinput,
+                    polyOptions: @js($getPolyOptions()),
+                    circleOptions: @js($getCircleOptions()),
+                    rectangleOptions: @js($getRectangleOptions())
                 })"
         id="{{ $getId() . '-alpine' }}"
         wire:ignore
