@@ -651,6 +651,50 @@ provide your own closure for handling reverse geocode data, as described in the 
 The Geocomplete field also offers many of the same features as Filament's TextInput,
 like prefixes, suffixes, placeholders, etc.
 
+### Form WidgetMap Field
+
+If you need to display multiple markers in a map on a form, you can use the WidgetMap field.  This is a cut down version
+of the main MapWidget (see below), providing a read-only display of multiple markers.  You cannot move or update the markers, only
+display them.
+
+```php
+WidgetMap::make('widget_map')
+    ->mapControls([
+        'zoomControl' => true,
+    ])
+    ->markers(function () {
+        // retrieve and display all records from the Geocode model
+        $markers = [];
+        Geocode::all()->each(function (Geocode $record) use (&$markers) {
+            $markers[] = [
+                'location' => [
+                    'lat' => $record->lat ? round(floatval($record->lat), 8) : 0,
+                    'lng' => $record->lng ? round(floatval($record->lat), 8) : 0,
+                ],
+                'label' => $record->name,
+            ];
+        });
+
+        return $markers;
+    })
+    ->columnSpan(2)
+```
+
+The markers() method must return an array of location arrays (same as the main Map Widget) of the form:
+
+```php
+[
+    [
+       'location' = > [ 'lat' => 12.34, 'lng' => -12.34 ],
+       'label' => 'Foo bar', // optional
+       'icon' => [ 'url' => 'path/to/foo.svg', 'type' => 'svg', 'scale' = [35,35] ] // optional
+    ],
+    //
+]
+```
+
+There are also center() and zoom() methods you can use to customize the initial display of the map.
+
 ### Table Column
 
 The table column displays a static Google map image.  The images are created on the
