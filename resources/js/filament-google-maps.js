@@ -798,6 +798,23 @@ export default function filamentGoogleMapsField(
                             }
                         }
                     }
+                    if (feature.getGeometry().getType() === 'MultiPolygon') {
+                        let array = feature.getGeometry().getArray();
+                        array.forEach(function(item,i){
+
+                            let  coords = item.getAt(0).getArray();
+                            let poly = new google.maps.Polygon({
+                                paths: coords
+                            });
+                            if (google.maps.geometry.poly.containsLocation(latLng, poly)) {
+                                if (geoJsonProperty) {
+                                    features.push(feature.getProperty(geoJsonProperty))
+                                } else {
+                                    dataLayer.add(feature);
+                                }
+                            }
+                        });
+                    }
                 });
 
                 let fieldContent;
