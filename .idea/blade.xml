@@ -63,6 +63,7 @@
       <data directive="@endsection" />
       <data directive="@endslot" />
       <data directive="@endswitch" />
+      <data directive="@endteleport" />
       <data directive="@endunless" />
       <data directive="@endverbatim" />
       <data directive="@endwhile" />
@@ -118,6 +119,7 @@
       <data directive="@style" injection="true" prefix="class=&quot;&lt;?php echo \Illuminate\Support\Arr::toCssStyles(" suffix=")?&gt;&quot;" />
       <data directive="@svg" injection="true" prefix="&lt;?php echo e(svg(" suffix=")); ?&gt;" />
       <data directive="@switch" injection="true" prefix="&lt;?php switch(" suffix="): ?&gt;" />
+      <data directive="@teleport" injection="true" prefix="&lt;?php echo e(" suffix="); ?&gt;" />
       <data directive="@this" />
       <data directive="@unless" injection="true" prefix="&lt;?php if (! (" suffix=")): ?&gt;" />
       <data directive="@unset" injection="true" prefix="&lt;?php unset(" suffix="); ?&gt;" />
