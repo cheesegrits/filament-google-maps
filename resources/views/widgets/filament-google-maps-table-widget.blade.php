@@ -1,7 +1,7 @@
 @php
-    $heading = $this->getHeading();
-    $filters = $this->getFilters();
-    $icon = $this->getIcon();
+    $heading     = $this->getHeading();
+    $filters     = $this->getFilters();
+    $icon        = $this->getIcon();
     $collapsible = $this->getCollapsible();
 @endphp
 
@@ -61,7 +61,10 @@
                     id="map-{{ $this->getMapId() }}"
                     x-ref="map"
                     class="w-full"
-                    style="min-height: 50vh; z-index: 1 !important"
+                    style="
+                        min-height: {{ $this->getMinHeight() }};
+                        z-index: 1 !important;
+                    "
                 ></div>
             </div>
         </div>
