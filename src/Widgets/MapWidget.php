@@ -24,6 +24,8 @@ class MapWidget extends Widgets\Widget implements HasActions, HasForms
     protected static ?string $heading = null;
 
     protected static ?string $maxHeight = null;
+    
+    protected static ?string $minHeight = '50vh';
 
     protected static ?array $options = null;
 
@@ -108,6 +110,11 @@ class MapWidget extends Widgets\Widget implements HasActions, HasForms
     protected function getMaxHeight(): ?string
     {
         return static::$maxHeight;
+    }
+
+    protected function getMinHeight(): ?string
+    {
+        return static::$minHeight;
     }
 
     protected function getOptions(): ?array

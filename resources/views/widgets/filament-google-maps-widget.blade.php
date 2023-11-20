@@ -1,7 +1,7 @@
 @php
-    $heading = $this->getHeading();
-    $filters = $this->getFilters();
-    $icon = $this->getIcon();
+    $heading     = $this->getHeading();
+    $filters     = $this->getFilters();
+    $icon        = $this->getIcon();
     $collapsible = $this->getCollapsible();
 @endphp
 
@@ -56,11 +56,14 @@
                 <div
                     x-ref="map"
                     class="w-full"
-                    style="min-height: 50vh; z-index: 1 !important"
+                    style="
+                        min-height: {{ $this->getMinHeight() }};
+                        z-index: 1 !important;
+                    "
                 ></div>
             </div>
         </div>
     </x-filament::section>
 
-    <x-filament-actions::modals/>
+    <x-filament-actions::modals />
 </x-filament-widgets::widget>
