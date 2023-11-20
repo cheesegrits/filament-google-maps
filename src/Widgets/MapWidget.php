@@ -24,7 +24,7 @@ class MapWidget extends Widgets\Widget implements HasActions, HasForms
     protected static ?string $heading = null;
 
     protected static ?string $maxHeight = null;
-    
+
     protected static ?string $minHeight = '50vh';
 
     protected static ?array $options = null;
