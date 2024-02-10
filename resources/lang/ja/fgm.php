@@ -2,13 +2,13 @@
 
 return [
     'radius_filter' => [
-        'address' => '住所',
-        'miles' => 'マイル',
+        'address'    => '住所',
+        'miles'      => 'マイル',
         'kilometers' => 'キロメートル',
-        'distance' => '距離',
-        'unit' => '単位',
-        'title' => '半径検索',
-        'indicate' => ':address から :radius :units 以内',
+        'distance'   => '距離',
+        'unit'       => '単位',
+        'title'      => '半径検索',
+        'indicate'   => ':address から :radius :units 以内',
     ],
     'map_is_filter' => [
         'indicate' => '表示中のマーカー :count 個',
@@ -16,7 +16,7 @@ return [
     'static_map_action' => [
         'modal' => [
             'heading' => '静的マップをダウンロード',
-            'label' => '実行する',
+            'label'   => '実行する',
             'success' => '成功',
         ],
         'button' => [
@@ -26,7 +26,7 @@ return [
     'widget_map_action' => [
         'modal' => [
             'heading' => 'マップを表示',
-            'label' => '実行する',
+            'label'   => '実行する',
             'success' => '成功',
         ],
         'button' => [
@@ -36,7 +36,7 @@ return [
     'radius_action' => [
         'modal' => [
             'heading' => 'マップを表示',
-            'label' => '実行する',
+            'label'   => '実行する',
             'success' => '成功',
         ],
         'button' => [

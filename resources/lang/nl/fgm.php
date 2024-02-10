@@ -1,13 +1,14 @@
 <?php
+
 return [
     'radius_filter' => [
-        'address' => 'Adres',
-        'miles' => 'Mijlen',
+        'address'    => 'Adres',
+        'miles'      => 'Mijlen',
         'kilometers' => 'Kilometers',
-        'distance' => 'Afstand',
-        'unit' => 'Eenheid',
-        'title' => 'Zoeken op Radius',
-        'indicate' => 'Binnen :radius :units van :address',
+        'distance'   => 'Afstand',
+        'unit'       => 'Eenheid',
+        'title'      => 'Zoeken op Radius',
+        'indicate'   => 'Binnen :radius :units van :address',
     ],
     'map_is_filter' => [
         'indicate' => 'toont :count markeringen in beeld',
@@ -15,7 +16,7 @@ return [
     'static_map_action' => [
         'modal' => [
             'heading' => 'Statische Kaart Downloaden',
-            'label' => 'Doe het!',
+            'label'   => 'Doe het!',
             'success' => 'Succes',
         ],
         'button' => [
@@ -25,7 +26,7 @@ return [
     'widget_map_action' => [
         'modal' => [
             'heading' => 'Kaart Weergeven',
-            'label' => 'Doe het!',
+            'label'   => 'Doe het!',
             'success' => 'Succes',
         ],
         'button' => [
@@ -35,7 +36,7 @@ return [
     'radius_action' => [
         'modal' => [
             'heading' => 'Kaart Weergeven',
-            'label' => 'Doe het!',
+            'label'   => 'Doe het!',
             'success' => 'Succes',
         ],
         'button' => [
@@ -51,4 +52,3 @@ return [
         'label' => 'Huidige Locatie Instellen',
     ],
 ];
-
