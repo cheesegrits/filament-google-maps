@@ -2,13 +2,13 @@
 
 return [
     'radius_filter' => [
-        'address' => 'Адрес',
-        'miles' => 'Мили',
+        'address'    => 'Адрес',
+        'miles'      => 'Мили',
         'kilometers' => 'Километры',
-        'distance' => 'Расстояние',
-        'unit' => 'Единица измерения',
-        'title' => 'Поиск по радиусу',
-        'indicate' => 'В пределах :radius :units от :address',
+        'distance'   => 'Расстояние',
+        'unit'       => 'Единица измерения',
+        'title'      => 'Поиск по радиусу',
+        'indicate'   => 'В пределах :radius :units от :address',
     ],
     'map_is_filter' => [
         'indicate' => 'показано :count маркеров на карте',
@@ -16,7 +16,7 @@ return [
     'static_map_action' => [
         'modal' => [
             'heading' => 'Скачать статичную карту',
-            'label' => 'Сделай это!',
+            'label'   => 'Сделай это!',
             'success' => 'Успех',
         ],
         'button' => [
@@ -26,7 +26,7 @@ return [
     'widget_map_action' => [
         'modal' => [
             'heading' => 'Показать карту',
-            'label' => 'Сделай это!',
+            'label'   => 'Сделай это!',
             'success' => 'Успех',
         ],
         'button' => [
@@ -36,7 +36,7 @@ return [
     'radius_action' => [
         'modal' => [
             'heading' => 'Показать карту',
-            'label' => 'Сделай это!',
+            'label'   => 'Сделай это!',
             'success' => 'Успех',
         ],
         'button' => [

@@ -2,13 +2,13 @@
 
 return [
     'radius_filter' => [
-        'address' => 'Indirizzo',
-        'miles' => 'Miglia',
+        'address'    => 'Indirizzo',
+        'miles'      => 'Miglia',
         'kilometers' => 'Chilometri',
-        'distance' => 'Distanza',
-        'unit' => 'Unità',
-        'title' => 'Ricerca per Raggio',
-        'indicate' => 'Entro :radius :units da :address',
+        'distance'   => 'Distanza',
+        'unit'       => 'Unità',
+        'title'      => 'Ricerca per Raggio',
+        'indicate'   => 'Entro :radius :units da :address',
     ],
     'map_is_filter' => [
         'indicate' => 'mostrando :count indicatori nella vista',
@@ -16,7 +16,7 @@ return [
     'static_map_action' => [
         'modal' => [
             'heading' => 'Scarica Mappa Statica',
-            'label' => 'Fallo!',
+            'label'   => 'Fallo!',
             'success' => 'Successo',
         ],
         'button' => [
@@ -26,7 +26,7 @@ return [
     'widget_map_action' => [
         'modal' => [
             'heading' => 'Mostra Mappa',
-            'label' => 'Fallo!',
+            'label'   => 'Fallo!',
             'success' => 'Successo',
         ],
         'button' => [
@@ -36,7 +36,7 @@ return [
     'radius_action' => [
         'modal' => [
             'heading' => 'Mostra Mappa',
-            'label' => 'Fallo!',
+            'label'   => 'Fallo!',
             'success' => 'Successo',
         ],
         'button' => [

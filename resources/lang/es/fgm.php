@@ -2,13 +2,13 @@
 
 return [
     'radius_filter' => [
-        'address' => 'Dirección',
-        'miles' => 'Millas',
+        'address'    => 'Dirección',
+        'miles'      => 'Millas',
         'kilometers' => 'Kilómetros',
-        'distance' => 'Distancia',
-        'unit' => 'Unidad',
-        'title' => 'Búsqueda por Radio',
-        'indicate' => 'Dentro de un radio de :radius :units de :address',
+        'distance'   => 'Distancia',
+        'unit'       => 'Unidad',
+        'title'      => 'Búsqueda por Radio',
+        'indicate'   => 'Dentro de un radio de :radius :units de :address',
     ],
     'map_is_filter' => [
         'indicate' => 'mostrando :count marcadores en vista',
@@ -16,7 +16,7 @@ return [
     'static_map_action' => [
         'modal' => [
             'heading' => 'Descargar Mapa Estático',
-            'label' => '¡Hazlo!',
+            'label'   => '¡Hazlo!',
             'success' => 'Éxito',
         ],
         'button' => [
@@ -26,7 +26,7 @@ return [
     'widget_map_action' => [
         'modal' => [
             'heading' => 'Mostrar Mapa',
-            'label' => '¡Hazlo!',
+            'label'   => '¡Hazlo!',
             'success' => 'Éxito',
         ],
         'button' => [
@@ -36,7 +36,7 @@ return [
     'radius_action' => [
         'modal' => [
             'heading' => 'Mostrar Mapa',
-            'label' => '¡Hazlo!',
+            'label'   => '¡Hazlo!',
             'success' => 'Éxito',
         ],
         'button' => [

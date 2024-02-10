@@ -2,13 +2,13 @@
 
 return [
     'radius_filter' => [
-        'address' => 'Adresse',
-        'miles' => 'Milles',
+        'address'    => 'Adresse',
+        'miles'      => 'Milles',
         'kilometers' => 'Kilomètres',
-        'distance' => 'Distance',
-        'unit' => 'Unité',
-        'title' => 'Recherche par rayon',
-        'indicate' => 'À moins de :radius :units de :address',
+        'distance'   => 'Distance',
+        'unit'       => 'Unité',
+        'title'      => 'Recherche par rayon',
+        'indicate'   => 'À moins de :radius :units de :address',
     ],
     'map_is_filter' => [
         'indicate' => 'affichage de :count marqueurs dans la vue',
@@ -16,7 +16,7 @@ return [
     'static_map_action' => [
         'modal' => [
             'heading' => 'Télécharger la carte statique',
-            'label' => 'Faites-le !',
+            'label'   => 'Faites-le !',
             'success' => 'Succès',
         ],
         'button' => [
@@ -26,7 +26,7 @@ return [
     'widget_map_action' => [
         'modal' => [
             'heading' => 'Afficher la carte',
-            'label' => 'Faites-le !',
+            'label'   => 'Faites-le !',
             'success' => 'Succès',
         ],
         'button' => [
@@ -36,7 +36,7 @@ return [
     'radius_action' => [
         'modal' => [
             'heading' => 'Afficher la carte',
-            'label' => 'Faites-le !',
+            'label'   => 'Faites-le !',
             'success' => 'Succès',
         ],
         'button' => [
