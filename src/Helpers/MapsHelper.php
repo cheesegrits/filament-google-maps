@@ -91,7 +91,7 @@ class MapsHelper
         return $gmaps;
     }
 
-    public static function reverseGeocode(array|string $lat, string $lng = null): string
+    public static function reverseGeocode(array|string $lat, ?string $lng = null): string
     {
         return (new Geocoder())->reverse(MapsHelper::getLatLng($lat, $lng));
     }
@@ -113,7 +113,7 @@ class MapsHelper
         return '';
     }
 
-    public static function getCountyFromLatLng(array|string $lat, string $lng = null): string
+    public static function getCountyFromLatLng(array|string $lat, ?string $lng = null): string
     {
         $geocoder = new Geocoder();
         $result   = $geocoder->reverseQuery(self::getLatLng($lat, $lng))->first();
@@ -125,7 +125,7 @@ class MapsHelper
         return '';
     }
 
-    public static function getLatLng(array|string $lat, string $lng = null): array
+    public static function getLatLng(array|string $lat, ?string $lng = null): array
     {
         if (is_array($lat)) {
             if (array_key_exists('lat', $lat) && array_key_exists('lng', $lat)) {

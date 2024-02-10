@@ -186,7 +186,7 @@ class Map extends Field
      *
      * @return $this
      */
-    public function autocomplete(Closure|string $fieldName, Closure|array $types = [], Closure|string $placeField = null, Closure|array $countries = []): static
+    public function autocomplete(Closure|string $fieldName, Closure|array $types = [], Closure|string|null $placeField = null, Closure|array $countries = []): static
     {
         $this->autocomplete = $fieldName;
         $this->types        = $types;
@@ -366,7 +366,7 @@ class Map extends Field
      *
      * @return $this
      */
-    public function drawingField(Closure|string $drawingField = null): static
+    public function drawingField(Closure|string|null $drawingField = null): static
     {
         $this->drawingField = $drawingField;
 
@@ -491,7 +491,7 @@ class Map extends Field
      *
      * @return $this
      */
-    public function geoJsonContainsField(Closure|string $field = null, Closure|string $property = null): static
+    public function geoJsonContainsField(Closure|string|null $field = null, Closure|string|null $property = null): static
     {
         $this->geoJsonField = $field;
 

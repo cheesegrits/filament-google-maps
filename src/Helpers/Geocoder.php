@@ -70,7 +70,7 @@ class Geocoder
 
     protected $isCaching = true;
 
-    public function __construct(int $rateLimit = null)
+    public function __construct(?int $rateLimit = null)
     {
         $this->stack = HandlerStack::create();
         $this->stack->push(
@@ -124,7 +124,7 @@ class Geocoder
         return $this->cacheRequest($cacheKey, [$query], 'geocodeQuery');
     }
 
-    public function reverse(array|string $lat, string $lng = null): string
+    public function reverse(array|string $lat, ?string $lng = null): string
     {
         $result = $this->reverseQuery(MapsHelper::getLatLng($lat, $lng))->first();
 
@@ -152,8 +152,8 @@ class Geocoder
         string $latField,
         string $lngField,
         string $fields,
-        string $processedField = null,
-        int $limit = null,
+        ?string $processedField = null,
+        ?int $limit = null,
         ?bool $verbose = false): array
     {
         Log::channel(config('filament-google-maps.log.channel'))->info('geocodeBatch started');
@@ -226,8 +226,8 @@ class Geocoder
         string $latField,
         string $lngField,
         array $fields,
-        string $processedField = null,
-        int $limit = null,
+        ?string $processedField = null,
+        ?int $limit = null,
         ?bool $verbose = false): array
     {
         Log::channel(config('filament-google-maps.log.channel'))->info('reverseBatch started');
@@ -326,7 +326,7 @@ class Geocoder
         return [$records, $lookups, $processed];
     }
 
-    public function testReverse(array|string $lat, string $lng = null, $withComponents = false): array
+    public function testReverse(array|string $lat, ?string $lng = null, $withComponents = false): array
     {
         $formats = [];
 
