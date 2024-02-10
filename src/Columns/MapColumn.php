@@ -20,7 +20,7 @@ class MapColumn extends Column
 
     protected int|Closure $height = 150;
 
-    protected int|Closure $width = 200;
+    protected int|string|Closure|null $width = 200;
 
     protected int|string|Closure|null $zoom = 13;
 
@@ -94,14 +94,14 @@ class MapColumn extends Column
      *
      * @return $this
      */
-    public function width(int|Closure $width): static
+    public function width(int|string|Closure|null $width): static
     {
         $this->width = $width;
 
         return $this;
     }
 
-    public function getWidth(): int
+    public function getWidth(): ?string
     {
         return $this->evaluate($this->width);
     }
