@@ -77,6 +77,13 @@ with optional reverse geocoding of address components.
 
 ![Geocomplete Field](images/form-geocode.png)
 
+### Infolist Field
+
+The **MapEntry** Infolist field displays a (read only) map showing a single pin.  This is currently WIP, features
+and functionality (like KML layers, GeoJSON drawings, etc) to be added soon.
+
+![Infolist Field](images/infolist.png)
+
 ### Map Widget
 
 The **MapWidget** displays a filterable set of locations from a model, with 
@@ -650,6 +657,28 @@ provide your own closure for handling reverse geocode data, as described in the 
 
 The Geocomplete field also offers many of the same features as Filament's TextInput,
 like prefixes, suffixes, placeholders, etc.
+
+### Infolist Field
+
+The Infolist field displays a read-only map with a single field showing the field's location.
+
+```php
+use Cheesegrits\FilamentGoogleMaps\Infolists\MapEntry;
+
+//
+
+    public function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema([
+            TextEntry::make('street'),
+            TextEntry::make('city'),
+            TextEntry::make('state'),
+            TextEntry::make('zip'),
+            MapEntry::make('location')
+                ->columnSpan(2),
+        ]);
+    }
+```
 
 ### Form WidgetMap Field
 
