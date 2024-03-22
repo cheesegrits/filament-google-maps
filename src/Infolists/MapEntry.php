@@ -41,16 +41,16 @@ class MapEntry extends Entry
      * Main field config variables
      */
     private array $mapConfig = [
-        'defaultLocation'     => [
+        'defaultLocation' => [
             'lat' => 15.3419776,
             'lng' => 44.2171392,
         ],
-        'controls'       => [],
-        'drawingField'         => null,
-        'statePath'            => '',
-        'layers'               => [],
-        'defaultZoom'          => 8,
-        'gmaps'                => '',
+        'controls'     => [],
+        'drawingField' => null,
+        'statePath'    => '',
+        'layers'       => [],
+        'defaultZoom'  => 8,
+        'gmaps'        => '',
     ];
 
     private array $componentTree = [];
@@ -250,18 +250,18 @@ class MapEntry extends Entry
     public function getMapConfig(): string
     {
         $config = array_merge($this->mapConfig, [
-            'defaultLocation'        => $this->getDefaultLocation(),
-            'statePath'              => $this->getStatePath(),
-            'controls'               => $this->getMapControls(false),
-            'drawingField'           => $this->getDrawingField(),
-            'layers'                 => $this->getLayers(),
-            'defaultZoom'            => $this->getDefaultZoom(),
-            'geoJson'                => $this->getGeoJsonFile(),
-            'geoJsonProperty'        => $this->getGeoJsonProperty(),
-            'geoJsonVisible'         => $this->getGeoJsonVisible(),
-            'gmaps'                  => MapsHelper::mapsUrl(false, $this->getDrawingControl() ? ['drawing'] : []),
+            'defaultLocation' => $this->getDefaultLocation(),
+            'statePath'       => $this->getStatePath(),
+            'controls'        => $this->getMapControls(false),
+            'drawingField'    => $this->getDrawingField(),
+            'layers'          => $this->getLayers(),
+            'defaultZoom'     => $this->getDefaultZoom(),
+            'geoJson'         => $this->getGeoJsonFile(),
+            'geoJsonProperty' => $this->getGeoJsonProperty(),
+            'geoJsonVisible'  => $this->getGeoJsonVisible(),
+            'gmaps'           => MapsHelper::mapsUrl(false, $this->getDrawingControl() ? ['drawing'] : []),
         ]);
-        
+
         return json_encode($config);
     }
 
