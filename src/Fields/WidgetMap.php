@@ -34,9 +34,8 @@ class WidgetMap extends Field
     protected Closure|bool $fitToBounds = false;
 
     protected Closure|array $markers = [];
-    
+
     protected Closure|Action|null $markerAction = null;
-    
 
     /**
      * Main field config variables
@@ -161,14 +160,14 @@ class WidgetMap extends Field
     {
         return $this->evaluate($this->markers);
     }
-    
+
     public function markerAction(Closure|Action $markerAction): static
     {
         $this->markerAction = $markerAction;
-        
+
         return $this;
     }
-    
+
     public function getMarkerAction(): ?Action
     {
         return $this->evaluate($this->markerAction);
@@ -270,13 +269,13 @@ class WidgetMap extends Field
 
         $config = json_encode(
             array_merge($this->mapConfig, [
-                'clustering' => self::getClustering(),
-                'layers'     => $this->getLayers(),
-                'zoom'       => $this->getZoom(),
-                'controls'   => $this->getMapControls(false),
-                'markerAction' => $this->getMarkerAction() ? 'markerAction' : null,                
-                'fit'   => $this->getFitToBounds(),
-                'gmaps' => MapsHelper::mapsUrl(),
+                'clustering'   => self::getClustering(),
+                'layers'       => $this->getLayers(),
+                'zoom'         => $this->getZoom(),
+                'controls'     => $this->getMapControls(false),
+                'markerAction' => $this->getMarkerAction() ? 'markerAction' : null,
+                'fit'          => $this->getFitToBounds(),
+                'gmaps'        => MapsHelper::mapsUrl(),
             ])
         );
 
