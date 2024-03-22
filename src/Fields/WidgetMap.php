@@ -5,6 +5,7 @@ namespace Cheesegrits\FilamentGoogleMaps\Fields;
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Exception;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Field;
 use JsonException;
 
@@ -33,6 +34,9 @@ class WidgetMap extends Field
     protected Closure|bool $fitToBounds = false;
 
     protected Closure|array $markers = [];
+    
+    protected Closure|Action|null $markerAction = null;
+    
 
     /**
      * Main field config variables
@@ -157,6 +161,18 @@ class WidgetMap extends Field
     {
         return $this->evaluate($this->markers);
     }
+    
+    public function markerAction(Closure|Action $markerAction): static
+    {
+        $this->markerAction = $markerAction;
+        
+        return $this;
+    }
+    
+    public function getMarkerAction(): ?Action
+    {
+        return $this->evaluate($this->markerAction);
+    }
 
     public function getCachedData()
     {
@@ -258,7 +274,7 @@ class WidgetMap extends Field
                 'layers'     => $this->getLayers(),
                 'zoom'       => $this->getZoom(),
                 'controls'   => $this->getMapControls(false),
-                //				'center'     => $this->getCenter(),
+                'markerAction' => $this->getMarkerAction() ? 'markerAction' : null,                
                 'fit'   => $this->getFitToBounds(),
                 'gmaps' => MapsHelper::mapsUrl(),
             ])

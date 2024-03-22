@@ -12,7 +12,7 @@
         "php-http/guzzle7-adapter": "^1.0",
         "spatie/guzzle-rate-limiter-middleware": "^2.0",
         "php-http/message": "^1.13",
-        "ryangjchandler/blade-capture-directive": "^0.3",
+        "ryangjchandler/blade-capture-directive": "^0.3|^1.0",
         "mastani/laravel-google-static-map": "^2.2",
         "laravel/prompts": "^0.1.4"
     },
