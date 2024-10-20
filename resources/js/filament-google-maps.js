@@ -310,7 +310,6 @@ export default function filamentGoogleMapsField({
         }
         locationButton.classList.add("custom-map-control-button");
         let controlPosition = google.maps.ControlPosition.TOP_CENTER;
-        console.log(geolocatePosition);
         if (geolocatePosition && geolocatePosition in google.maps.ControlPosition) {
           controlPosition = google.maps.ControlPosition[geolocatePosition];
         }
