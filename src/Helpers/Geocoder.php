@@ -81,7 +81,7 @@ class Geocoder
         $this->httpClient = new Client(['handler' => $this->stack, 'timeout' => 30.0]);
         $this->provider   = new GoogleMaps($this->httpClient, null, MapsHelper::mapsKey(true));
         $this->geocoder   = new StatefulGeocoder($this->provider, config('filament-google-maps.locale.language'));
-        $this->formatter  = new StringFormatter();
+        $this->formatter  = new StringFormatter;
     }
 
     public static function getFormats(): array
@@ -126,7 +126,7 @@ class Geocoder
 
     public function reverse(array|string $lat, ?string $lng = null): string
     {
-        $result = $this->reverseQuery(MapsHelper::getLatLng($lat, $lng))->first();
+        $result = $this->reverseQuery(MapsHelper::getLatLng($lat, $lng))?->first();
 
         if ($result) {
             return $result->getFormattedAddress();
@@ -162,7 +162,7 @@ class Geocoder
         $processed = 0;
         $records   = 0;
 
-        $model = new $modelName();
+        $model = new $modelName;
 
         // turn the comma separated $fields string into an array of trimmed strings
         $fields = array_map(fn ($field) => trim($field), explode(',', $fields));
@@ -240,7 +240,7 @@ class Geocoder
         // convert to keyed version here if the latter
         $fields = $this->reKeyFields($fields);
 
-        $model = new $modelName();
+        $model = new $modelName;
 
         // get an array of any dotted field name (which we have to update as relations)
         // and reverse format strings by field name

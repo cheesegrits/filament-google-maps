@@ -12,7 +12,11 @@ export default function filamentGoogleGeocomplete({
   placeField,
   reverseGeocodeUsing,
   hasReverseGeocodeUsing = false,
+  minChars,
 }) {
+  const geocompleteEl = isLocation ? statePath + "-fgm-address" : statePath;
+  const geoComplete = document.getElementById(geocompleteEl);
+
   return {
     geocoder: null,
     mapEl: null,
@@ -68,8 +72,23 @@ export default function filamentGoogleGeocomplete({
     init: function (mapEl) {
       console.log("geocomplete init");
       this.mapEl = mapEl;
-      this.loadGMaps();
-    },
+
+      let typingTimer;
+      const doneTypingInterval = 300; // milliseconds
+
+      geoComplete.addEventListener('input', () => {
+        clearTimeout(typingTimer);
+
+        if (geoComplete.value.length >= minChars) {
+          typingTimer = setTimeout(() => {
+            console.log('minChars met, loading GMaps');
+            this.loadGMaps();
+          }, doneTypingInterval);
+        } else {
+          console.log('minChars not met');
+        }
+      });
+      },
 
     createAutocomplete: function () {
       window.filamentGoogleMapsAPILoaded = true;
@@ -90,9 +109,6 @@ export default function filamentGoogleGeocomplete({
         strictBounds: false,
         types: types,
       };
-
-      const geocompleteEl = isLocation ? statePath + "-fgm-address" : statePath;
-      const geoComplete = document.getElementById(geocompleteEl);
 
       if (geoComplete) {
         window.addEventListener(

@@ -52,6 +52,8 @@ class Geocomplete extends Field implements Contracts\CanBeLengthConstrained, Con
 
     protected Closure|bool $debug = false;
 
+    protected int $minChars = 0;
+
     /**
      * DO NOT USE!  Only used by the Radius Filter, to set the state path for the filter form data.
      *
@@ -416,6 +418,7 @@ class Geocomplete extends Field implements Contracts\CanBeLengthConstrained, Con
             'placeField'           => $this->getPlaceField(),
             'debug'                => $this->getDebug(),
             'gmaps'                => $this->getMapsUrl(),
+            'minChars'             => $this->getMinChars(),
         ]);
 
         //ray($config);
@@ -455,5 +458,17 @@ class Geocomplete extends Field implements Contracts\CanBeLengthConstrained, Con
         }
 
         return $state;
+    }
+
+    public function minChars(int $minChars): static
+    {
+        $this->minChars = $minChars;
+
+        return $this;
+    }
+
+    public function getMinChars(): int
+    {
+        return $this->evaluate($this->minChars);
     }
 }

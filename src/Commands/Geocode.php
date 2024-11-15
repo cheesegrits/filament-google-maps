@@ -29,7 +29,7 @@ class Geocode extends Command
             );
         }
 
-        $geocoder = new Geocoder();
+        $geocoder = new Geocoder;
 
         if ($response = $geocoder->geocode($address)) {
             $this->line('lat: ' . $response['lat']);

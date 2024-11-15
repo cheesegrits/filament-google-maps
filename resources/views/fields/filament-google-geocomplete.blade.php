@@ -58,6 +58,7 @@
                         countries: @js($getCountries()),
                         debug: @js($getDebug()),
                         gmaps: @js($getMapsUrl()),
+                        minChars: @js($getMinChars()),
                     })"
             wire:ignore
         >

@@ -358,6 +358,7 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Map
     ->defaultLocation([39.526610, -107.727261]) // default for new forms
     ->draggable() // allow dragging to move marker
     ->clickable(false) // allow clicking to move marker
+    ->type('roadmap') // map type (hybrid, satellite, roadmap, terrain)
     ->geolocate() // adds a button to request device location and set map marker accordingly
     ->geolocateLabel('Get Location') // overrides the default label for geolocate button, empty string for default icon
     ->geolocatePosition('TOP_CENTER') // overrides the default position for geolocate button (default: TOP_CENTER, see other options in https://developers.google.com/maps/documentation/javascript/examples/control-positioning )
@@ -628,7 +629,7 @@ to the limitations on the number and mix of types - either 1 from Table 3 (like 
 ```php
     Geocomplete::make('location')
         ->types(['car_dealer', 'car_rental', 'car_repair'])
-        ->placesField('name')
+        ->placeField('name')
 ```
 
 In both modes, you may optionally specify fields to reverse geocode the selected address component data
@@ -650,11 +651,15 @@ provide your own closure for handling reverse geocode data, as described in the 
         ->debug() // output the results of reverse geocoding in the browser console, useful for figuring out symbol formats
         ->updateLatLng() // update the lat/lng fields on your form when a Place is selected
         ->maxLength(1024)
+        ->minChars(0) // minimum number of characters before autocomplete starts
         ->prefix('Choose:')
         ->placeholder('Start typing an address ...')
         ->geolocate() // add a suffix button which requests and reverse geocodes the device location
         ->geolocateIcon('heroicon-o-map'), // override the default icon for the geolocate button
 ```
+This field is *cost optimized*, so it will only start searching for places after 300ms of inactivity, and will not
+search while you are typing.  This is to prevent excessive API calls, as Google charges for each one. If you set the minChars
+to 0, it will start searching immediately. I suggest you set it to a minimum of 3.
 
 The Geocomplete field also offers many of the same features as Filament's TextInput,
 like prefixes, suffixes, placeholders, etc.

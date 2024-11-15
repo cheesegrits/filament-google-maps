@@ -93,17 +93,17 @@ class MapsHelper
 
     public static function reverseGeocode(array|string $lat, ?string $lng = null): string
     {
-        return (new Geocoder())->reverse(MapsHelper::getLatLng($lat, $lng));
+        return (new Geocoder)->reverse(MapsHelper::getLatLng($lat, $lng));
     }
 
     public static function geocode(string $address): array
     {
-        return (new Geocoder())->geocode($address);
+        return (new Geocoder)->geocode($address);
     }
 
     public static function getCountyFromAddress(string $address): string
     {
-        $geocoder = new Geocoder();
+        $geocoder = new Geocoder;
         $result   = $geocoder->geocodeQuery($address)->first();
 
         if ($result) {
@@ -115,7 +115,7 @@ class MapsHelper
 
     public static function getCountyFromLatLng(array|string $lat, ?string $lng = null): string
     {
-        $geocoder = new Geocoder();
+        $geocoder = new Geocoder;
         $result   = $geocoder->reverseQuery(self::getLatLng($lat, $lng))->first();
 
         if ($result) {

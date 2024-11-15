@@ -55,7 +55,8 @@
                     pacEl: $refs.pacinput,
                     polyOptions: @js($getPolyOptions()),
                     circleOptions: @js($getCircleOptions()),
-                    rectangleOptions: @js($getRectangleOptions())
+                    rectangleOptions: @js($getRectangleOptions()),
+                    mapType: @js($getMapType()),
                 })"
         id="{{ $getId() . '-alpine' }}"
         wire:ignore
