@@ -360,7 +360,8 @@ use Cheesegrits\FilamentGoogleMaps\Fields\Map
     ->clickable(false) // allow clicking to move marker
     ->type('roadmap') // map type (hybrid, satellite, roadmap, terrain)
     ->geolocate() // adds a button to request device location and set map marker accordingly
-    ->geolocateLabel('Get Location') // overrides the default label for geolocate button
+    ->geolocateLabel('Get Location') // overrides the default label for geolocate button, empty string for default icon
+    ->geolocatePosition('TOP_CENTER') // overrides the default position for geolocate button (default: TOP_CENTER, see other options in https://developers.google.com/maps/documentation/javascript/examples/control-positioning )
     ->geolocateOnLoad(true, false) // geolocate on load, second arg 'always' (default false, only for new form))
     ->layers([
         'https://googlearchive.github.io/js-v2-samples/ggeoxml/cta.kml',
