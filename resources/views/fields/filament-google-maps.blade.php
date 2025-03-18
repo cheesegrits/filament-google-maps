@@ -8,7 +8,7 @@
         ax-load
         ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-field', 'cheesegrits/filament-google-maps') }}"
         x-data="filamentGoogleMapsField({
-                    state: $wire.entangle('{{ $getStatePath() }}'),
+                    state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$getStatePath()}')") }},
                     setStateUsing: (path, state) => {
                         return $wire.set(path, state)
                     },
