@@ -25,8 +25,8 @@ it('can load a record with geocodeOnLoad', function () {
             'lat'      => round($location->lat, 8),
             'lng'      => round($location->lng, 8),
             'location' => [
-                'lat'               => $location->lat,
-                'lng'               => $location->lng,
+                'lat'               => round($location->lat, 8),
+                'lng'               => round($location->lng, 8),
                 'formatted_address' => $location->formatted_address,
             ],
             'street'            => $location->street,

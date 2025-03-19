@@ -1,15 +1,51 @@
-.custom-map-control-button {
-    background-color: #fff;
-    border: 0;
-    border-radius: 2px;
-    box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+/* * ============== */
+/* * Shared Styles */
+/* * ============ */
+
+/* * Container */
+.custom-map-control-button.modern-look,
+input[x-ref="pacinput"].modern-look {
+    transition: all;
+    transition-duration: 400ms;
     margin: 10px;
-    padding: 0 0.5em;
-    font: 400 18px Roboto, Arial, sans-serif;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-radius: 0.125rem;
+    border: 1px solid #d1d5db;
+    outline: none;
+}
+/* * Container (hovered) */
+.custom-map-control-button.modern-look:focus,
+input[x-ref="pacinput"].modern-look:focus {
+    box-shadow: none;
+    border-color: black;
+}
+
+/* * =============== */
+/* * Control Button */
+/* * ============= */
+
+.custom-map-control-button {
+    vertical-align: middle;
+    padding: 0.2rem 0.65rem 2.25rem 0.65rem;
+    font: 400 15px Roboto, Arial, sans-serif;
+    background: #ffffff;
+    color: rgba(0,0,0,0.7);
     overflow: hidden;
     height: 40px;
     cursor: pointer;
 }
 .custom-map-control-button:hover {
-    background: rgb(235, 235, 235);
+    background: rgb(241 241 241);
+}
+.custom-map-control-button.icon-padding {
+    padding: 0.5rem .65rem 2rem 0.65rem !important;
+}
+
+/* * ================= */
+/* * Search Box Input */
+/* * =============== */
+
+input[x-ref="pacinput"] {
+    position: absolute !important;
+    padding: 0.5rem;
 }

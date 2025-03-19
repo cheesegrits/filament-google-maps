@@ -29,6 +29,7 @@ class CustomerTable extends Component implements HasForms, Tables\Contracts\HasT
         return [
             //			Tables\Filters\TernaryFilter::make('processed'),
             RadiusFilter::make('radius')
+                ->relationship('location', 'name')
                 ->attribute('location.name')
                 ->selectUnit(),
         ];

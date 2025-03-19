@@ -7,6 +7,7 @@ export default function filamentGoogleMapsField({
   geolocate = false,
   geolocateOnLoad,
   geolocateLabel,
+  geolocatePosition,
   draggable,
   clickable,
   defaultLocation,
@@ -183,7 +184,20 @@ export default function filamentGoogleMapsField({
         this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
         searchBox.addListener("places_changed", () => {
           input.value = "";
-          this.markerLocation = searchBox.getPlaces()[0].geometry.location;
+          const places = searchBox.getPlaces();
+          if (!places || places.length === 0) return;
+          const place = places[0];
+          if (!place.geometry || !place.geometry.location) {
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+          }
+          if (place.geometry.viewport) {
+            this.map.fitBounds(place.geometry.viewport);
+          } else {
+            this.map.setCenter(place.geometry.location);
+          }
+          this.markerLocation = place.geometry.location;
+          this.markerMoved({ latLng: place.geometry.location, placeId: place.place_id });
         });
       }
 
@@ -304,12 +318,24 @@ export default function filamentGoogleMapsField({
       if (geolocate && "geolocation" in navigator) {
         const locationButton = document.createElement("button");
 
-        locationButton.textContent = geolocateLabel;
-        locationButton.classList.add("custom-map-control-button");
-        this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+        if (geolocateLabel) {
+          locationButton.textContent = geolocateLabel;
+        } else {
+          locationButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="#565656" width="24px" height="24px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M13 4.069V2h-2v2.069A8.01 8.01 0 0 0 4.069 11H2v2h2.069A8.008 8.008 0 0 0 11 19.931V22h2v-2.069A8.007 8.007 0 0 0 19.931 13H22v-2h-2.069A8.008 8.008 0 0 0 13 4.069zM12 18c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/></svg>';
+          locationButton.classList.add('icon-padding');
+        }
+
+        locationButton.classList.add('custom-map-control-button', 'modern-look');
+
+        let controlPosition = google.maps.ControlPosition.BOTTOM_CENTER;
+        if (geolocatePosition && geolocatePosition in google.maps.ControlPosition) {
+          controlPosition = google.maps.ControlPosition[geolocatePosition];
+        }
+
+        this.map.controls[controlPosition].push(
           locationButton
         );
-
+        
         locationButton.addEventListener("click", (e) => {
           e.preventDefault();
           this.getLocation();

@@ -2,5 +2,9 @@
 /node_modules/
 /vendor/
 composer.lock
+package-lock.json
+bun.lock
+bun.lockb
 phpunit.xml
 .phpunit.result.cache
+/build/report.junit.xml

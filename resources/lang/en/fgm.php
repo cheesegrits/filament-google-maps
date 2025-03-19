@@ -51,4 +51,7 @@ return [
     'geolocate' => [
         'label' => 'Set Current Location',
     ],
+    'map' => [
+        'search_placeholder' => 'Search...',
+    ],
 ];

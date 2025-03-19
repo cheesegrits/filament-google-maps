@@ -39,7 +39,7 @@ it('outputs the appends array model-code', function () {
             '--location' => 'location',
         ]
     )
-        ->expectsOutputToContain(convertNewlines('
+        ->expectsOutputToContain($this->convertNewlines('
     protected $appends = [
         \'location\',
     ];'));
@@ -55,7 +55,7 @@ it('outputs the fillable array model-code', function () {
             '--location' => 'location',
         ]
     )
-        ->expectsOutputToContain(convertNewlines('
+        ->expectsOutputToContain($this->convertNewlines('
     protected $fillable = [
         \'name\',
         \'lat\',
@@ -80,7 +80,7 @@ it('outputs the guarded array model-code', function () {
             '--location' => 'location',
         ]
     )
-        ->expectsOutputToContain(convertNewlines('
+        ->expectsOutputToContain($this->convertNewlines('
     protected $guarded = [
         \'id\',
     ];'));
@@ -96,8 +96,8 @@ it('outputs the get attribute model-code', function () {
             '--location' => 'location',
         ]
     )
-        ->expectsOutputToContain(convertNewlines('
-    function getLocationAttribute(): array
+        ->expectsOutputToContain($this->convertNewlines('
+    public function getLocationAttribute(): array
     {
         return [
             "lat" => (float)$this->lat,
@@ -128,8 +128,8 @@ it('outputs the set attribute model-code', function () {
             '--location' => 'location',
             '--terse',
         ]
-    )->expectsOutputToContain(convertNewlines('
-    function setLocationAttribute(?array $location): void
+    )->expectsOutputToContain($this->convertNewlines('
+    public function setLocationAttribute(?array $location): void
     {
         if (is_array($location))
         {
@@ -150,7 +150,7 @@ it('outputs the get lat lng model-code', function () {
             '--location' => 'location',
         ]
     )
-        ->expectsOutputToContain(convertNewlines('
+        ->expectsOutputToContain($this->convertNewlines('
     public static function getLatLngAttributes(): array
     {
         return [
@@ -170,16 +170,9 @@ it('outputs the get computed location model-code', function () {
             '--location' => 'location',
         ]
     )
-        ->expectsOutputToContain(convertNewlines('
+        ->expectsOutputToContain($this->convertNewlines('
     public static function getComputedLocation(): string
     {
         return \'location\';
     }'));
 });
-
-function convertNewlines($text)
-{
-    $text = implode("\n", explode("\r\n", $text));
-
-    return $text;
-}
