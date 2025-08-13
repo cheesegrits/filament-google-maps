@@ -2,10 +2,10 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Actions;
 
+use Filament\Actions\Action;
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Filament\Actions\Concerns\CanCustomizeProcess;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 

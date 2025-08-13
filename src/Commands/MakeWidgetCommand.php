@@ -2,6 +2,8 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Commands;
 
+use Throwable;
+use Exception;
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -77,10 +79,10 @@ class MakeWidgetCommand extends Command
             /** @noinspection PhpUnusedLocalVariableInspection */
             $model     = new ('\\App\\Models\\' . $modelName)();
             $modelName = '\\App\\Models\\' . $modelName;
-        } catch (\Throwable) {
+        } catch (Throwable) {
             try {
                 $model = new $modelName;
-            } catch (\Throwable) {
+            } catch (Throwable) {
                 echo "Can't find class $modelName or \\App\\Models\\$modelName\n";
 
                 return static::INVALID;
@@ -92,7 +94,7 @@ class MakeWidgetCommand extends Command
             $latLongFields = $modelName::getLatLngAttributes();
             /** @noinspection PhpUndefinedMethodInspection */
             $locationField = $modelName::getComputedLocation();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->line("Can't find your model's lat and lng attributes, did you run the fgm:model-code command and paste it into your model?");
 
             return static::INVALID;

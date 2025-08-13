@@ -2,10 +2,10 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Filters;
 
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Fieldset;
 use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete;
 use Closure;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;

@@ -2,8 +2,8 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Actions;
 
+use Filament\Actions\Action;
 use Closure;
-use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 
