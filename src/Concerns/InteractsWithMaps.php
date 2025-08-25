@@ -9,7 +9,7 @@ trait InteractsWithMaps
 {
     public function reverseGeocodeUsing(string $statePath, array $results): bool
     {
-        foreach ($this->getCachedForms() as $form) {
+        foreach ($this->getCachedSchemas() as $form) {
             if ($this->reverseGeocodeUpdated($form, $statePath, $results)) {
                 return true;
             }
@@ -43,7 +43,7 @@ trait InteractsWithMaps
 
     public function placeUpdatedUsing(string $statePath, array $results): bool
     {
-        foreach ($this->getCachedForms() as $form) {
+        foreach ($this->getCachedSchemas() as $form) {
             if ($this->placeUpdated($form, $statePath, $results)) {
                 return true;
             }
