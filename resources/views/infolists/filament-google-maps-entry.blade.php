@@ -5,8 +5,8 @@
 
     <div
         x-ignore
-        ax-load
-        ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-entry', 'cheesegrits/filament-google-maps') }}"
+        x-load
+        x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-entry', 'cheesegrits/filament-google-maps') }}"
         x-data="filamentGoogleMapsField({
                     state: @js($getState()),
                     defaultLocation: @js($getDefaultLocation()),
