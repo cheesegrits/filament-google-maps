@@ -326,7 +326,7 @@ class Geocoder
         return [$records, $lookups, $processed];
     }
 
-    public function testReverse(array|string $lat, ?string $lng = null, $withComponents = false): array
+    public function testReverse(array|string|float $lat, array|string|float $lng = null, bool $withComponents = false): array
     {
         $formats = [];
 
