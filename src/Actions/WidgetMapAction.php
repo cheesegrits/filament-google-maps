@@ -3,10 +3,10 @@
 namespace Cheesegrits\FilamentGoogleMaps\Actions;
 
 use Cheesegrits\FilamentGoogleMaps\Fields\WidgetMap;
+use Filament\Actions\BulkAction;
 use Filament\Actions\Concerns\CanCustomizeProcess;
 use Filament\Forms;
 use Filament\Schemas\Components;
-use Filament\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
