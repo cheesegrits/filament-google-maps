@@ -38,8 +38,8 @@
         <div
             class="w-full"
             x-ignore
-            ax-load
-            ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-geocomplete', 'cheesegrits/filament-google-maps') }}"
+            x-load
+            x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-geocomplete', 'cheesegrits/filament-google-maps') }}"
             x-data="filamentGoogleGeocomplete({
                         setStateUsing: async (path, state) => {
                             return await $wire.set(path, state)
@@ -59,6 +59,7 @@
                         debug: @js($getDebug()),
                         gmaps: @js($getMapsUrl()),
                         minChars: @js($getMinChars()),
+                        fieldId: @js($id),
                     })"
             wire:ignore
         >

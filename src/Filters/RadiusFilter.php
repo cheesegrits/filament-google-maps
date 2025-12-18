@@ -4,11 +4,11 @@ namespace Cheesegrits\FilamentGoogleMaps\Filters;
 
 use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete;
 use Closure;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Group;
+use Filament\Schemas\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Filters\Concerns\HasRelationship;
 use Illuminate\Database\Eloquent\Builder;
@@ -99,9 +99,9 @@ class RadiusFilter extends BaseFilter
         return $query;
     }
 
-    public function getFormSchema(): array
+    public function getSchemaComponents(): array
     {
-        $form = [
+        $schema = [
             Group::make()->schema([
                 Geocomplete::make('geocomplete')
                     ->label(__('filament-google-maps::fgm.radius_filter.address'))
@@ -134,12 +134,12 @@ class RadiusFilter extends BaseFilter
         ];
 
         if ($this->hasSection()) {
-            $form = [
-                Fieldset::make($this->getSection())->schema($form),
+            $schema = [
+                Fieldset::make($this->getSection())->schema($schema),
             ];
         }
 
-        return $form;
+        return $schema;
     }
 
     public function kilometers(bool|Closure $kilometers = true): static
@@ -228,18 +228,6 @@ class RadiusFilter extends BaseFilter
     {
         return ! empty($this->getSection());
     }
-
-    // public function relation(bool|Closure $relationship = true): static
-    // {
-    //    $this->relationship = $relationship;
-    //
-    //    return $this;
-    // }
-    //
-    // public function getRelationship(): string
-    // {
-    //    return $this->evaluate($this->relationship);
-    // }
 
     public function isRelationship(): bool
     {

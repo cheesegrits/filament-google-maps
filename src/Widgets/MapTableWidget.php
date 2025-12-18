@@ -16,7 +16,7 @@ class MapTableWidget extends MapWidget implements Tables\Contracts\HasTable
         getTableRecords as traitGetTableRecords;
     }
 
-    protected static string $view = 'filament-google-maps::widgets.filament-google-maps-table-widget';
+    protected string $view = 'filament-google-maps::widgets.filament-google-maps-table-widget';
 
     protected static ?string $heading = null;
 

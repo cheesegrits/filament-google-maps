@@ -12,6 +12,7 @@ use Filament\FilamentServiceProvider;
 use Filament\Forms\FormsServiceProvider;
 use Filament\Infolists\InfolistsServiceProvider;
 use Filament\Notifications\NotificationsServiceProvider;
+use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
@@ -25,23 +26,23 @@ class TestCase extends BaseTestCase
     protected function getPackageProviders($app): array
     {
         return [
-            FilamentGoogleMapsServiceProvider::class,
-            ColumnsServiceProvider::class,
-            GeocoderService::class,
-
-            ActionsServiceProvider::class,
-            BladeCaptureDirectiveServiceProvider::class,
+            AdminPanelProvider::class,
             BladeHeroiconsServiceProvider::class,
             BladeIconsServiceProvider::class,
+            FilamentGoogleMapsServiceProvider::class,
+            ColumnsServiceProvider::class,
+            ActionsServiceProvider::class,
             FilamentServiceProvider::class,
             FormsServiceProvider::class,
             InfolistsServiceProvider::class,
-            LivewireServiceProvider::class,
             NotificationsServiceProvider::class,
+            SchemasServiceProvider::class,
             SupportServiceProvider::class,
             TablesServiceProvider::class,
             WidgetsServiceProvider::class,
-            AdminPanelProvider::class,
+            GeocoderService::class,
+            LivewireServiceProvider::class,
+            BladeCaptureDirectiveServiceProvider::class,
         ];
     }
 

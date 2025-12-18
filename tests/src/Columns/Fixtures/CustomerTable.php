@@ -4,18 +4,37 @@ namespace Cheesegrits\FilamentGoogleMaps\Tests\Columns\Fixtures;
 
 use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
 use Cheesegrits\FilamentGoogleMaps\Tests\Models\Customer;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Tables;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 
-class CustomerTable extends Component implements HasForms, Tables\Contracts\HasTable
+class CustomerTable extends Component implements HasActions, HasSchemas, HasTable
 {
-    use InteractsWithForms;
-    use Tables\Concerns\InteractsWithTable;
+    use InteractsWithActions;
+    use InteractsWithSchemas;
+    use InteractsWithTable;
 
+    public function table(Table $table): Table
+    {
+        return $table
+            ->query($this->getTableQuery())
+            ->columns($this->getTableColumns())
+            ->filters($this->getTableFilters())
+            ->recordActions($this->getTableActions())
+            ->toolbarActions($this->getTableBulkActions())
+            ->headerActions($this->getTableHeaderActions());
+    }
+    
     protected function getTableColumns(): array
     {
         return [
@@ -29,7 +48,8 @@ class CustomerTable extends Component implements HasForms, Tables\Contracts\HasT
         return [
             //			Tables\Filters\TernaryFilter::make('processed'),
             RadiusFilter::make('radius')
-                ->attribute('location.name')
+                ->relationship('location', 'name')
+//                ->attribute('location.name')
                 ->selectUnit(),
         ];
     }

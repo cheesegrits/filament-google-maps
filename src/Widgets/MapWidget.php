@@ -47,7 +47,7 @@ class MapWidget extends Widgets\Widget implements HasActions, HasForms
 
     protected static bool $collapsible = false;
 
-    protected static string $view = 'filament-google-maps::widgets.filament-google-maps-widget';
+    protected string $view = 'filament-google-maps::widgets.filament-google-maps-widget';
 
     public array $controls = [
         'mapTypeControl'    => true,

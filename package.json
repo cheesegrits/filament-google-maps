@@ -1,25 +1,31 @@
 {
   "name": "filament-google-maps",
+  "type": "module",
   "author": "Hugh Messenger",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build:js": "node bin/build",
-    "dev:js": "node bin/build --watch"
+    "build:js": "node bin/build.js",
+    "build:css": "npx @tailwindcss/cli -i ./resources/css/filament-google-maps.css -o ./dist/cheesegrits/filament-google-maps/filament-google-maps.css --minify",
+    "dev:js": "node bin/build.js --dev",
+    "dev:css": "npx @tailwindcss/cli -i ./resources/css/filament-google-maps.css -o ./dist/cheesegrits/filament-google-maps/filament-google-maps.css --watch",
+    "dev": "npm-run-all --parallel dev:*",
+    "build": "npm-run-all build:*"
   },
   "devDependencies": {
     "@types/googlemaps": "^3.43.3",
-    "laravel-mix": "^6.0.6",
     "postcss": "^8.1.14"
   },
   "dependencies": {
+    "@awcodes/filament-plugin-purge": "^1.1.1",
     "@googlemaps/markerclusterer": "^2.0.13",
-    "esbuild": "^0.8.57",
-    "postcss": "^8.4.14",
-    "prettier": "^2.8.8",
-    "prettier-plugin-blade": "^1.6.11",
-    "prettier-plugin-tailwindcss": "^0.3.0",
-    "tailwindcss": "^3.3",
+    "esbuild": "^0.25.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.31",
+    "prettier": "^3.0",
+    "prettier-plugin-blade": "^2.0",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "tailwindcss": "^4.1.18",
     "underscore": "^1.13.6"
   }
 }

@@ -12,10 +12,11 @@ export default function filamentGoogleGeocomplete({
   placeField,
   reverseGeocodeUsing,
   hasReverseGeocodeUsing = false,
-  minChars,
+  minChars, 
+  fieldId,
 }) {
-  const geocompleteEl = isLocation ? statePath + "-fgm-address" : statePath;
-  const geoComplete = document.getElementById(geocompleteEl);
+  // const geocompleteEl = isLocation ? fieldId + "-fgm-address" : fieldId;
+  const geoComplete = document.getElementById(fieldId);
 
   return {
     geocoder: null,

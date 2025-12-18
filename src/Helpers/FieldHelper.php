@@ -2,7 +2,8 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Helpers;
 
-use Filament\Forms\Components\Component;
+
+use Filament\Schemas\Components\Component;
 
 class FieldHelper
 {
@@ -36,7 +37,7 @@ class FieldHelper
         $flatFields   = static::getFlatFields($topComponent);
 
         if (array_key_exists($field, $flatFields)) {
-            return $flatFields[$field]->getId();
+            return $flatFields[$field]->getStatePath();
         }
 
         return null;
