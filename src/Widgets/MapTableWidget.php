@@ -48,7 +48,7 @@ class MapTableWidget extends MapWidget implements Tables\Contracts\HasTable
         return $query->simplePaginate($this->getTableRecordsPerPage() == 'all' ? $query->count() : $this->getTableRecordsPerPage());
     }
 
-    protected function getRecords(): Paginator | Collection | \Illuminate\Support\Collection | CursorPaginator
+    protected function getRecords(): Paginator|Collection|\Illuminate\Support\Collection|CursorPaginator
     {
         if (static::$filtered) {
             return $this->traitGetTableRecords();
