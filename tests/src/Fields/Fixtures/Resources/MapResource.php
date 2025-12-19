@@ -21,7 +21,7 @@ class MapResource extends Resource
 {
     protected static ?string $model = Location::class;
 
-    protected static string | null | \BackedEnum $navigationIcon = 'heroicon-o-collection';
+    protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-collection';
 
     protected static ?string $recordTitleAttribute = 'name';
 
