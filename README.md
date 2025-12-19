@@ -11,12 +11,9 @@ either as part of an admin panel, or in standalone front end forms, tables and d
 
 ## About The Project
 
-### Filament v3 release
+### Filament v4 release
 
-This is the v3 branch, compatible with the recent Filament v3 release.  At some point soon we will replace
-the main branch (currently the Filament v2 compatible branch) with this v3 branch, and move Filament v2 support to
-a v2 branch.
-
+This is the v4 branch, only compatible with Filament v4.  If you need the v3 branch, please use the [v3 branch](https://github.com/cheesegrits/filament-google-maps/tree/v3).
 Please report any you find either on the [GitHub Issues](https://github.com/cheesegrits/filament-google-maps/issues) page,
 or find me (@cheesegrits) on the [Filament Discord server](https://filamentphp.com/discord).
 
@@ -34,7 +31,7 @@ We are not liable if you get a surprise bill!
 If you just can't handle reading documentation and want to dive right in ...
 
 ```sh
-composer require cheesegrits/filament-google-maps "^3.0"
+composer require cheesegrits/filament-google-maps "^4.0"
 ```
 
 ... then follow these instructions to add a computed attribute to any  model(s) that will use these components (which
@@ -49,7 +46,7 @@ php artisan filament-google-maps:model-code
 ```php
 use Cheesegrits\FilamentGoogleMaps\Fields\Map
 ...
-->schema[
+->components[
     ...
     // must use the computed attribute name you used on your model
     // which must NOT exist on the table itself
@@ -136,7 +133,7 @@ a combination of address fields into lat lng, or reverse geocoding lat and lng t
 
 ### Prerequisites
 
-This package is built on Filament V2, and Laravel 9.  It may run on earlier versions of
+This package is built on Filament V4, and Laravel 12.  It may run on earlier versions of
 Laravel, but has not been tested.
 
 ### Installation
@@ -144,7 +141,7 @@ Laravel, but has not been tested.
 You can install this project via composer:
 
 ```sh
-composer install cheesegrits/filament-google-maps
+composer install cheesegrits/filament-google-maps "^4.0"
 ```
 
 ### Assets
@@ -1366,7 +1363,7 @@ of the features provided by this package.
 - [x] Add KML layers to field and widgets
 - [x] Add more geocoding options for form fields, for individual address components (street, city, zip, etc)
 - [ ] Improve reverse geocoding format grammar, like alternates ... %A3|%A2 (is %A3 empty, try %A2), etc
-- [ ] Write test suite
+- [x] Write test suite
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
