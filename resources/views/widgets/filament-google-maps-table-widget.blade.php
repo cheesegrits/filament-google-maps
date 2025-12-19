@@ -40,8 +40,8 @@
             <div
                 wire:key="{{ rand() }}"
                 x-ignore
-                ax-load
-                ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-widget', 'cheesegrits/filament-google-maps') }}"
+                x-load
+                x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-widget', 'cheesegrits/filament-google-maps') }}"
                 x-data="filamentGoogleMapsWidget({
                     cachedData: {{  json_encode($this->getCachedData()) }},
                     config: {{ $this->getMapConfig()}},

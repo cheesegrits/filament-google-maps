@@ -4,6 +4,7 @@ namespace Cheesegrits\FilamentGoogleMaps\Widgets;
 
 use Closure;
 use Filament\Tables;
+use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
@@ -47,7 +48,7 @@ class MapTableWidget extends MapWidget implements Tables\Contracts\HasTable
         return $query->simplePaginate($this->getTableRecordsPerPage() == 'all' ? $query->count() : $this->getTableRecordsPerPage());
     }
 
-    protected function getRecords()
+    protected function getRecords(): Paginator | Collection | \Illuminate\Support\Collection | CursorPaginator
     {
         if (static::$filtered) {
             return $this->traitGetTableRecords();
