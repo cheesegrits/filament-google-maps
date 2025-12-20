@@ -1,8 +1,10 @@
+import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
+
 export default function filamentGoogleGeocomplete({
   setStateUsing,
   debug,
   statePath,
-  gmaps,
+  apiKey,
   filterName,
   reverseGeocodeFields,
   latLngFields,
@@ -43,58 +45,17 @@ export default function filamentGoogleGeocomplete({
       "%P": ["premise"],
     },
 
-    loadGMaps: function () {
-      if (!document.getElementById("filament-google-maps-google-maps-js")) {
-        const script = document.createElement("script");
-        script.id = "filament-google-maps-google-maps-js";
-        window.filamentGoogleMapsAsyncLoad = this.createAutocomplete.bind(this);
-        script.src = gmaps + "&callback=filamentGoogleMapsAsyncLoad";
-        document.head.appendChild(script);
-      } else {
-        const waitForGlobal = function (key, callback) {
-          if (window[key]) {
-            callback();
-          } else {
-            setTimeout(function () {
-              waitForGlobal(key, callback);
-            }, 100);
-          }
-        };
-
-        waitForGlobal(
-          "filamentGoogleMapsAPILoaded",
-          function () {
-            this.createAutocomplete();
-          }.bind(this)
-        );
-      }
-    },
-
     init: function (mapEl) {
       console.log("geocomplete init");
       this.mapEl = mapEl;
 
-      // let typingTimer;
-      // const doneTypingInterval = 300; // milliseconds
-      //
-      // geoComplete.addEventListener('input', () => {
-      //   clearTimeout(typingTimer);
-      //
-      //   if (geoComplete.value.length >= minChars) {
-      //     typingTimer = setTimeout(() => {
-      //       console.log('minChars met, loading GMaps');
-      //       this.loadGMaps();
-      //     }, doneTypingInterval);
-      //   } else {
-      //     console.log('minChars not met');
-      //   }
-      // });
-
-      this.loadGMaps();
+      this.createAutocomplete();
     },
 
-    createAutocomplete: function () {
-      window.filamentGoogleMapsAPILoaded = true;
+    async createAutocomplete () {
+      setOptions({ key: apiKey })
+      const {Map} = await importLibrary("maps");
+      const {PlacesService} = await importLibrary("places");
 
       let fields = [
         "address_components",

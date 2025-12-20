@@ -2,12 +2,14 @@
     @php
         $statePath = $getStatePath();
     @endphp
-
+    
     <div
         x-ignore
         x-load
         x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-field', 'cheesegrits/filament-google-maps') }}"
-        x-data="filamentGoogleMapsField({
+        x-data="
+            filamentGoogleMapsField({
+                    apiKey: @js(\Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper::mapsKey()),
                     state: $wire.entangle('{{ $getStatePath() }}'),
                     setStateUsing: (path, state) => {
                         return $wire.set(path, state)
@@ -39,10 +41,6 @@
                     types: @js($getTypes()),
                     countries: @js($getCountries()),
                     placeField: @js($getPlaceField()),
-                    drawingControl: @js($getDrawingControl()),
-                    drawingControlPosition: @js($getDrawingControlPosition()),
-                    drawingModes: @js($getDrawingModes()),
-                    drawingField: @js($getDrawingField()),
                     geoJson: @js($getGeoJsonFile()),
                     geoJsonField: @js($getGeoJsonField()),
                     geoJsonProperty: @js($getGeoJsonProperty()),

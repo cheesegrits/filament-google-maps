@@ -17,6 +17,14 @@ This is the v4 branch, only compatible with Filament v4.  If you need the v3 bra
 Please report any you find either on the [GitHub Issues](https://github.com/cheesegrits/filament-google-maps/issues) page,
 or find me (@cheesegrits) on the [Filament Discord server](https://filamentphp.com/discord).
 
+### Changes from v3
+
+Most of the changes are under the hood and should not break backward compatibility.
+
+The only breaking change is that the drawing features, using the google.maps.drawing library, have been removed.
+Google has deprecated this library and will remove it entirely in May 2026.  These features were WIP and undocumented,
+so hopefully very few people are affected by this.
+ 
 ### API Usage
 
 **IMPORTANT NOTE** - some features of this package could potentially drive up your
