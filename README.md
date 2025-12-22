@@ -592,6 +592,12 @@ The Geocomplete field turns a field on your form into a Google Geocomplete field
 would usually use this **instead of** a Map field (if you want a geocomplete field together
 with a map, you would typically use the autocomplete() feature on the Map field).
 
+NOTE - when using the GeoComplete field, you will see deprecation warnings in the browser console.  This is because
+Google are replacing the Autocomplete API with the new PlaceAutoCompleteElement HTML element.  Unfortunately, this new
+element does not support adding autocompletion to an existing form field, which makes integration with frameworks /
+libraries like Filament much more difficult.  See the [this issue](https://issuetracker.google.com/issues/399061524)
+for more details.  We are working on a workaround, but for now you will see deprecation warnings.
+
 The Geocomplete field can operate in one of two modes.  Either independently, where you
 simply use it with a normal text field on your form, e.g. 'full_address', and this component
 will simply fill the field in with the formatted address returned when the user selects one
