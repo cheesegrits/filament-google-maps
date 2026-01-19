@@ -6,7 +6,7 @@ use Cheesegrits\FilamentGoogleMaps\Tests\Columns\TestCase;
 use Cheesegrits\FilamentGoogleMaps\Tests\Models\Customer;
 use Cheesegrits\FilamentGoogleMaps\Tests\Models\Location;
 
-use function Pest\Livewire\livewire;
+use function Cheesegrits\FilamentGoogleMaps\Tests\livewire;
 
 uses(TestCase::class);
 

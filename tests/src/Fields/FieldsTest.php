@@ -6,7 +6,7 @@ use Cheesegrits\FilamentGoogleMaps\Tests\Models\Location;
 use Cheesegrits\FilamentGoogleMaps\Tests\TestCase;
 use Illuminate\Contracts\View\View;
 
-use function Pest\Livewire\livewire;
+use function Cheesegrits\FilamentGoogleMaps\Tests\livewire;
 
 uses(TestCase::class);
 
@@ -101,6 +101,8 @@ class TestComponentWithGeocodeOnLoad extends Livewire
     public Location $location;
 
     public $data;
+    
+    public Location $record;
 
     public function mount($id): void
     {
@@ -147,6 +149,8 @@ class TestComponentWithoutGeocodeOnLoad extends Livewire
     public Location $location;
 
     public $data;
+    
+    public Location $record;
 
     public function mount($id): void
     {

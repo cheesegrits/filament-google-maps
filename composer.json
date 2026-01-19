@@ -6,7 +6,7 @@
     "homepage": "https://github.com/cheesegrits/filament-google-maps",
     "require": {
         "php": "^8.3",
-        "filament/filament": "^4.0",
+        "filament/filament": "^v5.0",
         "spatie/laravel-package-tools": "^1.9",
         "guzzlehttp/guzzle": "^7.5",
         "geocoder-php/google-maps-provider": "^4.7",
@@ -41,7 +41,6 @@
         "pestphp/pest": "^4.0",
         "pestphp/pest-plugin-laravel": "^4.0",
         "orchestra/testbench": "^8.0|^9.0|^10.0",
-        "pestphp/pest-plugin-livewire": "^4.1",
         "nonsapiens/realaddressfactory": "^2.0",
         "timacdonald/log-fake": "^2.0",
         "laravel/pint": "^1.6"
