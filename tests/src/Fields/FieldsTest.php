@@ -101,7 +101,7 @@ class TestComponentWithGeocodeOnLoad extends Livewire
     public Location $location;
 
     public $data;
-    
+
     public Location $record;
 
     public function mount($id): void
@@ -149,7 +149,7 @@ class TestComponentWithoutGeocodeOnLoad extends Livewire
     public Location $location;
 
     public $data;
-    
+
     public Location $record;
 
     public function mount($id): void
