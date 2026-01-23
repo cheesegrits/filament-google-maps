@@ -142,7 +142,8 @@ export default function filamentGoogleMapsField(
             }
 
             if (autocomplete) {
-                const geoComplete = document.getElementById(autocomplete);
+                const autocompleteElementId = autocomplete.replace(/^data\./, 'form.');
+                const geoComplete = document.getElementById(autocompleteElementId);
 
                 if (geoComplete) {
                     window.addEventListener(
