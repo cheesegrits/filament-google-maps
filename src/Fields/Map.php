@@ -71,6 +71,8 @@ class Map extends Field
 
     protected ?Closure $placeUpdatedUsing = null;
 
+    protected Closure|string $type = 'roadmap';
+
     protected Closure|array $drawingModes = [
         'marker'    => true,
         'circle'    => true,
@@ -512,14 +514,14 @@ class Map extends Field
         return $this->evaluate($this->geoJsonProperty);
     }
 
-    //public function handleGeoJson(array $features): void
-    //{
+    // public function handleGeoJson(array $features): void
+    // {
     //    $geoJsonHandler = $this->getGeoJsonHandler();
     //
     //    $this->evaluate($geoJsonHandler, [
     //        'features' => $features,
     //    ]);
-    //}
+    // }
 
     /**
      * Set the default location for new maps, accepts an array of either [$lat, $lng] or ['lat' => $lat, 'lng' => $lng],
@@ -816,11 +818,12 @@ class Map extends Field
             'debug'                  => $this->getDebug(),
             'gmaps'                  => MapsHelper::mapsUrl(false, $this->getDrawingControl() ? ['drawing'] : []),
             'polyOptions'            => $this->getPolyOptions(),
-            'rectangleOptions'       => $this->getRectangeOptions(),
+            'rectangleOptions'       => $this->getRectangleOptions(),
             'circleOptions'          => $this->getCircleOptions(),
+            'mapType'                => $this->getType(),
         ]);
 
-        //ray($config);
+        // ray($config);
 
         return json_encode($config);
     }
@@ -830,6 +833,10 @@ class Map extends Field
         $state = parent::getState();
 
         if (is_array($state)) {
+            if (empty(array_filter($state))) {
+                return $this->getDefaultLocation();
+            }
+
             return $state;
         } else {
             try {
@@ -854,7 +861,7 @@ class Map extends Field
 
     public function rectangleOptions(Closure|array $rectangleOptions): static
     {
-        $this->recatangleOptions = $rectangleOptions;
+        $this->rectangleOptions = $rectangleOptions;
 
         return $this;
     }
@@ -874,5 +881,17 @@ class Map extends Field
     public function getCircleOptions(): ?array
     {
         return $this->evaluate($this->circleOptions);
+    }
+
+    public function type(Closure|string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return $this->evaluate($this->type);
     }
 }

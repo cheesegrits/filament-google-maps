@@ -10,10 +10,10 @@ use function Pest\Livewire\livewire;
 
 uses(TestCase::class);
 
-//it('can create form with geocode field', function () {
+// it('can create form with geocode field', function () {
 //	livewire(TestComponentWithGeocomplete::class)
 //		->assertFormExists();
-//});
+// });
 
 it('can load a record with geocodeOnLoad', function () {
     $location = Location::factory()->withRealAddressAndLatLng()->create();

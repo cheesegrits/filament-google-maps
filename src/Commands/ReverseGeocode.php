@@ -41,7 +41,7 @@ class ReverseGeocode extends Command
             );
         }
 
-        $geocoder = new Geocoder();
+        $geocoder = new Geocoder;
 
         if ($formats = $geocoder->testReverse($lat, $lng, $withComponents)) {
             $this->table(

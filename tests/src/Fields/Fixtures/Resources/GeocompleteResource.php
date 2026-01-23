@@ -3,7 +3,7 @@
 namespace Cheesegrits\FilamentGoogleMaps\Tests\Fields\Fixtures\Resources;
 
 use Cheesegrits\FilamentGoogleMaps\Columns\MapColumn;
-//use App\Filament\Resources\LocationResource\RelationManagers;
+// use App\Filament\Resources\LocationResource\RelationManagers;
 use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete;
 use Cheesegrits\FilamentGoogleMaps\Fields\Map;
 use Cheesegrits\FilamentGoogleMaps\Filters\RadiusFilter;
@@ -60,8 +60,8 @@ class GeocompleteResource extends Resource
                 //                    ->layers([
                 //                        'https://googlearchive.github.io/js-v2-samples/ggeoxml/cta.kml',
                 //                    ])
-                ////                    ->autocomplete('formatted_address')
-                ////                    ->autocompleteReverse()
+                // //                    ->autocomplete('formatted_address')
+                // //                    ->autocompleteReverse()
                 //                    ->reverseGeocode([
                 //                        'city' => '%L',
                 //                        'zip' => '%z',

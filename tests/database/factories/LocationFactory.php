@@ -31,7 +31,7 @@ class LocationFactory extends Factory
     public function withRealAddressAndLatLng(string $country = 'united-states-of-america', ?string $city = null): LocationFactory
     {
         //		$address = $this->faker->realAddress($country, $city);
-        $f       = new RealAddressFactory();
+        $f       = new RealAddressFactory;
         $address = $f->make(1, $country, $city)->first();
 
         return $this->state([
@@ -48,7 +48,7 @@ class LocationFactory extends Factory
     public function withRealLatLng(string $country = 'united-states-of-america', ?string $city = null): LocationFactory
     {
         //		$address = $this->faker->realAddress($country, $city);
-        $f       = new RealAddressFactory();
+        $f       = new RealAddressFactory;
         $address = $f->make(1, $country, $city)->first();
 
         return $this->state([
@@ -65,7 +65,7 @@ class LocationFactory extends Factory
     public function withRealAddress(string $country = 'united-states-of-america', ?string $city = null): LocationFactory
     {
         //		$address = $this->faker->realAddress($country, $city);
-        $f       = new RealAddressFactory();
+        $f       = new RealAddressFactory;
         $address = $f->make(1, $country, $city)->first();
 
         return $this->state([

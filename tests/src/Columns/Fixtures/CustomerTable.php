@@ -51,9 +51,9 @@ class CustomerTable extends Component implements HasForms, Tables\Contracts\HasT
     protected function getTableBulkActions(): array
     {
         return [
-            //BulkActionGroup::make([
+            // BulkActionGroup::make([
             //			Tables\Actions\DeleteBulkAction::make(),
-            //]),
+            // ]),
         ];
     }
 

@@ -31,7 +31,7 @@ class ReverseGeocodeTable extends Command
 
         try {
             /** @noinspection PhpUnusedLocalVariableInspection */
-            $model = new $modelName();
+            $model = new $modelName;
         } catch (Throwable $e) {
             try {
                 /** @noinspection PhpUnusedLocalVariableInspection */
