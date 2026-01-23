@@ -313,10 +313,6 @@ class Geocomplete extends Field implements Contracts\CanBeLengthConstrained, Con
     {
         $types = $this->evaluate($this->types);
 
-        if (count($types) === 0) {
-            $types = ['geocode'];
-        }
-
         return $types;
     }
 

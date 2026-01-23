@@ -207,10 +207,6 @@ class Map extends Field
     {
         $types = $this->evaluate($this->types);
 
-        if (count($types) === 0) {
-            $types = ['geocode'];
-        }
-
         return $types;
     }
 
