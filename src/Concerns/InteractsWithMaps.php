@@ -4,6 +4,7 @@ namespace Cheesegrits\FilamentGoogleMaps\Concerns;
 
 use Cheesegrits\FilamentGoogleMaps\Fields\Geocomplete;
 use Cheesegrits\FilamentGoogleMaps\Fields\Map;
+use Filament\Schemas\Components\Component;
 
 trait InteractsWithMaps
 {
@@ -62,6 +63,7 @@ trait InteractsWithMaps
             }
 
             foreach ($component->getChildComponentContainers() as $childComponentContainer) {
+            foreach ($component->getChildSchemas() as $childComponentContainer) {
                 if ($childComponentContainer->isHidden()) {
                     continue;
                 }
