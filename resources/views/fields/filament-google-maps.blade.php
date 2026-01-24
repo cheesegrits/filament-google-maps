@@ -24,6 +24,7 @@
                         $wire.placeUpdatedUsing(@js($statePath), results)
                     },
                     autocomplete: @js($getAutocompleteId()),
+                    autocompleteId: @js($getAutocompleteElementId()),
                     autocompleteReverse: @js($getAutocompleteReverse()),
                     geolocate: @js($getGeolocate()),
                     geolocateOnLoad: @js($getGeolocateOnLoad()),
