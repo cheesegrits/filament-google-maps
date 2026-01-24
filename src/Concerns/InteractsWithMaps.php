@@ -28,7 +28,11 @@ trait InteractsWithMaps
                 return true;
             }
 
-            foreach ($component->getChildComponentContainers() as $childComponentContainer) {
+            if(! $component instanceof Component){
+                return false;
+            }
+
+            foreach ($component->getChildSchemas() as $childComponentContainer) {
                 if ($childComponentContainer->isHidden()) {
                     continue;
                 }
