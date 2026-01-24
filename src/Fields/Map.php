@@ -715,6 +715,17 @@ class Map extends Field
         return null;
     }
 
+    public function getAutocompleteElementId(): ?string
+    {
+        $autoCompleteField = $this->getAutocomplete();
+
+        if (! blank($autoCompleteField)) {
+            return FieldHelper::getFieldElementId($autoCompleteField, $this);
+        }
+
+        return null;
+    }
+
     public function getMapsUrl(): string
     {
         return MapsHelper::mapsUrl(false, $this->getDrawingControl() ? ['drawing'] : []);
@@ -794,6 +805,7 @@ class Map extends Field
     {
         $config = array_merge($this->mapConfig, [
             'autocomplete'           => $this->getAutocompleteId(),
+            'autocompleteId'         => $this->getAutocompleteElementId(),
             'types'                  => $this->getTypes(),
             'countries'              => $this->getCountries(),
             'placeField'             => $this->getPlaceField(),

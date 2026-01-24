@@ -41,4 +41,16 @@ class FieldHelper
 
         return null;
     }
+
+    public static function getFieldElementId(string $field, Component $component): ?string
+    {
+        $topComponent = self::getTopComponent($component);
+        $flatFields   = static::getFlatFields($topComponent);
+
+        if (array_key_exists($field, $flatFields)) {
+            return $flatFields[$field]->getId();
+        }
+
+        return null;
+    }
 }
