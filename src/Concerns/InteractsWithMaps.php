@@ -28,7 +28,7 @@ trait InteractsWithMaps
                 return true;
             }
 
-            if(! $component instanceof Component){
+            if (! $component instanceof Component) {
                 return false;
             }
 
@@ -66,7 +66,7 @@ trait InteractsWithMaps
                 return true;
             }
 
-            if(! $component instanceof Component){
+            if (! $component instanceof Component) {
                 return false;
             }
 
