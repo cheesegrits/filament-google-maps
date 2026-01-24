@@ -7,6 +7,7 @@ export default function filamentGoogleMapsField(
         setStateUsing,
         getStateUsing,
         autocomplete,
+        autocompleteId,
         autocompleteReverse,
         geolocate = false,
         geolocateOnLoad,
@@ -141,9 +142,8 @@ export default function filamentGoogleMapsField(
                 placeFields.push("photos");
             }
 
-            if (autocomplete) {
-                const autocompleteElementId = autocomplete.replace(/^data\./, 'form.');
-                const geoComplete = document.getElementById(autocompleteElementId);
+            if (autocomplete && autocompleteId) {
+                const geoComplete = document.getElementById(autocompleteId);
 
                 if (geoComplete) {
                     window.addEventListener(
