@@ -181,7 +181,7 @@ class MapWidget extends Widgets\Widget implements HasActions, HasForms
     public function getMapId(): ?string
     {
         $mapId = static::$mapId ?? str(get_called_class())->afterLast('\\')->studly()->toString();
-        
+
         return preg_replace('/[^a-zA-Z0-9_]/', '', $mapId);
     }
 
