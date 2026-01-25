@@ -16,7 +16,8 @@
             <input x-ref="pacinput" type="text" placeholder="Search Box" />
         @endif
 
-        <div
+        <div 
+            id="map-{{ $getMapId() }}"
             x-ref="map"
             class="w-full"
             style="

@@ -55,6 +55,7 @@
                     @endif
             >
                 <div
+                        id="map-{{ $this->getMapId() }}"
                         x-ref="map"
                         class="w-full"
                         style="

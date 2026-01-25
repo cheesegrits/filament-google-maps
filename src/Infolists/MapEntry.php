@@ -94,7 +94,7 @@ class MapEntry extends Entry
         $drawingField = $this->evaluate($this->drawingField);
 
         if ($drawingField) {
-            return FieldHelper::getFieldId($drawingField, $this);
+            return FieldHelper::getFieldStatePath($drawingField, $this);
         }
 
         return null;
