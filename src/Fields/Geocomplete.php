@@ -131,7 +131,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained, HasAffixActio
             $fields = $this->getModel()::getLatLngAttributes();
 
             foreach ($fields as $fieldKey => $field) {
-                $fieldId = FieldHelper::getFieldId($field, $this);
+                $fieldId = FieldHelper::getFieldStatePath($field, $this);
 
                 if ($fieldId) {
                     $statePaths[$fieldKey] = $fieldId;
@@ -247,7 +247,7 @@ class Geocomplete extends Field implements CanBeLengthConstrained, HasAffixActio
         $statePaths = [];
 
         foreach ($fields as $field => $format) {
-            $fieldId = FieldHelper::getFieldId($field, $this);
+            $fieldId = FieldHelper::getFieldStatePath($field, $this);
 
             if ($fieldId) {
                 $statePaths[$fieldId] = $format;

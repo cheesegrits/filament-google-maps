@@ -274,7 +274,7 @@ class Map extends Field
         $statePaths = [];
 
         foreach ($fields as $field => $format) {
-            $fieldId = FieldHelper::getFieldId($field, $this);
+            $fieldId = FieldHelper::getFieldStatePath($field, $this);
 
             if ($fieldId) {
                 $statePaths[$fieldId] = $format;
@@ -380,7 +380,7 @@ class Map extends Field
         $drawingField = $this->evaluate($this->drawingField);
 
         if ($drawingField) {
-            return FieldHelper::getFieldId($drawingField, $this);
+            return FieldHelper::getFieldStatePath($drawingField, $this);
         }
 
         return null;
@@ -507,7 +507,7 @@ class Map extends Field
         $jsonField = $this->evaluate($this->geoJsonField);
 
         if ($jsonField) {
-            return FieldHelper::getFieldId($jsonField, $this);
+            return FieldHelper::getFieldStatePath($jsonField, $this);
         }
 
         return null;
@@ -709,7 +709,7 @@ class Map extends Field
         $autoCompleteField = $this->getAutocomplete();
 
         if (! blank($autoCompleteField)) {
-            return FieldHelper::getFieldId($autoCompleteField, $this);
+            return FieldHelper::getFieldStatePath($autoCompleteField, $this);
         }
 
         return null;

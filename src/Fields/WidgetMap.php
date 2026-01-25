@@ -37,6 +37,8 @@ class WidgetMap extends Field
 
     protected Closure|Action|null $markerAction = null;
 
+    protected static ?string $mapId = null;
+
     /**
      * Main field config variables
      */
@@ -300,5 +302,12 @@ class WidgetMap extends Field
                 ];
             }
         }
+    }
+
+    public function getMapId(): ?string
+    {
+        $mapId = static::$mapId ?? str(get_called_class())->afterLast('\\')->studly()->toString();
+
+        return preg_replace('/[^a-zA-Z0-9_]/', '', $mapId);
     }
 }

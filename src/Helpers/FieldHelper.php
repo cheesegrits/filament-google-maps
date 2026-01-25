@@ -30,7 +30,7 @@ class FieldHelper
         return $flatFields;
     }
 
-    public static function getFieldId(string $field, Component $component): ?string
+    public static function getFieldStatePath(string $field, Component $component): ?string
     {
         $topComponent = self::getTopComponent($component);
         $flatFields   = static::getFlatFields($topComponent);
