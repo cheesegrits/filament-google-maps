@@ -2,13 +2,13 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Columns;
 
+use Cheesegrits\FilamentGoogleMaps\Helpers\GoogleStaticMap\GoogleStaticMap;
 use Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper;
 use Closure;
 use Exception;
 use Filament\Tables\Columns\Column;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\ComponentAttributeBag;
-use Mastani\GoogleStaticMap\GoogleStaticMap;
 
 class MapColumn extends Column
 {
