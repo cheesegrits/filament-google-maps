@@ -3,52 +3,31 @@
 namespace Cheesegrits\FilamentGoogleMaps\Helpers;
 
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Schema;
 
 class FieldHelper
 {
-    public static function getTopComponent(Component $component): Component
-    {
-        $parentComponent = $component->getContainer()->getParentComponent();
-
-        return $parentComponent ? static::getTopComponent($parentComponent) : $component;
-    }
-
-    public static function getFlatFields($topComponent): array
-    {
-        $flatFields = $topComponent->getContainer()->getFlatFields();
-
-        foreach ($topComponent->getContainer()->getComponents() as $component) {
-            foreach ($component->getChildComponentContainers() as $container) {
-                if ($container->isHidden()) {
-                    continue;
-                }
-
-                $flatFields = array_merge($flatFields, $container->getFlatFields());
-            }
-        }
-
-        return $flatFields;
-    }
-
     public static function getFieldStatePath(string $field, Component $component): ?string
     {
-        $topComponent = self::getTopComponent($component);
-        $flatFields   = static::getFlatFields($topComponent);
-
-        if (array_key_exists($field, $flatFields)) {
-            return $flatFields[$field]->getStatePath();
-        }
-
-        return null;
+        return static::findField($field, $component)?->getStatePath();
     }
 
     public static function getFieldElementId(string $field, Component $component): ?string
     {
-        $topComponent = self::getTopComponent($component);
-        $flatFields   = static::getFlatFields($topComponent);
+        return static::findField($field, $component)?->getId();
+    }
 
-        if (array_key_exists($field, $flatFields)) {
-            return $flatFields[$field]->getId();
+    protected static function findField(string $fieldName, Component $component): ?Component
+    {
+
+        $container = $component->getContainer();
+
+        while ($container instanceof Schema) {
+            if ($found = $container->getComponent($fieldName)) {
+                return $found;
+            }
+
+            $container = $container->getParentComponent()?->getContainer();
         }
 
         return null;
