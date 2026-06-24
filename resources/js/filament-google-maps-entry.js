@@ -2,6 +2,7 @@ import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 
 export default function filamentGoogleMapsField(
     {
+        apiKey,
         state,
         defaultLocation,
         controls,
