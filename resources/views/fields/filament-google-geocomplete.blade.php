@@ -64,6 +64,7 @@
                         types: @js($getTypes()),
                         placeField: @js($getPlaceField()),
                         countries: @js($getCountries()),
+                        bounds: @js($getBounds()),
                         debug: @js($getDebug()),
                         apiKey: @js(\Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper::mapsKey()),
                         minChars: @js($getMinChars()),

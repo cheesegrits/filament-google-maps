@@ -47,6 +47,10 @@ return [
         'region'   => env('FILAMENT_GOOGLE_MAPS_REGION_CODE', null),
         'language' => env('FILAMENT_GOOGLE_MAPS_LANGUAGE_CODE', null),
         'api'      => env('FILAMENT_GOOGLE_MAPS_API_LANGUAGE_CODE', null),
+        'bounds' => [
+            'southWest' => env('FILAMENT_GOOGLE_MAPS_GEOCODE_BOUNDS_SOUTH_WEST', null),
+            'northEast' => env('FILAMENT_GOOGLE_MAPS_GEOCODE_BOUNDS_NORTH_EAST', null),
+        ],
     ],
 
     /*

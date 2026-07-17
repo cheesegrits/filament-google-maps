@@ -225,6 +225,65 @@ class Map extends Field
     }
 
     /**
+     * Get the validated regional bounding box for Google Maps Autocomplete.
+     *
+     * @return array{
+     *     southWest: array{lat: float, lng: float},
+     *     northEast: array{lat: float, lng: float}
+     * }|false
+     */
+    public function getBounds(): array|false
+    {
+        $southWestBound = config('filament-google-maps.locale.bounds.southWest', false);
+        $northEastBound = config('filament-google-maps.locale.bounds.northEast', false);
+
+        if (!$southWestBound || !$northEastBound) {
+            return false;
+        }
+
+        // Convert comma-separated string configurations into arrays
+        if (is_string($southWestBound)) {
+            $southWestBound = explode(',', $southWestBound);
+        }
+        if (is_string($northEastBound)) {
+            $northEastBound = explode(',', $northEastBound);
+        }
+
+        // Ensure we have correct structural arrays with exactly 2 elements
+        if (!is_array($southWestBound) || count($southWestBound) !== 2 ||
+            !is_array($northEastBound) || count($northEastBound) !== 2) {
+            return false;
+        }
+
+        // Explicitly strip keys (handles numeric vs string-keyed config entries) and cast to float
+        $sw = array_map('floatval', array_values($southWestBound));
+        $ne = array_map('floatval', array_values($northEastBound));
+
+        // 1. Strict Coordinate Validation (Latitudes -90 to 90, Longitudes -180 to 180)
+        if (abs($sw[0]) > 90 || abs($ne[0]) > 90 || abs($sw[1]) > 180 || abs($ne[1]) > 180) {
+            return false;
+        }
+
+        // 2. Strict SW/NE Order Validation
+        // SouthWest latitude MUST be lower than or equal to NorthEast latitude.
+        if ($sw[0] > $ne[0]) {
+            return false;
+        }
+
+        // Return a structured, named payload ready to be cast to JSON for the JS layer
+        return [
+            'southWest' => [
+                'lat' => $sw[0],
+                'lng' => $sw[1],
+            ],
+            'northEast' => [
+                'lat' => $ne[0],
+                'lng' => $ne[1],
+            ],
+        ];
+    }
+
+    /**
      * If autocomplete() is enabled, this will enable reverse geocoding for that field.
      *
      *
