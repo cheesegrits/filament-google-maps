@@ -22,6 +22,7 @@ export default function filamentGoogleMapsField(
         defaultZoom,
         types,
         countries,
+        bounds,
         placeField,
         debug,
         mapEl,
@@ -168,6 +169,13 @@ export default function filamentGoogleMapsField(
                         strictBounds: false,
                         types: types,
                     };
+
+                  if (bounds) {
+                    geocompleteOptions.bounds = new google.maps.LatLngBounds(
+                      new google.maps.LatLng(bounds.southWest.lat, bounds.southWest.lng),
+                      new google.maps.LatLng(bounds.northEast.lat, bounds.northEast.lng)
+                    );
+                  }
 
                     const gAutocomplete = new google.maps.places.Autocomplete(
                         geoComplete,

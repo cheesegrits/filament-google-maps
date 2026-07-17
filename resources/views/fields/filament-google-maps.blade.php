@@ -41,6 +41,7 @@
                     defaultZoom: @js($getDefaultZoom()),
                     types: @js($getTypes()),
                     countries: @js($getCountries()),
+                    bounds: @js($getBounds()),
                     placeField: @js($getPlaceField()),
                     geoJson: @js($getGeoJsonFile()),
                     geoJsonField: @js($getGeoJsonField()),

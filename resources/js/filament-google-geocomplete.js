@@ -10,6 +10,7 @@ export default function filamentGoogleGeocomplete({
   latLngFields,
   types,
   countries,
+  bounds,
   isLocation,
   placeField,
   reverseGeocodeUsing,
@@ -73,6 +74,14 @@ export default function filamentGoogleGeocomplete({
         strictBounds: false,
         types: types,
       };
+
+      if (bounds) {
+        geocompleteOptions.bounds = new google.maps.LatLngBounds(
+          new google.maps.LatLng(bounds.southWest.lat, bounds.southWest.lng),
+          new google.maps.LatLng(bounds.northEast.lat, bounds.northEast.lng)
+        );
+
+      }
 
       if (geoComplete) {
         window.addEventListener(
