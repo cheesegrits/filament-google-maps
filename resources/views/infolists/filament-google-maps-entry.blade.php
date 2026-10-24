@@ -24,6 +24,7 @@
                     geoJson: @js($getGeoJsonFile()),
                     geoJsonVisible: @js($getGeoJsonVisible()),
                     mapEl: $refs.map,
+                    apiKey: @js(\Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper::mapsKey()),
                 })"
         id="{{ $getId() . '-alpine' }}"
         wire:ignore

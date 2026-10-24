@@ -11,6 +11,7 @@ export default function filamentGoogleMapsField(
         geoJson,
         geoJsonVisible,
         statePath,
+        apiKey,
     }) {
     let map = null
     let marker = null
